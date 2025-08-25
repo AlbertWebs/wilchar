@@ -13,16 +13,21 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('middle_name')->nullable();
-            $table->date('date_of_birth');
-            $table->string('gender');
-            $table->string('nationality');
+            $table->date('date_of_birth')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('nationality')->nullable();
             $table->string('id_number')->unique();
             //pasport photo
             $table->string('photo')->nullable();
             //photos of business premises
+            $table->string('business_name')->unique();
+            $table->string('business_type');
+            $table->string('location');
+            $table->string('created_by');
+            
             $table->string('phone')->unique();
             $table->string('email')->nullable()->unique();
             $table->string('address')->nullable();

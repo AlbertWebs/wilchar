@@ -12,7 +12,7 @@ class UsersSeeder extends Seeder
 {
     public function run()
     {
-        $roles = Role::pluck('id', 'name');
+        // $roles = Role::pluck('id', 'name');
 
         $users = [
             [
@@ -47,7 +47,7 @@ class UsersSeeder extends Seeder
                 [
                     'name' => $userData['name'],
                     'password' => $userData['password'],
-                    'role_id' => $roles[$userData['role']] ?? null,
+                    // 'role_id' => $roles[$userData['role']] ?? null,
                 ]
             );
         }

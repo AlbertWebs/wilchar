@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -54,5 +55,25 @@ class User extends Authenticatable
     public function hasRole($roleName)
     {
         return $this->role && $this->role->name === $roleName;
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(LoanApproval::class, 'approved_by');
+    }
+
+    public function disbursements()
+    {
+        return $this->hasMany(Disbursement::class, 'disbursed_by');
+    }
+
+    public function repayments()
+    {
+        return $this->hasMany(Repayment::class, 'received_by');
+    }
+
+    public function performanceLogs()
+    {
+        return $this->hasMany(PerformanceLog::class, 'logged_by');
     }
 }

@@ -2,15 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\LoanController;
+use App\Http\Controllers\Admin\LoanApprovalController;
+use App\Http\Controllers\Admin\DisbursementController;
+use App\Http\Controllers\Admin\RepaymentController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoanCalculatorController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::post('/calculate-loan', [LoanCalculatorController::class, 'calculate'])->name('loan.calculate');
 
 // Common Dashboard Route (fallback if role not handled)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Routes for All Authenticated Users
 Route::middleware('auth')->group(function () {
@@ -24,13 +30,17 @@ Route::middleware('auth')->group(function () {
 // Role-Based Dashboards
 // ===========================
 
-Route::middleware(['auth', 'role:Admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    // Add more admin-only routes here
+    Route::resource('clients', ClientController::class);
+    Route::resource('loan-applications', LoanController::class);
+    Route::resource('approvals', LoanApprovalController::class);
+    Route::resource('loans', LoanController::class); // or separate ApprovedLoansController
+    Route::resource('disbursements', DisbursementController::class);
+    Route::resource('collections', RepaymentController::class);
 });
+
 
 Route::middleware(['auth', 'role:Loan Officer'])->prefix('loan-officer')->group(function () {
     Route::get('/dashboard', function () {
