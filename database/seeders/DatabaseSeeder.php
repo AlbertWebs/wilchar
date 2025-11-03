@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,15 +12,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed in correct order
         $this->call([
-            UsersSeeder::class,
-            ClientSeeder::class,
-            LoanSeeder::class,
-            AccountSeeder::class,
+            UsersSeeder::class,        // Create users and roles first
+            SiteSettingSeeder::class,  // Create site settings
+            ClientSeeder::class,       // Then create clients
+            AccountSeeder::class,      // Create accounts
+            LoanSeeder::class,         // Finally create loan applications and loans
         ]);
-
-  
-        
     }
 }

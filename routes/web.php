@@ -5,9 +5,24 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\LoanController;
+use App\Http\Controllers\Admin\LoanApplicationController;
 use App\Http\Controllers\Admin\LoanApprovalController;
+use App\Http\Controllers\Admin\MpesaDisbursementController;
 use App\Http\Controllers\Admin\DisbursementController;
 use App\Http\Controllers\Admin\RepaymentController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LoanProductController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StkPushController;
+use App\Http\Controllers\Admin\C2bTransactionController;
+use App\Http\Controllers\Admin\B2bTransactionController;
+use App\Http\Controllers\Admin\MpesaAccountBalanceController;
+use App\Http\Controllers\Admin\MpesaTransactionStatusController;
+use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanCalculatorController;
 
@@ -27,27 +42,182 @@ Route::middleware('auth')->group(function () {
 });
 
 // ===========================
+// M-Pesa Callback Routes (Public)
+// ===========================
+// These routes need to be public for M-Pesa servers to call them
+Route::prefix('admin/mpesa')->name('mpesa.')->group(function () {
+    Route::post('stk-push/callback', [StkPushController::class, 'callback'])->name('stk-callback');
+    Route::post('c2b/validate', [C2bTransactionController::class, 'validate'])->name('c2b.validate');
+    Route::post('c2b/confirm', [C2bTransactionController::class, 'confirm'])->name('c2b.confirm');
+    Route::post('b2b/callback', [B2bTransactionController::class, 'callback'])->name('b2b.callback');
+    Route::post('b2b/timeout', [B2bTransactionController::class, 'timeout'])->name('b2b.timeout');
+    Route::post('account-balance/callback', [MpesaAccountBalanceController::class, 'callback'])->name('account-balance.callback');
+    Route::post('account-balance/timeout', [MpesaAccountBalanceController::class, 'timeout'])->name('account-balance.timeout');
+    Route::post('transaction-status/callback', [MpesaTransactionStatusController::class, 'callback'])->name('transaction-status.callback');
+    Route::post('transaction-status/timeout', [MpesaTransactionStatusController::class, 'timeout'])->name('transaction-status.timeout');
+});
+
+// ===========================
 // Role-Based Dashboards
 // ===========================
 
+// Admin Routes
 Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+    // Clients
     Route::resource('clients', ClientController::class);
-    Route::resource('loan-applications', LoanController::class);
-    Route::resource('approvals', LoanApprovalController::class);
-    Route::resource('loans', LoanController::class); // or separate ApprovedLoansController
-    Route::resource('disbursements', DisbursementController::class);
+
+    // Loan Applications (Admin can manage all)
+    Route::resource('loan-applications', LoanApplicationController::class);
+    Route::post('loan-applications/{loanApplication}/assign-officer', [LoanApplicationController::class, 'assignLoanOfficer'])->name('loan-applications.assign-officer');
+
+    // Approvals
+    Route::get('approvals', [LoanApprovalController::class, 'index'])->name('approvals.index');
+    Route::get('approvals/{loanApplication}', [LoanApprovalController::class, 'show'])->name('approvals.show');
+    Route::post('approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('approvals.approve');
+    Route::post('approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('approvals.reject');
+
+    // Loans (approved loans)
+    Route::resource('loans', LoanController::class);
+
+    // Disbursements (B2C - kept for backward compatibility)
+    Route::get('disbursements', [MpesaDisbursementController::class, 'index'])->name('disbursements.index');
+    Route::get('disbursements/create/{loanApplication}', [MpesaDisbursementController::class, 'create'])->name('disbursements.create');
+    Route::post('disbursements/{loanApplication}', [MpesaDisbursementController::class, 'store'])->name('disbursements.store');
+    Route::get('disbursements/{disbursement}', [MpesaDisbursementController::class, 'show'])->name('disbursements.show');
+    Route::post('disbursements/{disbursement}/retry', [MpesaDisbursementController::class, 'retry'])->name('disbursements.retry');
+
+
+    // Collections
     Route::resource('collections', RepaymentController::class);
+
+    // M-Pesa Operations
+    Route::prefix('mpesa')->name('mpesa.')->group(function () {
+        // M-Pesa Dashboard
+        Route::get('/', function() {
+            return view('admin.mpesa.dashboard');
+        })->name('dashboard');
+
+        // STK Push (Lipa na M-Pesa Online)
+        Route::get('stk-push', [StkPushController::class, 'index'])->name('stk-push.index');
+        Route::get('stk-push/create', [StkPushController::class, 'create'])->name('stk-push.create');
+        Route::post('stk-push', [StkPushController::class, 'store'])->name('stk-push.store');
+        Route::get('stk-push/{stkPush}', [StkPushController::class, 'show'])->name('stk-push.show');
+
+        // C2B Transactions
+        Route::get('c2b', [C2bTransactionController::class, 'index'])->name('c2b.index');
+        Route::get('c2b/{c2bTransaction}', [C2bTransactionController::class, 'show'])->name('c2b.show');
+
+        // B2B Transactions
+        Route::get('b2b', [B2bTransactionController::class, 'index'])->name('b2b.index');
+        Route::get('b2b/create', [B2bTransactionController::class, 'create'])->name('b2b.create');
+        Route::post('b2b', [B2bTransactionController::class, 'store'])->name('b2b.store');
+        Route::get('b2b/{b2bTransaction}', [B2bTransactionController::class, 'show'])->name('b2b.show');
+
+        // B2C Disbursements (existing)
+        Route::get('b2c', [MpesaDisbursementController::class, 'index'])->name('b2c.index');
+        Route::get('b2c/create/{loanApplication}', [MpesaDisbursementController::class, 'create'])->name('b2c.create');
+        Route::post('b2c/{loanApplication}', [MpesaDisbursementController::class, 'store'])->name('b2c.store');
+        Route::get('b2c/{disbursement}', [MpesaDisbursementController::class, 'show'])->name('b2c.show');
+
+        // Account Balance
+        Route::get('account-balance', [MpesaAccountBalanceController::class, 'index'])->name('account-balance.index');
+        Route::post('account-balance', [MpesaAccountBalanceController::class, 'store'])->name('account-balance.store');
+
+        // Transaction Status
+        Route::get('transaction-status', [MpesaTransactionStatusController::class, 'index'])->name('transaction-status.index');
+        Route::get('transaction-status/create', [MpesaTransactionStatusController::class, 'create'])->name('transaction-status.create');
+        Route::post('transaction-status', [MpesaTransactionStatusController::class, 'store'])->name('transaction-status.store');
+    });
+
+    // Reports
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'dashboard'])->name('reports.dashboard');
+        Route::get('/financial', [ReportController::class, 'financial'])->name('reports.financial');
+        Route::get('/loan-applications', [ReportController::class, 'loanApplications'])->name('reports.loan-applications');
+        Route::get('/disbursements', [ReportController::class, 'disbursements'])->name('reports.disbursements');
+        Route::get('/clients', [ReportController::class, 'clients'])->name('reports.clients');
+        Route::get('/users', [ReportController::class, 'users'])->name('reports.users');
+        Route::get('/loans', [ReportController::class, 'loans'])->name('reports.loans');
+    });
+
+    // User Management
+    Route::resource('users', UserController::class);
+
+    // Loan Products
+    Route::resource('loan-products', LoanProductController::class);
+
+    // Notifications
+    Route::resource('notifications', NotificationController::class);
+
+    // Audit Logs
+    Route::get('logs', [AuditLogController::class, 'index'])->name('logs.index');
+    Route::get('logs/{log}', [AuditLogController::class, 'show'])->name('logs.show');
+
+    // Role Management
+    Route::resource('roles', RoleController::class)->names([
+        'index' => 'admin.roles.index',
+        'create' => 'admin.roles.create',
+        'store' => 'admin.roles.store',
+        'show' => 'admin.roles.show',
+        'edit' => 'admin.roles.edit',
+        'update' => 'admin.roles.update',
+        'destroy' => 'admin.roles.destroy',
+    ]);
+
+    // Site Settings
+    Route::get('site-settings', [SiteSettingController::class, 'edit'])->name('admin.site-settings.edit');
+    Route::patch('site-settings', [SiteSettingController::class, 'update'])->name('admin.site-settings.update');
+
+    // Admin Profile
+    Route::get('profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::patch('profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+    Route::patch('profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
+    Route::delete('profile', [AdminProfileController::class, 'destroy'])->name('admin.profile.destroy');
 });
 
-
+// Loan Officer Routes
 Route::middleware(['auth', 'role:Loan Officer'])->prefix('loan-officer')->group(function () {
     Route::get('/dashboard', function () {
         return view('loan_officer.dashboard');
     })->name('loanofficer.dashboard');
 
-    // Add more Loan Officer routes here
+    // Loan Applications
+    Route::get('/applications', [LoanApplicationController::class, 'index'])->name('loan-officer.applications.index');
+    Route::get('/applications/{loanApplication}', [LoanApplicationController::class, 'show'])->name('loan-officer.applications.show');
+
+    // Approvals
+    Route::get('/approvals', [LoanApprovalController::class, 'index'])->name('loan-officer.approvals.index');
+    Route::get('/approvals/{loanApplication}', [LoanApprovalController::class, 'show'])->name('loan-officer.approvals.show');
+    Route::post('/approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('loan-officer.approvals.approve');
+    Route::post('/approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('loan-officer.approvals.reject');
+});
+
+// Credit Officer Routes
+Route::middleware(['auth', 'role:Credit Officer'])->prefix('credit-officer')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('credit_officer.dashboard');
+    })->name('credit-officer.dashboard');
+
+    // Approvals
+    Route::get('/approvals', [LoanApprovalController::class, 'index'])->name('credit-officer.approvals.index');
+    Route::get('/approvals/{loanApplication}', [LoanApprovalController::class, 'show'])->name('credit-officer.approvals.show');
+    Route::post('/approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('credit-officer.approvals.approve');
+    Route::post('/approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('credit-officer.approvals.reject');
+});
+
+// Director Routes
+Route::middleware(['auth', 'role:Director'])->prefix('director')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('director.dashboard');
+    })->name('director.dashboard');
+
+    // Approvals
+    Route::get('/approvals', [LoanApprovalController::class, 'index'])->name('director.approvals.index');
+    Route::get('/approvals/{loanApplication}', [LoanApprovalController::class, 'show'])->name('director.approvals.show');
+    Route::post('/approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('director.approvals.approve');
+    Route::post('/approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('director.approvals.reject');
 });
 
 Route::middleware(['auth', 'role:Accountant'])->prefix('accountant')->group(function () {
@@ -65,5 +235,8 @@ Route::middleware(['auth', 'role:Collections'])->prefix('collections')->group(fu
 
     // Add more collections routes here
 });
+
+// M-Pesa B2C Callback (public route, no auth)
+Route::post('/api/mpesa/b2c/callback', [MpesaDisbursementController::class, 'callback'])->name('disbursements.callback');
 
 require __DIR__.'/auth.php';

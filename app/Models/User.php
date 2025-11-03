@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'avatar',
     ];
 
     /**
@@ -47,15 +49,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
-    public function hasRole($roleName)
-    {
-        return $this->role && $this->role->name === $roleName;
-    }
+    /**
+     * Note: hasRole() and roles() are provided by Spatie Permission's HasRoles trait
+     * No need for custom implementation
+     */
 
     public function approvals()
     {

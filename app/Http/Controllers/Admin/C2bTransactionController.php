@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\C2bTransaction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class C2bTransactionController extends Controller
+{
+    /**
+     * Display a listing of C2B transactions
+     */
+    public function index(Request $request)
+    {
+        $query = C2bTransaction::latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('phone')) {
+            $query->where('msisdn', 'like', "%{$request->phone}%");
+        }
+
+        if ($request->filled('trans_id')) {
+            $query->where('trans_id', 'like', "%{$request->trans_id}%");
+        }
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('trans_time', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('trans_time', '<=', $request->end_date);
+        }
+
+        $transactions = $query->paginate(15);
+
+        $stats = [
+            'total' => C2bTransaction::count(),
+            'completed' => C2bTransaction::where('status', 'completed')->count(),
+            'total_amount' => C2bTransaction::where('status', 'completed')->sum('trans_amount'),
+        ];
+
+        return view('admin.mpesa.c2b.index', compact('transactions', 'stats'));
+    }
+
+    /**
+     * Display C2B transaction details
+     */
+    public function show(C2bTransaction $c2bTransaction)
+    {
+        return view('admin.mpesa.c2b.show', compact('c2bTransaction'));
+    }
+
+    /**
+     * C2B validation endpoint (PayBill/Buy Goods)
+     */
+    public function validate(Request $request)
+    {
+        $data = $request->all();
+        Log::info('C2B Validation:', $data);
+
+        // Return validation result
+        return response()->json([
+            'ResultCode' => 0,
+            'ResultDesc' => 'Accepted'
+        ]);
+    }
+
+    /**
+     * C2B confirmation callback endpoint
+     */
+    public function confirm(Request $request)
+    {
+        $data = $request->all();
+        Log::info('C2B Confirmation:', $data);
+
+        DB::beginTransaction();
+        try {
+            $transaction = C2bTransaction::updateOrCreate(
+                ['trans_id' => $data['TransID'] ?? null],
+                [
+                    'transaction_type' => $data['TransactionType'] ?? null,
+                    'trans_time' => $data['TransTime'] ?? now()->format('YmdHis'),
+                    'trans_amount' => $data['TransAmount'] ?? 0,
+                    'business_short_code' => $data['BusinessShortCode'] ?? null,
+                    'bill_ref_number' => $data['BillRefNumber'] ?? null,
+                    'invoice_number' => $data['InvoiceNumber'] ?? null,
+                    'org_account_balance' => $data['OrgAccountBalance'] ?? null,
+                    'third_party_trans_id' => $data['ThirdPartyTransID'] ?? null,
+                    'msisdn' => $data['MSISDN'] ?? null,
+                    'first_name' => $data['FirstName'] ?? null,
+                    'middle_name' => $data['MiddleName'] ?? null,
+                    'last_name' => $data['LastName'] ?? null,
+                    'status' => 'completed',
+                    'callback_data' => $data,
+                ]
+            );
+
+            DB::commit();
+
+            return response()->json([
+                'ResultCode' => 0,
+                'ResultDesc' => 'Accepted'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('C2B Confirmation Error: ' . $e->getMessage());
+            return response()->json([
+                'ResultCode' => 1,
+                'ResultDesc' => 'Error processing confirmation'
+            ], 500);
+        }
+    }
+}

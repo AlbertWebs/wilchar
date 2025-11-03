@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -10,9 +11,31 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Client::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('client_code', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('id_number', 'like', "%{$search}%")
+                    ->orWhere('business_name', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $clients = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('admin.clients.index', compact('clients'));
     }
 
     /**
@@ -20,7 +43,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.clients.create');
     }
 
     /**
@@ -28,38 +51,93 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'id_number' => 'required|string|unique:clients,id_number',
+            'phone' => 'required|string|unique:clients,phone',
+            'email' => 'nullable|email|unique:clients,email',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'nationality' => 'nullable|string',
+            'business_name' => 'required|string|unique:clients,business_name',
+            'business_type' => 'required|string',
+            'location' => 'required|string',
+            'address' => 'nullable|string',
+            'occupation' => 'nullable|string',
+            'employer' => 'nullable|string',
+            'mpesa_phone' => 'nullable|string',
+            'alternate_phone' => 'nullable|string',
+            'status' => 'nullable|in:active,inactive,blacklisted',
+        ]);
+
+        $validated['created_by'] = auth()->user()->name;
+        $validated['created_by_user_id'] = auth()->id();
+        $validated['status'] = $validated['status'] ?? 'active';
+
+        Client::create($validated);
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Client $client)
     {
-        //
+        return view('admin.clients.show', compact('client'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Client $client)
     {
-        //
+        return view('admin.clients.edit', compact('client'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Client $client)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'id_number' => 'required|string|unique:clients,id_number,' . $client->id,
+            'phone' => 'required|string|unique:clients,phone,' . $client->id,
+            'email' => 'nullable|email|unique:clients,email,' . $client->id,
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'nationality' => 'nullable|string',
+            'business_name' => 'required|string|unique:clients,business_name,' . $client->id,
+            'business_type' => 'required|string',
+            'location' => 'required|string',
+            'address' => 'nullable|string',
+            'occupation' => 'nullable|string',
+            'employer' => 'nullable|string',
+            'mpesa_phone' => 'nullable|string',
+            'alternate_phone' => 'nullable|string',
+            'status' => 'nullable|in:active,inactive,blacklisted',
+        ]);
+
+        $client->update($validated);
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client deleted successfully.');
     }
 }

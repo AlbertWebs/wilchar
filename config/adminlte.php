@@ -324,93 +324,198 @@ return [
             'active' => ['admin/dashboard'],
         ],
 
-        // Clients
+        // Loan Management Dropdown
         [
-            'text' => 'Clients',
-            'url'  => 'admin/clients',
-            'icon' => 'fas fa-users',
+            'text'    => 'Loan Management',
+            'icon'    => 'fas fa-hand-holding-usd',
+            'submenu' => [
+                [
+                    'text' => 'Clients',
+                    'url'  => 'admin/clients',
+                    'icon' => 'fas fa-users',
+                    'active' => ['admin/clients*'],
+                ],
+                [
+                    'text' => 'Loan Applications',
+                    'url'  => 'admin/loan-applications',
+                    'icon' => 'fas fa-file-alt',
+                    'active' => ['admin/loan-applications*'],
+                ],
+                [
+                    'text' => 'Approved Loans',
+                    'url'  => 'admin/loans',
+                    'icon' => 'fas fa-check-circle',
+                    'active' => ['admin/loans*'],
+                ],
+                [
+                    'text' => 'Pending Approvals',
+                    'url'  => 'admin/approvals',
+                    'icon' => 'fas fa-hourglass-half',
+                    'active' => ['admin/approvals*'],
+                ],
+                [
+                    'text' => 'Collections',
+                    'url'  => 'admin/collections',
+                    'icon' => 'fas fa-money-bill-wave',
+                    'active' => ['admin/collections*'],
+                ],
+            ],
         ],
 
-        // Loan Applications
+        // Reports Dropdown
         [
-            'text' => 'Loan Applications',
-            'url'  => 'admin/loan-applications',
-            'icon' => 'fas fa-file-alt',
+            'text'    => 'Reports',
+            'icon'    => 'fas fa-chart-line',
+            'submenu' => [
+                [
+                    'text' => 'Reports Dashboard',
+                    'url'  => 'admin/reports',
+                    'icon' => 'fas fa-chart-bar',
+                    'active' => ['admin/reports'],
+                ],
+                [
+                    'text' => 'Financial Reports',
+                    'url'  => 'admin/reports/financial',
+                    'icon' => 'fas fa-dollar-sign',
+                    'active' => ['admin/reports/financial*'],
+                ],
+                [
+                    'text' => 'Client Reports',
+                    'url'  => 'admin/reports/clients',
+                    'icon' => 'fas fa-users',
+                    'active' => ['admin/reports/clients*'],
+                ],
+                [
+                    'text' => 'Loan Reports',
+                    'url'  => 'admin/reports/loans',
+                    'icon' => 'fas fa-file-invoice-dollar',
+                    'active' => ['admin/reports/loans*'],
+                ],
+                [
+                    'text' => 'Loan Application Reports',
+                    'url'  => 'admin/reports/loan-applications',
+                    'icon' => 'fas fa-file-alt',
+                    'active' => ['admin/reports/loan-applications*'],
+                ],
+                [
+                    'text' => 'User Reports',
+                    'url'  => 'admin/reports/users',
+                    'icon' => 'fas fa-user-chart',
+                    'active' => ['admin/reports/users*'],
+                ],
+                [
+                    'text' => 'Disbursement Reports',
+                    'url'  => 'admin/reports/disbursements',
+                    'icon' => 'fas fa-paper-plane',
+                    'active' => ['admin/reports/disbursements*'],
+                ],
+            ],
         ],
 
-        // Loans
+        // M-Pesa Operations Dropdown
         [
-            'text' => 'Approved Loans',
-            'url'  => 'admin/loans',
-            'icon' => 'fas fa-check-circle',
+            'text'    => 'M-Pesa Operations',
+            'icon'    => 'fas fa-mobile-alt',
+            'submenu' => [
+                [
+                    'text' => 'M-Pesa Dashboard',
+                    'url'  => 'admin/mpesa',
+                    'icon' => 'fas fa-tachometer-alt',
+                    'active' => ['admin/mpesa'],
+                ],
+                [
+                    'text' => 'STK Push',
+                    'url'  => 'admin/mpesa/stk-push',
+                    'icon' => 'fas fa-shopping-cart',
+                    'active' => ['admin/mpesa/stk-push*'],
+                ],
+                [
+                    'text' => 'C2B Transactions',
+                    'url'  => 'admin/mpesa/c2b',
+                    'icon' => 'fas fa-arrow-down',
+                    'active' => ['admin/mpesa/c2b*'],
+                ],
+                [
+                    'text' => 'B2B Transactions',
+                    'url'  => 'admin/mpesa/b2b',
+                    'icon' => 'fas fa-exchange-alt',
+                    'active' => ['admin/mpesa/b2b*'],
+                ],
+                [
+                    'text' => 'B2C Disbursements',
+                    'url'  => 'admin/mpesa/b2c',
+                    'icon' => 'fas fa-arrow-up',
+                    'active' => ['admin/mpesa/b2c*', 'admin/disbursements*'],
+                ],
+                [
+                    'text' => 'Account Balance',
+                    'url'  => 'admin/mpesa/account-balance',
+                    'icon' => 'fas fa-wallet',
+                    'active' => ['admin/mpesa/account-balance*'],
+                ],
+                [
+                    'text' => 'Transaction Status',
+                    'url'  => 'admin/mpesa/transaction-status',
+                    'icon' => 'fas fa-search',
+                    'active' => ['admin/mpesa/transaction-status*'],
+                ],
+            ],
         ],
 
-        // Approvals
+        // System Management Dropdown
         [
-            'text' => 'Pending Approvals',
-            'url'  => 'admin/approvals',
-            'icon' => 'fas fa-hourglass-half',
-        ],
-
-        // Reports
-        [
-            'text' => 'Reports',
-            'url'  => 'admin/reports',
-            'icon' => 'fas fa-chart-line',
-        ],
-
-        // Users Management
-        [
-            'text' => 'User Management',
-            'url'  => 'admin/users',
-            'icon' => 'fas fa-user-shield',
-        ],
-
-        [
-            'text' => 'Disbursements',
-            'url'  => 'admin/disbursements',
-            'icon' => 'fas fa-money-bill-wave',
-        ],
-
-        [
-            'text' => 'Collections',
-            'url'  => 'admin/collections',
-            'icon' => 'fas fa-hand-holding-usd',
-        ],
-
-        [
-            'text' => 'Loan Products',
-            'url'  => 'admin/loan-products',
-            'icon' => 'fas fa-clipboard-list',
-        ],
-
-        [
-            'text' => 'Notifications',
-            'url'  => 'admin/notifications',
-            'icon' => 'fas fa-bell',
-        ],
-
-        [
-            'text' => 'Audit Logs',
-            'url'  => 'admin/logs',
-            'icon' => 'fas fa-user-secret',
-        ],
-
-
-        // Roles Management
-        [
-            'text' => 'Role Management',
-            'url'  => 'admin/roles',
-            'icon' => 'fas fa-user-shield',
+            'text'    => 'System Management',
+            'icon'    => 'fas fa-cog',
+            'submenu' => [
+                [
+                    'text' => 'User Management',
+                    'url'  => 'admin/users',
+                    'icon' => 'fas fa-users-cog',
+                    'active' => ['admin/users*'],
+                ],
+                [
+                    'text' => 'Role Management',
+                    'url'  => 'admin/roles',
+                    'icon' => 'fas fa-user-shield',
+                    'active' => ['admin/roles*'],
+                ],
+                [
+                    'text' => 'Loan Products',
+                    'url'  => 'admin/loan-products',
+                    'icon' => 'fas fa-clipboard-list',
+                    'active' => ['admin/loan-products*'],
+                ],
+                [
+                    'text' => 'Notifications',
+                    'url'  => 'admin/notifications',
+                    'icon' => 'fas fa-bell',
+                    'active' => ['admin/notifications*'],
+                ],
+                [
+                    'text' => 'Audit Logs',
+                    'url'  => 'admin/logs',
+                    'icon' => 'fas fa-user-secret',
+                    'active' => ['admin/logs*'],
+                ],
+            ],
         ],
 
         ['header' => 'ACCOUNT SETTINGS'],
 
-        // Profile
+        // Admin Profile
         [
             'text' => 'Profile',
-            'url'  => 'profile',
+            'url'  => 'admin/profile',
             'icon' => 'fas fa-user',
+            'active' => ['admin/profile*'],
+        ],
+
+        // Site Settings
+        [
+            'text' => 'Site Settings',
+            'url'  => 'admin/site-settings',
+            'icon' => 'fas fa-cog',
+            'active' => ['admin/site-settings*'],
         ],
     ],
 
