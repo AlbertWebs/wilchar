@@ -3,115 +3,88 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-// Client Model
 use App\Models\Client;
 use App\Models\Loan;
+use App\Models\LoanProduct;
+use App\Models\Team;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LoanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index(Request $request): View|JsonResponse
     {
-        $query = Loan::with('client');
-
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('client', function ($clientQuery) use ($search) {
-                    $clientQuery->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%")
-                        ->orWhere('phone', 'like', "%{$search}%");
-                })->orWhere('loan_type', 'like', "%{$search}%");
+        $query = Loan::with(['client', 'loanProduct', 'team', 'collectionOfficer'])
+            ->when($request->filled('status'), fn($q) => $q->where('status', $request->status))
+            ->when($request->filled('team_id'), fn($q) => $q->where('team_id', $request->team_id))
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->search;
+                $q->where(function ($inner) use ($search) {
+                    $inner->where('loan_type', 'like', "%{$search}%")
+                        ->orWhereHas('client', function ($clientQuery) use ($search) {
+                            $clientQuery->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%")
+                                ->orWhere('phone', 'like', "%{$search}%");
+                        });
+                });
             });
+
+        $loans = $query->orderByDesc('created_at')->paginate(15);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'loans' => $loans,
+            ]);
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        } else {
-            // Default to showing approved, disbursed, and closed loans
-            $query->whereIn('status', ['approved', 'disbursed', 'closed']);
-        }
+        $portfolioSummary = [
+            'portfolio_value' => Loan::sum('total_amount'),
+            'outstanding_balance' => Loan::sum('outstanding_balance'),
+            'active_loans' => Loan::whereIn('status', ['approved', 'disbursed'])->count(),
+            'overdue_balance' => Loan::where('outstanding_balance', '>', 0)
+                ->whereNotNull('next_due_date')
+                ->whereDate('next_due_date', '<', now())
+                ->sum('outstanding_balance'),
+        ];
 
-        $loans = $query->orderBy('created_at', 'desc')->paginate(15);
-
-        return view('admin.loans.index', compact('loans'));
+        return view('admin.loans.index', [
+            'loans' => $loans,
+            'teams' => Team::orderBy('name')->get(),
+            'loanProducts' => LoanProduct::orderBy('name')->get(),
+            'portfolioSummary' => $portfolioSummary,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Loan $loan): View
     {
-        $clients = Client::all();
-        return view('admin.loans.create', compact('clients'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-   
-    public function store(Request $request)
-    {
-        $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'loan_type' => 'required|string|max:255',
-            'amount_requested' => 'required|numeric|min:0',
-            'amount_approved' => 'nullable|numeric|min:0',
-            'term_months' => 'required|integer|min:1',
-            'interest_rate' => 'required|numeric|min:0',
-            'repayment_frequency' => 'required|string|max:255',
-            'status' => 'required|in:pending,approved,rejected,disbursed,closed'
+        $loan->load([
+            'client',
+            'loanProduct',
+            'team',
+            'disbursements',
+            'repayments',
+            'instalments' => fn($q) => $q->orderBy('due_date'),
         ]);
 
-        Loan::create($request->all());
-        return redirect()->route('loans.index')->with('success', 'Loan created successfully.');
+        return view('admin.loans.show', [
+            'loan' => $loan,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Loan $loan)
+    public function update(Request $request, Loan $loan): RedirectResponse
     {
-        $loan->load(['client', 'disbursements', 'repayments']);
-        return view('admin.loans.show', compact('loan'));
-    }
+        $validated = $request->validate([
+            'status' => 'required|in:pending,approved,rejected,disbursed,closed',
+            'collection_officer_id' => 'nullable|exists:users,id',
+            'recovery_officer_id' => 'nullable|exists:users,id',
+            'finance_officer_id' => 'nullable|exists:users,id',
+            'next_due_date' => 'nullable|date',
+        ]);
 
-    public function edit(Loan $loan)
-    {
-        $clients = Client::all();
-        return view('admin.loans.edit', compact('loan', 'clients'));
-    }
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Loan $loan)
-        {
-            $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'loan_type' => 'required|string|max:255',
-                'amount_requested' => 'required|numeric|min:0',
-                'amount_approved' => 'nullable|numeric|min:0',
-                'term_months' => 'required|integer|min:1',
-                'interest_rate' => 'required|numeric|min:0',
-                'repayment_frequency' => 'required|string|max:255',
-                'status' => 'required|in:pending,approved,rejected,disbursed,closed'
-            ]);
+        $loan->update($validated);
 
-            $loan->update($request->all());
-            return redirect()->route('loans.index')->with('success', 'Loan updated successfully.');
-        }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Loan $loan)
-    {
-        $loan->delete();
-        return redirect()->route('loans.index')->with('success', 'Loan deleted successfully.');
+        return redirect()->route('loans.show', $loan)->with('success', 'Loan updated successfully.');
     }
 }

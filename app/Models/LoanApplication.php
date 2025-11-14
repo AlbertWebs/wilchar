@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class LoanApplication extends Model
@@ -12,18 +13,36 @@ class LoanApplication extends Model
     protected $fillable = [
         'application_number',
         'client_id',
+        'loan_product_id',
+        'team_id',
         'loan_type',
+        'business_type',
+        'business_location',
         'amount',
         'amount_approved',
+        'interest_amount',
+        'weekly_payment_amount',
+        'repayment_cycle_amount',
+        'total_repayment_amount',
         'interest_rate',
+        'interest_rate_type',
+        'repayment_frequency',
+        'repayment_interval_weeks',
         'duration_months',
+        'registration_fee',
         'status',
         'approval_stage',
         'purpose',
         'supporting_documents',
+        'loan_form_path',
+        'mpesa_statement_path',
+        'business_photo_path',
+        'onboarding_data',
         'created_by',
         'loan_officer_id',
+        'collection_officer_id',
         'credit_officer_id',
+        'finance_officer_id',
         'director_id',
         'background_check_status',
         'background_check_notes',
@@ -36,8 +55,14 @@ class LoanApplication extends Model
         'amount' => 'decimal:2',
         'amount_approved' => 'decimal:2',
         'interest_rate' => 'decimal:2',
+        'interest_amount' => 'decimal:2',
+        'total_repayment_amount' => 'decimal:2',
+        'weekly_payment_amount' => 'decimal:2',
+        'repayment_cycle_amount' => 'decimal:2',
+        'registration_fee' => 'decimal:2',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
+        'onboarding_data' => 'array',
     ];
 
     protected static function boot()
@@ -75,6 +100,11 @@ class LoanApplication extends Model
         return $this->belongsTo(User::class, 'loan_officer_id');
     }
 
+    public function collectionOfficer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'collection_officer_id');
+    }
+
     /**
      * Get the credit officer assigned to this application
      */
@@ -83,12 +113,27 @@ class LoanApplication extends Model
         return $this->belongsTo(User::class, 'credit_officer_id');
     }
 
+    public function financeOfficer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'finance_officer_id');
+    }
+
     /**
      * Get the director assigned to this application
      */
     public function director(): BelongsTo
     {
         return $this->belongsTo(User::class, 'director_id');
+    }
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function loanProduct(): BelongsTo
+    {
+        return $this->belongsTo(LoanProduct::class);
     }
 
     /**
@@ -118,9 +163,16 @@ class LoanApplication extends Model
     /**
      * Get the loan created from this application (if approved)
      */
-    public function loan(): BelongsTo
+    public function loan(): HasOne
     {
-        return $this->belongsTo(Loan::class);
+        return $this->hasOne(Loan::class);
+    }
+
+    public function calculateTotals(float $amount, float $interestRate, int $months): void
+    {
+        $interest = round(($interestRate / 100) * $amount * ($months / 12), 2);
+        $this->interest_amount = $interest;
+        $this->total_repayment_amount = round($amount + $interest + (float) $this->registration_fee, 2);
     }
 
     /**
@@ -129,6 +181,11 @@ class LoanApplication extends Model
     public function isAtLoanOfficerStage(): bool
     {
         return $this->approval_stage === 'loan_officer';
+    }
+
+    public function isAtCollectionOfficerStage(): bool
+    {
+        return $this->approval_stage === 'collection_officer';
     }
 
     /**
@@ -140,11 +197,11 @@ class LoanApplication extends Model
     }
 
     /**
-     * Check if application is at director stage
+     * Check if application is at finance office stage
      */
-    public function isAtDirectorStage(): bool
+    public function isAtFinanceOfficerStage(): bool
     {
-        return $this->approval_stage === 'director';
+        return $this->approval_stage === 'finance_officer';
     }
 
     /**
@@ -176,7 +233,7 @@ class LoanApplication extends Model
      */
     public function moveToNextStage(): void
     {
-        $stages = ['loan_officer', 'credit_officer', 'director', 'completed'];
+        $stages = ['loan_officer', 'collection_officer', 'credit_officer', 'finance_officer', 'completed'];
         $currentIndex = array_search($this->approval_stage, $stages);
         
         if ($currentIndex !== false && $currentIndex < count($stages) - 1) {
@@ -192,8 +249,9 @@ class LoanApplication extends Model
     {
         return match($this->approval_stage) {
             'loan_officer' => 'Loan Officer Review',
+            'collection_officer' => 'Collection Officer Approval',
             'credit_officer' => 'Credit Officer Review',
-            'director' => 'Director Approval',
+            'finance_officer' => 'Finance Office Disbursement',
             'completed' => 'Approval Completed',
             default => 'Unknown'
         };

@@ -1,186 +1,153 @@
-@extends('adminlte::page')
+@extends('layouts.admin', ['title' => 'Reports Dashboard'])
 
-@section('title', 'Reports Dashboard')
-
-@section('content_header')
-    <h1 class="text-2xl font-bold">Reports Dashboard</h1>
-@stop
+@section('header')
+    Reports Dashboard
+@endsection
 
 @section('content')
-<div class="container-fluid space-y-6">
-    <!-- Report Categories -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Clients Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+    <div class="space-y-6">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Applications</p>
+                <p class="mt-2 text-3xl font-semibold text-slate-900">{{ number_format($stats['total_applications']) }}</p>
+                <p class="text-xs text-slate-400">Pending {{ number_format($stats['pending_applications']) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-500">Approved Applications</p>
+                <p class="mt-2 text-3xl font-semibold text-emerald-600">{{ number_format($stats['approved_applications']) }}</p>
+                <p class="text-xs text-slate-400">Rejected {{ number_format($stats['rejected_applications']) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Disbursed</p>
+                <p class="mt-2 text-3xl font-semibold text-slate-900">KES {{ number_format($stats['total_disbursed'], 2) }}</p>
+                <p class="text-xs text-slate-400">{{ number_format($stats['disbursed_loans']) }} applications disbursed</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Active Clients</p>
+                <p class="mt-2 text-3xl font-semibold text-slate-900">{{ number_format($stats['active_clients']) }}</p>
+                <p class="text-xs text-slate-400">Pending approvals {{ number_format($stats['pending_approvals']) }}</p>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-white text-lg font-semibold">Client Reports</h3>
-                        <p class="text-blue-100 text-sm mt-1">View client statistics and analytics</p>
+                        <p class="text-base font-semibold text-slate-900">Monthly Disbursements</p>
+                        <p class="text-sm text-slate-500">Past 6 months · success status only</p>
                     </div>
-                    <i class="fas fa-users text-white text-4xl opacity-75"></i>
+                </div>
+                <div class="mt-6">
+                    <canvas id="monthlyDisbursementsChart"></canvas>
                 </div>
             </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Total Clients</span>
-                        <span class="font-semibold text-gray-900">{{ $stats['active_clients'] ?? 0 }}</span>
-                    </div>
-                    <a href="{{ route('reports.clients') }}" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-chart-bar mr-2"></i> View Client Reports
-                    </a>
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p class="text-base font-semibold text-slate-900">Applications by Stage</p>
+                <div class="mt-4 space-y-3">
+                    @forelse($applicationsByStage as $stage)
+                        <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">{{ \Illuminate\Support\Str::headline($stage->approval_stage) }}</p>
+                                <p class="text-xs text-slate-400">Awaiting action</p>
+                            </div>
+                            <span class="text-base font-semibold text-slate-900">{{ $stage->count }}</span>
+                        </div>
+                    @empty
+                        <p class="text-sm text-slate-500">No pending applications.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
 
-        <!-- Loans Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-green-500 to-green-600 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-white text-lg font-semibold">Loan Reports</h3>
-                        <p class="text-green-100 text-sm mt-1">Analyze loan performance</p>
-                    </div>
-                    <i class="fas fa-file-invoice-dollar text-white text-4xl opacity-75"></i>
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-base font-semibold text-slate-900">Recent Applications</p>
+                    <p class="text-sm text-slate-500">Latest 10 submissions</p>
                 </div>
             </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Total Loans</span>
-                        <span class="font-semibold text-gray-900">{{ $stats['disbursed_loans'] ?? 0 }}</span>
-                    </div>
-                    <a href="{{ route('reports.loans') }}" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-chart-line mr-2"></i> View Loan Reports
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Users Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-white text-lg font-semibold">User Reports</h3>
-                        <p class="text-purple-100 text-sm mt-1">Staff performance & activity</p>
-                    </div>
-                    <i class="fas fa-user-shield text-white text-4xl opacity-75"></i>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Total Users</span>
-                        <span class="font-semibold text-gray-900">-</span>
-                    </div>
-                    <a href="{{ route('reports.users') }}" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-chart-pie mr-2"></i> View User Reports
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Loan Applications Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-white text-lg font-semibold">Loan Applications</h3>
-                        <p class="text-yellow-100 text-sm mt-1">Application tracking & analytics</p>
-                    </div>
-                    <i class="fas fa-file-alt text-white text-4xl opacity-75"></i>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Total Applications</span>
-                        <span class="font-semibold text-gray-900">{{ $stats['total_applications'] ?? 0 }}</span>
-                    </div>
-                    <a href="{{ route('reports.loan-applications') }}" class="block w-full bg-yellow-600 hover:bg-yellow-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-list-alt mr-2"></i> View Applications Report
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Financial Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-red-500 to-red-600 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-white text-lg font-semibold">Financial Reports</h3>
-                        <p class="text-red-100 text-sm mt-1">Revenue & disbursement analysis</p>
-                    </div>
-                    <i class="fas fa-money-bill-wave text-white text-4xl opacity-75"></i>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Total Disbursed</span>
-                        <span class="font-semibold text-gray-900">KES {{ number_format($stats['total_disbursed'] ?? 0, 2) }}</span>
-                    </div>
-                    <a href="{{ route('reports.financial') }}" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-chart-area mr-2"></i> View Financial Reports
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Disbursements Reports -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-            <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-white text-lg font-semibold">Disbursements</h3>
-                        <p class="text-indigo-100 text-sm mt-1">Disbursement tracking & history</p>
-                    </div>
-                    <i class="fas fa-hand-holding-usd text-white text-4xl opacity-75"></i>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b">
-                        <span class="text-gray-600">Success Rate</span>
-                        <span class="font-semibold text-gray-900">-</span>
-                    </div>
-                    <a href="{{ route('reports.disbursements') }}" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-2 px-4 rounded-lg transition">
-                        <i class="fas fa-chart-bar mr-2"></i> View Disbursements Report
-                    </a>
-                </div>
+            <div class="mt-4 overflow-hidden rounded-xl border border-slate-100">
+                <table class="min-w-full divide-y divide-slate-100 text-sm">
+                    <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <tr>
+                            <th class="px-4 py-3 text-left">Application</th>
+                            <th class="px-4 py-3 text-left">Client</th>
+                            <th class="px-4 py-3 text-left">Status</th>
+                            <th class="px-4 py-3 text-left">Amount</th>
+                            <th class="px-4 py-3 text-left">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @forelse($recentApplications as $application)
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-slate-900">{{ $application->application_number }}</td>
+                                <td class="px-4 py-3 text-slate-600">{{ $application->client->full_name ?? '—' }}</td>
+                                <td class="px-4 py-3">
+                                    <span class="rounded-full px-3 py-1 text-xs font-semibold
+                                        {{ $application->status === 'approved' ? 'bg-emerald-50 text-emerald-600' : ($application->status === 'rejected' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600') }}">
+                                        {{ \Illuminate\Support\Str::headline($application->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-slate-900">KES {{ number_format($application->amount, 2) }}</td>
+                                <td class="px-4 py-3 text-slate-500 text-xs">{{ $application->created_at->diffForHumans() }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                                    No applications recorded yet.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+@endsection
 
-    <!-- Quick Statistics -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Quick Statistics</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center p-4 bg-blue-50 rounded-lg">
-                <div class="text-2xl font-bold text-blue-600">{{ $stats['total_applications'] ?? 0 }}</div>
-                <div class="text-sm text-gray-600 mt-1">Total Applications</div>
-            </div>
-            <div class="text-center p-4 bg-green-50 rounded-lg">
-                <div class="text-2xl font-bold text-green-600">{{ $stats['approved_applications'] ?? 0 }}</div>
-                <div class="text-sm text-gray-600 mt-1">Approved</div>
-            </div>
-            <div class="text-center p-4 bg-yellow-50 rounded-lg">
-                <div class="text-2xl font-bold text-yellow-600">{{ $stats['pending_approvals'] ?? 0 }}</div>
-                <div class="text-sm text-gray-600 mt-1">Pending Approvals</div>
-            </div>
-            <div class="text-center p-4 bg-red-50 rounded-lg">
-                <div class="text-2xl font-bold text-red-600">{{ $stats['rejected_applications'] ?? 0 }}</div>
-                <div class="text-sm text-gray-600 mt-1">Rejected</div>
-            </div>
-        </div>
-    </div>
-</div>
-@stop
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('monthlyDisbursementsChart');
+            if (!ctx || !window.ChartJS) {
+                return;
+            }
 
-@section('css')
-@vite(['resources/css/app.css'])
-@stop
+            const data = @json($monthlyDisbursements);
+            const labels = data.map(item => item.month);
+            const totals = data.map(item => Number(item.total) || 0);
+
+            new window.ChartJS(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'KES Disbursed',
+                            data: totals,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+        });
+    </script>
+@endpush
 

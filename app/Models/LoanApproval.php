@@ -71,7 +71,9 @@ class LoanApproval extends Model
     {
         return match($this->approval_level) {
             'loan_officer' => 'Loan Officer',
+            'collection_officer' => 'Collection Officer',
             'credit_officer' => 'Credit Officer',
+            'finance_officer' => 'Finance Office',
             'director' => 'Director',
             default => 'Unknown'
         };

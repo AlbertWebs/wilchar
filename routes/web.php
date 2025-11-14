@@ -23,6 +23,13 @@ use App\Http\Controllers\Admin\MpesaAccountBalanceController;
 use App\Http\Controllers\Admin\MpesaTransactionStatusController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\LiabilityController;
+use App\Http\Controllers\Admin\ShareholderController;
+use App\Http\Controllers\Admin\TrialBalanceController;
+use App\Http\Controllers\Admin\AccountBalanceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanCalculatorController;
 
@@ -78,8 +85,22 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('approvals.approve');
     Route::post('approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('approvals.reject');
 
+    // Teams & Members
+    Route::resource('teams', TeamController::class);
+    Route::post('teams/{team}/members', [TeamController::class, 'assignMember'])->name('teams.members.assign');
+    Route::delete('teams/{team}/members/{user}', [TeamController::class, 'removeMember'])->name('teams.members.remove');
+
     // Loans (approved loans)
     Route::resource('loans', LoanController::class);
+
+    // Financial Management
+    Route::resource('assets', AssetController::class)->except(['show', 'create', 'edit']);
+    Route::resource('expenses', ExpenseController::class)->except(['show', 'create', 'edit']);
+    Route::resource('liabilities', LiabilityController::class)->except(['show', 'create', 'edit']);
+    Route::resource('shareholders', ShareholderController::class)->except(['create', 'edit']);
+    Route::post('shareholders/{shareholder}/contributions', [ShareholderController::class, 'storeContribution'])->name('shareholders.contributions.store');
+    Route::resource('trial-balances', TrialBalanceController::class)->only(['index', 'show', 'store', 'destroy']);
+    Route::resource('account-balances', AccountBalanceController::class)->only(['index', 'store']);
 
     // Disbursements (B2C - kept for backward compatibility)
     Route::get('disbursements', [MpesaDisbursementController::class, 'index'])->name('disbursements.index');

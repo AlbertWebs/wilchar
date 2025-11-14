@@ -1,179 +1,126 @@
-@extends('adminlte::page')
+@extends('layouts.admin', ['title' => 'Create Client'])
 
-@section('title', 'New Client')
-
-@section('content_header')
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Create New Client</h1>
-        <a href="{{ route('clients.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
-            <i class="fas fa-arrow-left"></i> Back
-        </a>
-    </div>
-@stop
+@section('header')
+    Create Client
+@endsection
 
 @section('content')
-<div class="container-fluid">
-    <form action="{{ route('clients.store') }}" method="POST" class="space-y-4">
-        @csrf
+    <div class="space-y-6">
+        <x-admin.section title="Client Profile" description="Capture the borrower’s personal details and business background.">
+            <form action="{{ route('clients.store') }}" method="POST" class="space-y-6">
+                @csrf
+                <div class="grid gap-4 md:grid-cols-3">
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">First Name</label>
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Middle Name</label>
+                        <input type="text" name="middle_name" value="{{ old('middle_name') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Last Name</label>
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                    </div>
+                </div>
 
-        <!-- Personal Information -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                <i class="fas fa-user text-blue-500"></i> Personal Information
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="first_name" value="{{ old('first_name') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('first_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                <div class="grid gap-4 md:grid-cols-3">
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">National ID / Passport</label>
+                        <input type="text" name="id_number" value="{{ old('id_number') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone Number</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="2547XXXXXXXX" required>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Email (optional)</label>
+                        <input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
-                    <input type="text" name="middle_name" value="{{ old('middle_name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('middle_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="last_name" value="{{ old('last_name') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('last_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">ID Number <span class="text-red-500">*</span></label>
-                    <input type="text" name="id_number" value="{{ old('id_number') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('id_number')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('date_of_birth')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                    <select name="gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Gender</option>
-                        <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-                        <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
-                    @error('gender')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
-                    <input type="text" name="nationality" value="{{ old('nationality') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('nationality')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-        </div>
 
-        <!-- Contact Information -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                <i class="fas fa-phone text-green-500"></i> Contact Information
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone <span class="text-red-500">*</span></label>
-                    <input type="text" name="phone" value="{{ old('phone') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                <div class="grid gap-4 md:grid-cols-4">
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Date of Birth</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Gender</label>
+                        <select name="gender" class="mt-1 w-full rounded-xl border-slate-200">
+                            <option value="">Select</option>
+                            <option value="male" @selected(old('gender') === 'male')>Male</option>
+                            <option value="female" @selected(old('gender') === 'female')>Female</option>
+                            <option value="other" @selected(old('gender') === 'other')>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Nationality</label>
+                        <input type="text" name="nationality" value="{{ old('nationality') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
+                        <select name="status" class="mt-1 w-full rounded-xl border-slate-200">
+                            <option value="active" @selected(old('status') === 'active')>Active</option>
+                            <option value="inactive" @selected(old('status') === 'inactive')>Inactive</option>
+                            <option value="blacklisted" @selected(old('status') === 'blacklisted')>Blacklisted</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Alternate Phone</label>
-                    <input type="text" name="alternate_phone" value="{{ old('alternate_phone') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('alternate_phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">M-Pesa Phone</label>
-                    <input type="text" name="mpesa_phone" value="{{ old('mpesa_phone') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('mpesa_phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                    <textarea name="address" rows="2"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('address') }}</textarea>
-                    @error('address')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-        </div>
 
-        <!-- Business Information -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                <i class="fas fa-briefcase text-purple-500"></i> Business Information
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Business Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="business_name" value="{{ old('business_name') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('business_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Details</p>
+                    <div class="mt-4 grid gap-4 md:grid-cols-3">
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Name</label>
+                            <input type="text" name="business_name" value="{{ old('business_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Type</label>
+                            <input type="text" name="business_type" value="{{ old('business_type') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Retail, Farming..." required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Location</label>
+                            <input type="text" name="location" value="{{ old('location') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Town · Street · Landmark" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Address (optional)</label>
+                            <input type="text" name="address" value="{{ old('address') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Business Type <span class="text-red-500">*</span></label>
-                    <input type="text" name="business_type" value="{{ old('business_type') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('business_type')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Location <span class="text-red-500">*</span></label>
-                    <input type="text" name="location" value="{{ old('location') }}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('location')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Occupation</label>
-                    <input type="text" name="occupation" value="{{ old('occupation') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('occupation')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Employer</label>
-                    <input type="text" name="employer" value="{{ old('employer') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    @error('employer')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        <option value="blacklisted" {{ old('status') == 'blacklisted' ? 'selected' : '' }}>Blacklisted</option>
-                    </select>
-                    @error('status')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-        </div>
 
-        <!-- Actions -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex justify-end gap-4">
-                <a href="{{ route('clients.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
-                    Cancel
-                </a>
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium">
-                    <i class="fas fa-save"></i> Create Client
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-@stop
+                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employment & Contacts</p>
+                    <div class="mt-4 grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Occupation</label>
+                            <input type="text" name="occupation" value="{{ old('occupation') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employer</label>
+                            <input type="text" name="employer" value="{{ old('employer') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">M-PESA Phone</label>
+                            <input type="text" name="mpesa_phone" value="{{ old('mpesa_phone') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Alternate Phone</label>
+                            <input type="text" name="alternate_phone" value="{{ old('alternate_phone') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        </div>
+                    </div>
+                </div>
 
-@section('css')
-@vite(['resources/css/app.css'])
-@stop
+                <div class="flex items-center justify-end gap-3">
+                    <a href="{{ route('clients.index') }}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        Cancel
+                    </a>
+                    <button type="submit" class="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300">
+                        Save Client
+                    </button>
+                </div>
+            </form>
+        </x-admin.section>
+    </div>
+@endsection
 

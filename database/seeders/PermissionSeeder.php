@@ -102,6 +102,46 @@ class PermissionSeeder extends Seeder
             'notifications.edit',
             'notifications.delete',
 
+            // Teams
+            'teams.view',
+            'teams.create',
+            'teams.edit',
+            'teams.delete',
+            'teams.assign',
+
+            // Assets
+            'assets.view',
+            'assets.create',
+            'assets.edit',
+            'assets.delete',
+
+            // Expenses
+            'expenses.view',
+            'expenses.create',
+            'expenses.edit',
+            'expenses.delete',
+
+            // Liabilities
+            'liabilities.view',
+            'liabilities.create',
+            'liabilities.edit',
+            'liabilities.delete',
+
+            // Shareholders
+            'shareholders.view',
+            'shareholders.create',
+            'shareholders.edit',
+            'shareholders.delete',
+            'shareholders.contributions',
+
+            // Trial Balance & Accounts
+            'trial-balances.view',
+            'trial-balances.generate',
+            'trial-balances.delete',
+
+            'account-balances.view',
+            'account-balances.create',
+
             // Audit Logs
             'audit-logs.view',
             'audit-logs.show',

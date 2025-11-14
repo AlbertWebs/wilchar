@@ -16,11 +16,11 @@ class UsersSeeder extends Seeder
         // Create roles if they don't exist
         $roles = [
             'Admin',
+            'Finance',
             'Loan Officer',
-            'Credit Officer',
-            'Director',
-            'Accountant',
-            'Collections',
+            'Collection Officer',
+            'Marketer',
+            'Recovery Officer',
         ];
 
         foreach ($roles as $roleName) {
@@ -42,33 +42,33 @@ class UsersSeeder extends Seeder
             ],
             [
                 'name' => 'Loan Officer',
-                'email' => 'officer@nurusmesolution.co.ke',
+                'email' => 'loan.officer@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
                 'role' => 'Loan Officer',
             ],
             [
-                'name' => 'Credit Officer',
-                'email' => 'credit@nurusmesolution.co.ke',
+                'name' => 'Finance Officer',
+                'email' => 'finance@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
-                'role' => 'Credit Officer',
+                'role' => 'Finance',
             ],
             [
-                'name' => 'Director',
-                'email' => 'director@nurusmesolution.co.ke',
+                'name' => 'Collections Lead',
+                'email' => 'collection@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
-                'role' => 'Director',
+                'role' => 'Collection Officer',
             ],
             [
-                'name' => 'Accountant',
-                'email' => 'accountant@nurusmesolution.co.ke',
+                'name' => 'Marketing Lead',
+                'email' => 'marketing@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
-                'role' => 'Accountant',
+                'role' => 'Marketer',
             ],
             [
-                'name' => 'Collections Agent',
-                'email' => 'collections@nurusmesolution.co.ke',
+                'name' => 'Recovery Officer',
+                'email' => 'recovery@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
-                'role' => 'Collections',
+                'role' => 'Recovery Officer',
             ],
         ];
 

@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         // Seed in correct order
         $this->call([
-            UsersSeeder::class,        // Create users and roles first
+            PermissionSeeder::class,
+            UsersSeeder::class,        // Create users and roles
             SiteSettingSeeder::class,  // Create site settings
             ClientSeeder::class,       // Then create clients
             AccountSeeder::class,      // Create accounts

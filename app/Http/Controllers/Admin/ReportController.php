@@ -30,7 +30,7 @@ class ReportController extends Controller
             'total_disbursed' => Disbursement::where('status', 'success')->sum('amount'),
             'total_collections' => Collection::sum('amount'),
             'active_clients' => Client::where('status', 'active')->count(),
-            'pending_approvals' => LoanApplication::whereIn('approval_stage', ['loan_officer', 'credit_officer', 'director'])
+            'pending_approvals' => LoanApplication::whereIn('approval_stage', ['loan_officer', 'collection_officer', 'finance_officer'])
                 ->whereIn('status', ['submitted', 'under_review'])->count(),
         ];
 
@@ -47,8 +47,13 @@ class ReportController extends Controller
             ->get();
 
         // Monthly disbursements (last 6 months)
+        $driver = DB::connection()->getDriverName();
+        $monthExpression = $driver === 'sqlite'
+            ? "strftime('%Y-%m', disbursement_date)"
+            : "DATE_FORMAT(disbursement_date, '%Y-%m')";
+
         $monthlyDisbursements = Disbursement::select(
-                DB::raw('DATE_FORMAT(disbursement_date, "%Y-%m") as month'),
+                DB::raw("$monthExpression as month"),
                 DB::raw('SUM(amount) as total')
             )
             ->where('status', 'success')
@@ -93,7 +98,7 @@ class ReportController extends Controller
      */
     public function loanApplications(Request $request)
     {
-        $query = LoanApplication::with(['client', 'loanOfficer', 'creditOfficer', 'director']);
+        $query = LoanApplication::with(['client', 'loanOfficer', 'collectionOfficer', 'financeOfficer']);
 
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);

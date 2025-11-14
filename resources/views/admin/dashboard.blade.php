@@ -1,85 +1,183 @@
-@extends('adminlte::page')
-
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>BI Dashboard</h1>
-@stop
+@extends('layouts.admin', ['title' => 'Admin Dashboard'])
 
 @section('content')
-<div class="row">
-    @foreach([
-        ['label' => 'Clients', 'value' => $totalClients, 'icon' => 'users', 'bg' => 'info'],
-        ['label' => 'Loan Applications', 'value' => $loanApplications, 'icon' => 'file-alt', 'bg' => 'primary'],
-        ['label' => 'Approved Loans', 'value' => $approvedLoans, 'icon' => 'check-circle', 'bg' => 'success'],
-        ['label' => 'Pending Approvals', 'value' => $pendingApprovals, 'icon' => 'hourglass-half', 'bg' => 'warning'],
-        ['label' => 'Total Disbursed', 'value' => number_format($totalDisbursed), 'icon' => 'money-bill-wave', 'bg' => 'purple'],
-        ['label' => 'Collections', 'value' => number_format($totalCollections), 'icon' => 'hand-holding-usd', 'bg' => 'maroon'],
-    ] as $stat)
-    <div class="col-md-4">
-        <div class="small-box bg-{{ $stat['bg'] }}">
-            <div class="inner">
-                <h3>{{ $stat['value'] }}</h3>
-                <p>{{ $stat['label'] }}</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-{{ $stat['icon'] }}"></i>
-            </div>
+    <div class="space-y-6">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <x-admin.stat-card
+                title="Active Clients"
+                :value="number_format($totalClients)"
+                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M5.121 17.804A4 4 0 018 17h8a4 4 0 013.879 2.804M15 11a3 3 0 10-6 0 3 3 0 006 0z&quot; /></svg>'"
+            />
+            <x-admin.stat-card
+                title="Loan Applications"
+                :value="number_format($loanApplications)"
+                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M9 13h6m-6 4h6M5 7h14M5 11h14M5 15h14M5 19h14&quot; /></svg>'"
+            />
+            <x-admin.stat-card
+                title="Approved Loans"
+                :value="number_format($approvedLoans)"
+                :trend="$approvalGrowth"
+                trend-label="vs last month"
+                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M4 12l6 6L20 6&quot; /></svg>'"
+            />
+            <x-admin.stat-card
+                title="Disbursed Amount"
+                :value="number_format($totalDisbursed, 2)"
+                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z&quot; /></svg>'"
+            />
         </div>
-    </div>
-    @endforeach
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card card-info">
-            <div class="card-header"><h3 class="card-title">Monthly Loan Disbursements</h3></div>
-            <div class="card-body">
-                <canvas id="disbursementChart"></canvas>
-            </div>
+        <div class="grid gap-6 lg:grid-cols-3">
+            <x-admin.section class="lg:col-span-2" title="Disbursements vs Collections" description="Monthly M-PESA movements">
+                <canvas id="disbursementCollectionChart" class="h-72 w-full"></canvas>
+            </x-admin.section>
+
+            <x-admin.section title="Pending Approvals" description="Applications awaiting action">
+                <div class="space-y-4">
+                    @foreach($pendingApprovalBreakdown as $stage => $count)
+                        <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $stage)) }}</p>
+                                <p class="text-xs text-slate-500">Applications in queue</p>
+                            </div>
+                            <span class="text-lg font-semibold text-slate-900">{{ $count }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </x-admin.section>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card card-success">
-            <div class="card-header"><h3 class="card-title">Monthly Collections</h3></div>
-            <div class="card-body">
-                <canvas id="collectionChart"></canvas>
-            </div>
+
+        <div class="grid gap-6 xl:grid-cols-3">
+            <x-admin.section title="Team Performance" description="Onboarding vs Disbursements by team">
+                <div class="space-y-4">
+                    @foreach($teamStats as $team)
+                        <div class="flex items-center justify-between rounded-xl border border-slate-100 px-4 py-3">
+                            <div>
+                                <p class="text-sm font-medium text-slate-800">{{ $team['name'] }}</p>
+                                <p class="text-xs text-slate-500">
+                                    {{ $team['onboardings'] }} onboardings · {{ $team['disbursements'] }} disbursements
+                                </p>
+                            </div>
+                            <span class="text-xs font-semibold text-emerald-600">
+                                {{ number_format($team['collection_rate'], 1) }}% collection
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </x-admin.section>
+
+            <x-admin.section class="xl:col-span-2" title="Overdue Loans" description="Loans requiring collection & recovery">
+                <div class="overflow-hidden rounded-xl border border-slate-100">
+                    <table class="min-w-full divide-y divide-slate-100">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">Client</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">Loan</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600">Outstanding</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600">Days Overdue</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                            @forelse($overdueLoans as $loan)
+                                <tr class="hover:bg-slate-50/70">
+                                    <td class="px-4 py-3">
+                                        <p class="font-medium text-slate-800">{{ $loan->client->full_name }}</p>
+                                        <p class="text-xs text-slate-500">{{ $loan->client->phone }}</p>
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-600">
+                                        {{ $loan->loan_type }} · {{ $loan->term_months }} months
+                                    </td>
+                                    <td class="px-4 py-3 text-right font-semibold text-rose-500">
+                                        {{ number_format($loan->outstanding_balance, 2) }}
+                                    </td>
+                                    <td class="px-4 py-3 text-right text-slate-600">
+                                        {{ $loan->days_overdue }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500">
+                                        No overdue loans. Great job!
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-admin.section>
         </div>
+
+        <x-admin.section title="Financial Snapshot" description="Expense, assets, liabilities overview">
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div class="rounded-2xl border border-slate-200/70 bg-slate-900 p-5 text-slate-100 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Monthly Expenses</p>
+                    <p class="mt-3 text-2xl font-semibold">KES {{ number_format($financialSummary['expenses'], 2) }}</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-slate-500">Assets Value</p>
+                    <p class="mt-3 text-2xl font-semibold text-slate-900">KES {{ number_format($financialSummary['assets'], 2) }}</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-slate-500">Liabilities</p>
+                    <p class="mt-3 text-2xl font-semibold text-slate-900">KES {{ number_format($financialSummary['liabilities'], 2) }}</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
+                    <p class="text-xs uppercase tracking-wide text-slate-500">Shareholder Contributions</p>
+                    <p class="mt-3 text-2xl font-semibold text-slate-900">KES {{ number_format($financialSummary['shareholder_contributions'], 2) }}</p>
+                </div>
+            </div>
+        </x-admin.section>
     </div>
-</div>
-@stop
+@endsection
 
-@section('js')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('disbursementCollectionChart');
+            if (!ctx) return;
 
-    new Chart(document.getElementById('disbursementChart'), {
-        type: 'bar',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Disbursed (KES)',
-                backgroundColor: '#17a2b8',
-                data: @json(array_values($disbursements))
-            }]
-        }
-    });
+            new ChartJS(ctx, {
+                type: 'line',
+                data: {
+                    labels: @json($months),
+                    datasets: [
+                        {
+                            label: 'Disbursements',
+                            data: @json(array_values($disbursements)),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16,185,129,0.08)',
+                            tension: 0.4,
+                            fill: true,
+                        },
+                        {
+                            label: 'Collections',
+                            data: @json(array_values($collections)),
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99,102,241,0.08)',
+                            tension: 0.4,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => `KES ${Number(value).toLocaleString()}`,
+                            },
+                        },
+                    },
+                },
+            });
+        });
+    </script>
+@endpush
 
-    new Chart(document.getElementById('collectionChart'), {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Collections (KES)',
-                borderColor: '#28a745',
-                data: @json(array_values($collections)),
-                fill: false
-            }]
-        }
-    });
-</script>
-
-
-@stop

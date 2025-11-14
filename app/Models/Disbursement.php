@@ -25,15 +25,21 @@ class Disbursement extends Model
         'recipient_phone',
         'transaction_receipt',
         'transaction_amount',
+        'processing_fee',
+        'processing_notes',
         'mpesa_callback_data',
         'retry_count',
         'last_retry_at',
+        'approved_by',
+        'approved_at',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
         'transaction_amount' => 'decimal:2',
+        'processing_fee' => 'decimal:2',
         'disbursement_date' => 'date',
+        'approved_at' => 'datetime',
         'mpesa_callback_data' => 'array',
         'retry_count' => 'integer',
         'last_retry_at' => 'datetime',
@@ -53,6 +59,11 @@ class Disbursement extends Model
     public function disburser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'disbursed_by');
+    }
+
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     /**
