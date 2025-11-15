@@ -11,12 +11,12 @@ return [
     'security_credential' => env('MPESA_SECURITY_CREDENTIAL'),
 
     'b2c' => [
-        'result_url' => env('MPESA_B2C_RESULT_URL', route('disbursements.callback')),
-        'timeout_url' => env('MPESA_B2C_TIMEOUT_URL', url('/api/mpesa/b2c/timeout')),
+        'result_url' => env('MPESA_B2C_RESULT_URL', env('APP_URL', 'http://localhost') . '/api/mpesa/b2c/result'),
+        'timeout_url' => env('MPESA_B2C_TIMEOUT_URL', env('APP_URL', 'http://localhost') . '/api/mpesa/b2c/timeout'),
     ],
 
     'stk' => [
-        'callback_url' => env('MPESA_STK_CALLBACK_URL', route('mpesa.stk-callback')),
+        'callback_url' => env('MPESA_STK_CALLBACK_URL', env('APP_URL', 'http://localhost') . '/api/mpesa/stk-callback'),
     ],
 ];
 
