@@ -84,6 +84,8 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'sandbox_mode' => (bool) env('SANDBOX_MODE', env('APP_ENV') === 'sandbox'),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

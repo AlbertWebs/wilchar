@@ -146,6 +146,50 @@
                             <span>Loan Products</span>
                         </a>
                     </li>
+                    @if(auth()->user()->hasAnyRole(['Finance', 'Director']))
+                        <li>
+                            <a href="{{ route('finance-disbursements.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('finance-disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8m10 9H6a2 2 0 01-2-2V7.5A1.5 1.5 0 015.5 6h13A1.5 1.5 0 0120 7.5V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span>Finance Desk</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if(auth()->user()->hasAnyRole(['Finance', 'Director', 'Collection Officer', 'Admin']))
+                        <li>
+                            <a href="{{ route('payments.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('payments.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-5 w-5 shrink-0 text-cyan-400 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a5 5 0 00-10 0v2M5 10h14l-1 11H6L5 10zm6 4v4m4-4v4" />
+                                </svg>
+                                <span>Client Payments</span>
+                            </a>
+                        </li>
+                    @endif
+                    
+                    @if(config('app.sandbox_mode') || app()->environment('local'))
+                        <li>
+                            <a href="{{ route('sandbox.purge.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-rose-900/40 {{ request()->routeIs('sandbox.*') ? 'bg-rose-900/40 text-white' : 'text-rose-200' }}">
+                                <svg class="h-5 w-5 shrink-0 text-rose-400 group-hover:text-rose-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8m11 11H5a2 2 0 01-2-2V7.5A1.5 1.5 0 014.5 6h15A1.5 1.5 0 0121 7.5V21a2 2 0 01-2 2z" />
+                                </svg>
+                                <span>Sandbox Purge</span>
+                            </a>
+                        </li>
+                    @endif
+                    
+                    <li>
+                        <a href="{{ route('teams.index') }}"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('teams.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                            <svg class="h-5 w-5 shrink-0 text-amber-400 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5V4H2v16h5m10 0h-6a3 3 0 11-6 0h12a3 3 0 11-6 0" />
+                            </svg>
+                            <span>Teams</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('expenses.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('expenses.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -251,13 +295,45 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m8-9h1M3 12H2m15.364-6.364l.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                     </button>
-                    <div class="relative">
-                        <button class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                            <span>{{ auth()->user()->email }}</span>
+                    <div class="relative" x-data="{ open:false }" @keydown.escape.window="open=false">
+                        <button @click="open = !open" class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <span>{{ auth()->user()->name }}</span>
                             <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
+                        <div
+                            x-cloak
+                            x-show="open"
+                            x-transition
+                            @click.away="open = false"
+                            class="absolute right-0 z-40 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+                        >
+                            <div class="px-4 py-3 text-sm">
+                                <p class="font-semibold text-slate-900">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-slate-500">{{ auth()->user()->email }}</p>
+                            </div>
+                            <div class="border-t border-slate-100">
+                                <a
+                                    href="{{ route('admin.profile.edit') }}"
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-50"
+                                >
+                                    <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 013.879 2.804M15 11a3 3 0 10-6 0 3 3 0 006 0z" />
+                                    </svg>
+                                    My Profile
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-600 transition hover:bg-rose-50">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12H3m0 0l4-4m-4 4l4 4m12-8v8" />
+                                        </svg>
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>

@@ -23,6 +23,7 @@ class StkPush extends Model
         'status',
         'callback_data',
         'initiated_by',
+        'loan_id',
     ];
 
     protected $casts = [
@@ -30,11 +31,17 @@ class StkPush extends Model
         'balance' => 'decimal:2',
         'callback_data' => 'array',
         'result_type' => 'integer',
+        'applied_at' => 'datetime',
     ];
 
     public function initiator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'initiated_by');
+    }
+
+    public function loan(): BelongsTo
+    {
+        return $this->belongsTo(Loan::class);
     }
 
     public function isPending(): bool

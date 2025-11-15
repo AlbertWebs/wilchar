@@ -9,10 +9,23 @@
         <x-admin.section title="Client Profile" description="Capture the borrower’s personal details and business background.">
             <form action="{{ route('clients.store') }}" method="POST" class="space-y-6">
                 @csrf
+                @if($errors->any())
+                    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                        <p class="font-semibold">We couldn’t save the client yet.</p>
+                        <ul class="mt-2 list-disc pl-5 text-xs">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">First Name</label>
-                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('first_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        @error('first_name')
+                            <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Middle Name</label>
@@ -20,22 +33,34 @@
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Last Name</label>
-                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('last_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        @error('last_name')
+                            <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">National ID / Passport</label>
-                        <input type="text" name="id_number" value="{{ old('id_number') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="id_number" value="{{ old('id_number') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('id_number') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        @error('id_number')
+                            <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone Number</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="2547XXXXXXXX" required>
+                        <input type="text" name="phone" value="{{ old('phone') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('phone') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" placeholder="2547XXXXXXXX" required>
+                        @error('phone')
+                            <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Email (optional)</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        <input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('email') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror">
+                        @error('email')
+                            <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -72,7 +97,10 @@
                     <div class="mt-4 grid gap-4 md:grid-cols-3">
                         <div class="md:col-span-2">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Name</label>
-                            <input type="text" name="business_name" value="{{ old('business_name') }}" class="mt-1 w-full rounded-xl border-slate-200" required>
+                            <input type="text" name="business_name" value="{{ old('business_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('business_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                            @error('business_name')
+                                <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Type</label>

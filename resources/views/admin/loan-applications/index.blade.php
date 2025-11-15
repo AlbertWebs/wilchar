@@ -37,8 +37,9 @@
                     <select class="rounded-xl border-slate-200 text-sm" x-model="filters.stage" @change="window.location = '{{ route('loan-applications.index') }}?stage=' + filters.stage">
                         <option value="">Stage: All</option>
                         <option value="loan_officer" @selected(request('stage') === 'loan_officer')>Loan Officer</option>
-                        <option value="collection_officer" @selected(request('stage') === 'collection_officer')>Collection Officer</option>
+                        <option value="credit_officer" @selected(request('stage') === 'credit_officer')>Credit Officer</option>
                         <option value="finance_officer" @selected(request('stage') === 'finance_officer')>Finance Officer</option>
+                        <option value="director" @selected(request('stage') === 'director')>Director</option>
                         <option value="completed" @selected(request('stage') === 'completed')>Completed</option>
                     </select>
                     <select class="rounded-xl border-slate-200 text-sm" x-model="filters.status" @change="window.location = '{{ route('loan-applications.index') }}?status=' + filters.status">
@@ -90,7 +91,10 @@
                                     Loan Officer: {{ $application->loanOfficer->name ?? 'Pending' }}
                                 </p>
                                 <p class="text-xs text-slate-500">
-                                    Collection: {{ $application->collectionOfficer->name ?? 'Pending' }}
+                                    Credit Officer: {{ $application->creditOfficer->name ?? 'Pending' }}
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Collections: {{ $application->collectionOfficer->name ?? 'Pending' }}
                                 </p>
                             </td>
                             <td class="px-4 py-4">

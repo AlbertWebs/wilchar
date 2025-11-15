@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('header'); ?>
     Collections & Recovery
 <?php $__env->stopSection(); ?>

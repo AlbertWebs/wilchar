@@ -40,14 +40,24 @@
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Assign Roles</label>
-                        <select name="roles[]" multiple class="mt-1 w-full rounded-xl border-slate-200">
+                        <div class="mt-2 grid gap-2 rounded-xl border border-slate-200 p-3">
+                            @php
+                                $selectedRoles = collect(old('roles', $userRoleIds))->map(fn($id) => (int) $id)->all();
+                            @endphp
+                           
                             @foreach($roles as $role)
-                                <option value="{{ $role->id }}" @selected(collect(old('roles', $userRoleIds))->contains($role->id))>
-                                    {{ \Illuminate\Support\Str::headline($role->name) }}
-                                </option>
+                                <label class="flex items-center gap-3 text-sm text-slate-700">
+                                    <input
+                                        type="checkbox"
+                                        name="roles[]"
+                                        value="{{ $role->id }}"
+                                        class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                        @checked(in_array($role->id, $selectedRoles, true))
+                                    >
+                                    <span>{{ \Illuminate\Support\Str::headline($role->name) }}</span>
+                                </label>
                             @endforeach
-                        </select>
-                        <p class="mt-1 text-xs text-slate-400">Hold CTRL / CMD to select multiple roles.</p>
+                        </div>
                     </div>
                 </div>
 

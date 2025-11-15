@@ -37,8 +37,9 @@
                     <select class="rounded-xl border-slate-200 text-sm" x-model="filters.stage" @change="window.location = '<?php echo e(route('loan-applications.index')); ?>?stage=' + filters.stage">
                         <option value="">Stage: All</option>
                         <option value="loan_officer" <?php if(request('stage') === 'loan_officer'): echo 'selected'; endif; ?>>Loan Officer</option>
-                        <option value="collection_officer" <?php if(request('stage') === 'collection_officer'): echo 'selected'; endif; ?>>Collection Officer</option>
+                        <option value="credit_officer" <?php if(request('stage') === 'credit_officer'): echo 'selected'; endif; ?>>Credit Officer</option>
                         <option value="finance_officer" <?php if(request('stage') === 'finance_officer'): echo 'selected'; endif; ?>>Finance Officer</option>
+                        <option value="director" <?php if(request('stage') === 'director'): echo 'selected'; endif; ?>>Director</option>
                         <option value="completed" <?php if(request('stage') === 'completed'): echo 'selected'; endif; ?>>Completed</option>
                     </select>
                     <select class="rounded-xl border-slate-200 text-sm" x-model="filters.status" @change="window.location = '<?php echo e(route('loan-applications.index')); ?>?status=' + filters.status">
@@ -93,7 +94,11 @@
 
                                 </p>
                                 <p class="text-xs text-slate-500">
-                                    Collection: <?php echo e($application->collectionOfficer->name ?? 'Pending'); ?>
+                                    Credit Officer: <?php echo e($application->creditOfficer->name ?? 'Pending'); ?>
+
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Collections: <?php echo e($application->collectionOfficer->name ?? 'Pending'); ?>
 
                                 </p>
                             </td>

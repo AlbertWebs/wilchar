@@ -30,7 +30,7 @@ class ReportController extends Controller
             'total_disbursed' => Disbursement::where('status', 'success')->sum('amount'),
             'total_collections' => Collection::sum('amount'),
             'active_clients' => Client::where('status', 'active')->count(),
-            'pending_approvals' => LoanApplication::whereIn('approval_stage', ['loan_officer', 'collection_officer', 'finance_officer'])
+            'pending_approvals' => LoanApplication::whereIn('approval_stage', ['loan_officer', 'credit_officer', 'finance_officer', 'director'])
                 ->whereIn('status', ['submitted', 'under_review'])->count(),
         ];
 
@@ -98,7 +98,7 @@ class ReportController extends Controller
      */
     public function loanApplications(Request $request)
     {
-        $query = LoanApplication::with(['client', 'loanOfficer', 'collectionOfficer', 'financeOfficer']);
+        $query = LoanApplication::with(['client', 'loanOfficer', 'creditOfficer', 'collectionOfficer', 'financeOfficer']);
 
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);

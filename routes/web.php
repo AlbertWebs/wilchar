@@ -30,6 +30,10 @@ use App\Http\Controllers\Admin\LiabilityController;
 use App\Http\Controllers\Admin\ShareholderController;
 use App\Http\Controllers\Admin\TrialBalanceController;
 use App\Http\Controllers\Admin\AccountBalanceController;
+use App\Http\Controllers\Admin\FinanceDisbursementController;
+use App\Http\Controllers\Admin\PaymentDashboardController;
+use App\Http\Controllers\Admin\SandboxController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileSettingsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanCalculatorController;
 
@@ -196,6 +200,34 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::patch('profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
     Route::patch('profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
     Route::delete('profile', [AdminProfileController::class, 'destroy'])->name('admin.profile.destroy');
+});
+
+Route::prefix('admin/finance-disbursements')
+    ->middleware(['auth', 'role:Finance|Director'])
+    ->name('finance-disbursements.')
+    ->group(function () {
+        Route::get('/', [FinanceDisbursementController::class, 'index'])->name('index');
+        Route::post('/prepare', [FinanceDisbursementController::class, 'prepare'])->name('prepare');
+        Route::get('/confirm/{disbursement}', [FinanceDisbursementController::class, 'showConfirm'])->name('confirm.show');
+        Route::post('/confirm/{disbursement}', [FinanceDisbursementController::class, 'confirm'])->name('confirm.store');
+    });
+
+Route::prefix('admin/payments')
+    ->middleware(['auth', 'role:Admin|Finance|Director|Collection Officer'])
+    ->name('payments.')
+    ->group(function () {
+        Route::get('/', [PaymentDashboardController::class, 'index'])->name('index');
+        Route::post('/attach', [PaymentDashboardController::class, 'attach'])->name('attach');
+    });
+
+Route::middleware(['auth'])->prefix('admin/sandbox')->name('sandbox.')->group(function () {
+    Route::get('/purge', [SandboxController::class, 'index'])->name('purge.index');
+    Route::post('/purge', [SandboxController::class, 'purge'])->name('purge.run');
+});
+
+Route::middleware(['auth'])->prefix('admin/profile')->name('admin.profile.')->group(function () {
+    Route::get('/', [AdminProfileSettingsController::class, 'edit'])->name('edit');
+    Route::put('/', [AdminProfileSettingsController::class, 'update'])->name('update');
 });
 
 // Loan Officer Routes

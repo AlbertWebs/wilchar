@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class C2bTransaction extends Model
 {
@@ -22,12 +23,19 @@ class C2bTransaction extends Model
         'last_name',
         'status',
         'callback_data',
+        'loan_id',
     ];
 
     protected $casts = [
         'trans_amount' => 'decimal:2',
         'callback_data' => 'array',
+        'applied_at' => 'datetime',
     ];
+
+    public function loan(): BelongsTo
+    {
+        return $this->belongsTo(Loan::class);
+    }
 
     public function isCompleted(): bool
     {

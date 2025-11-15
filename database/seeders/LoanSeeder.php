@@ -25,7 +25,9 @@ class LoanSeeder extends Seeder
 
         $loanOfficer = User::role('Loan Officer')->first();
         $collectionOfficer = User::role('Collection Officer')->first();
+        $creditOfficer = User::role('Credit Officer')->first();
         $financeOfficer = User::role('Finance')->first();
+        $director = User::role('Director')->first();
 
         foreach ($clients as $index => $client) {
             $amount = Arr::random([75000, 125000, 200000]);
@@ -46,12 +48,13 @@ class LoanSeeder extends Seeder
                 'status' => $index === 2 ? 'approved' : 'submitted',
                 'approval_stage' => match ($index) {
                     0 => 'loan_officer',
-                    1 => 'collection_officer',
+                    1 => 'credit_officer',
                     default => 'completed',
                 },
                 'background_check_status' => $index > 0 ? 'passed' : 'pending',
                 'created_by' => $loanOfficer?->id,
                 'loan_officer_id' => $loanOfficer?->id,
+                'credit_officer_id' => $creditOfficer?->id,
                 'collection_officer_id' => $collectionOfficer?->id,
                 'finance_officer_id' => $financeOfficer?->id,
                 'interest_amount' => $interestAmount,
@@ -90,8 +93,8 @@ class LoanSeeder extends Seeder
 
                 LoanApproval::create([
                     'loan_application_id' => $application->id,
-                    'approved_by' => $collectionOfficer?->id,
-                    'approval_level' => 'collection_officer',
+                    'approved_by' => $creditOfficer?->id,
+                    'approval_level' => 'credit_officer',
                     'previous_level' => 'loan_officer',
                     'status' => 'approved',
                     'is_current_level' => false,
@@ -102,16 +105,26 @@ class LoanSeeder extends Seeder
                     'loan_application_id' => $application->id,
                     'approved_by' => $financeOfficer?->id,
                     'approval_level' => 'finance_officer',
-                    'previous_level' => 'collection_officer',
+                    'previous_level' => 'credit_officer',
                     'status' => 'approved',
                     'is_current_level' => false,
                     'approved_at' => now()->subDay(),
                 ]);
 
+                LoanApproval::create([
+                    'loan_application_id' => $application->id,
+                    'approved_by' => $director?->id ?? $financeOfficer?->id,
+                    'approval_level' => 'director',
+                    'previous_level' => 'finance_officer',
+                    'status' => 'approved',
+                    'is_current_level' => false,
+                    'approved_at' => now(),
+                ]);
+
                 Disbursement::create([
                     'loan_application_id' => $application->id,
                     'disbursed_by' => $financeOfficer?->id,
-                    'approved_by' => $financeOfficer?->id,
+                    'approved_by' => $director?->id ?? $financeOfficer?->id,
                     'approved_at' => now()->subDay(),
                     'amount' => $amount,
                     'transaction_amount' => $amount - 2500,

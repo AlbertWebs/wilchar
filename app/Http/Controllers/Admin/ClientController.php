@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -51,32 +52,53 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'id_number' => 'required|string|unique:clients,id_number',
-            'phone' => 'required|string|unique:clients,phone',
-            'email' => 'nullable|email|unique:clients,email',
-            'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|string',
-            'nationality' => 'nullable|string',
-            'business_name' => 'required|string|unique:clients,business_name',
-            'business_type' => 'required|string',
-            'location' => 'required|string',
-            'address' => 'nullable|string',
-            'occupation' => 'nullable|string',
-            'employer' => 'nullable|string',
-            'mpesa_phone' => 'nullable|string',
-            'alternate_phone' => 'nullable|string',
-            'status' => 'nullable|in:active,inactive,blacklisted',
+        Log::info('Client create form submitted', [
+            'user_id' => auth()->id(),
+            'payload' => $request->except(['_token']),
         ]);
+
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'middle_name' => 'nullable|string|max:255',
+                'id_number' => 'required|string|unique:clients,id_number',
+                'phone' => 'required|string|unique:clients,phone',
+                'email' => 'nullable|email|unique:clients,email',
+                'date_of_birth' => 'nullable|date',
+                'gender' => 'nullable|string',
+                'nationality' => 'nullable|string',
+                'business_name' => 'required|string|unique:clients,business_name',
+                'business_type' => 'required|string',
+                'location' => 'required|string',
+                'address' => 'nullable|string',
+                'occupation' => 'nullable|string',
+                'employer' => 'nullable|string',
+                'mpesa_phone' => 'nullable|string',
+                'alternate_phone' => 'nullable|string',
+                'status' => 'nullable|in:active,inactive,blacklisted',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Client create validation failed', [
+                'user_id' => auth()->id(),
+                'errors' => $e instanceof \Illuminate\Validation\ValidationException ? $e->errors() : $e->getMessage(),
+            ]);
+            throw $e;
+        }
 
         $validated['created_by'] = auth()->user()->name;
         $validated['created_by_user_id'] = auth()->id();
         $validated['status'] = $validated['status'] ?? 'active';
 
-        Client::create($validated);
+        try {
+            Client::create($validated);
+        } catch (\Throwable $e) {
+            Log::error('Client record insert failed', [
+                'user_id' => auth()->id(),
+                'message' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
 
         return redirect()->route('clients.index')
             ->with('success', 'Client created successfully.');

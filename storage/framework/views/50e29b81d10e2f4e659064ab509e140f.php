@@ -18,10 +18,37 @@
 <?php $component->withAttributes(['title' => 'Client Profile','description' => 'Capture the borrower’s personal details and business background.']); ?>
             <form action="<?php echo e(route('clients.store')); ?>" method="POST" class="space-y-6">
                 <?php echo csrf_field(); ?>
+                <?php if($errors->any()): ?>
+                    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                        <p class="font-semibold">We couldn’t save the client yet.</p>
+                        <ul class="mt-2 list-disc pl-5 text-xs">
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">First Name</label>
-                        <input type="text" name="first_name" value="<?php echo e(old('first_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="first_name" value="<?php echo e(old('first_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['first_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" required>
+                        <?php $__errorArgs = ['first_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Middle Name</label>
@@ -29,22 +56,90 @@
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Last Name</label>
-                        <input type="text" name="last_name" value="<?php echo e(old('last_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="last_name" value="<?php echo e(old('last_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['last_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" required>
+                        <?php $__errorArgs = ['last_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">National ID / Passport</label>
-                        <input type="text" name="id_number" value="<?php echo e(old('id_number')); ?>" class="mt-1 w-full rounded-xl border-slate-200" required>
+                        <input type="text" name="id_number" value="<?php echo e(old('id_number')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['id_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" required>
+                        <?php $__errorArgs = ['id_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone Number</label>
-                        <input type="text" name="phone" value="<?php echo e(old('phone')); ?>" class="mt-1 w-full rounded-xl border-slate-200" placeholder="2547XXXXXXXX" required>
+                        <input type="text" name="phone" value="<?php echo e(old('phone')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" placeholder="2547XXXXXXXX" required>
+                        <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Email (optional)</label>
-                        <input type="email" name="email" value="<?php echo e(old('email')); ?>" class="mt-1 w-full rounded-xl border-slate-200">
+                        <input type="email" name="email" value="<?php echo e(old('email')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                        <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -81,7 +176,24 @@
                     <div class="mt-4 grid gap-4 md:grid-cols-3">
                         <div class="md:col-span-2">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Name</label>
-                            <input type="text" name="business_name" value="<?php echo e(old('business_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200" required>
+                            <input type="text" name="business_name" value="<?php echo e(old('business_name')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['business_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" required>
+                            <?php $__errorArgs = ['business_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Type</label>

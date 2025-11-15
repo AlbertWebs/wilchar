@@ -49,8 +49,8 @@ class UserController extends Controller
         ]);
 
         if (!empty($validated['roles'])) {
-            $roleModels = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->get();
-            $user->syncRoles($roleModels);
+            $roleNames = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->pluck('name')->all();
+            $user->syncRoles($roleNames);
         }
 
         return redirect()->route('users.index')
@@ -81,6 +81,7 @@ class UserController extends Controller
      */
     public function update(Request $request, \App\Models\User $user)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -98,8 +99,8 @@ class UserController extends Controller
         ]);
 
         if (isset($validated['roles'])) {
-            $roles = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->get();
-            $user->syncRoles($roles);
+            $roleNames = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->pluck('name')->all();
+            $user->syncRoles($roleNames);
         } else {
             $user->syncRoles([]);
         }

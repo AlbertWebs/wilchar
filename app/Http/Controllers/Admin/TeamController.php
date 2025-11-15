@@ -100,7 +100,7 @@ class TeamController extends Controller
         return redirect()->route('teams.index')->with('success', 'Team deleted successfully.');
     }
 
-    public function assignMember(Request $request, Team $team): JsonResponse
+    public function assignMember(Request $request, Team $team): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -118,13 +118,17 @@ class TeamController extends Controller
             "User {$validated['user_id']} assigned to team {$team->name} as {$validated['role']}"
         );
 
-        return response()->json([
-            'message' => 'Member assigned successfully.',
-            'team' => $team->load('members'),
-        ]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Member assigned successfully.',
+                'team' => $team->load('members'),
+            ]);
+        }
+
+        return back()->with('success', 'Member assigned successfully.');
     }
 
-    public function removeMember(Request $request, Team $team, User $user): JsonResponse
+    public function removeMember(Request $request, Team $team, User $user): JsonResponse|RedirectResponse
     {
         $team->members()->detach($user->id);
 
@@ -135,10 +139,14 @@ class TeamController extends Controller
             "User {$user->id} removed from team {$team->name}"
         );
 
-        return response()->json([
-            'message' => 'Member removed successfully.',
-            'team' => $team->load('members'),
-        ]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Member removed successfully.',
+                'team' => $team->load('members'),
+            ]);
+        }
+
+        return back()->with('success', 'Member removed successfully.');
     }
 }
 

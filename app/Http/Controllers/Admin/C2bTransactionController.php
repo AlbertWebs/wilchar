@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\C2bTransaction;
+use App\Models\Loan;
+use App\Services\LoanPaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class C2bTransactionController extends Controller
 {
+    public function __construct(private LoanPaymentService $loanPaymentService)
+    {
+    }
+
     /**
      * Display a listing of C2B transactions
      */
@@ -101,6 +107,21 @@ class C2bTransactionController extends Controller
                 ]
             );
 
+            if (!$transaction->loan_id) {
+                $loan = $this->resolveLoanFromReference($transaction->bill_ref_number);
+                if ($loan) {
+                    $transaction->loan()->associate($loan);
+                    $transaction->save();
+                }
+            } else {
+                $loan = $transaction->loan;
+            }
+
+            if (($loan ?? null) && !$transaction->applied_at) {
+                $this->loanPaymentService->applyPaymentToLoan($loan, (float) $transaction->trans_amount, 'c2b', $transaction->trans_id);
+                $transaction->update(['applied_at' => now()]);
+            }
+
             DB::commit();
 
             return response()->json([
@@ -115,5 +136,20 @@ class C2bTransactionController extends Controller
                 'ResultDesc' => 'Error processing confirmation'
             ], 500);
         }
+    }
+
+    private function resolveLoanFromReference(?string $reference): ?Loan
+    {
+        if (!$reference) {
+            return null;
+        }
+
+        if (is_numeric($reference)) {
+            return Loan::find((int) $reference);
+        }
+
+        return Loan::whereHas('application', function ($query) use ($reference) {
+            $query->where('application_number', $reference);
+        })->first();
     }
 }

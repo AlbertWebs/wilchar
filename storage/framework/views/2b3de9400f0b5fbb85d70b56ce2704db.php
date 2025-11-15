@@ -49,15 +49,24 @@
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Assign Roles</label>
-                        <select name="roles[]" multiple class="mt-1 w-full rounded-xl border-slate-200">
+                        <div class="mt-2 grid gap-2 rounded-xl border border-slate-200 p-3">
+                            <?php
+                                $selectedRoles = collect(old('roles', $userRoleIds))->map(fn($id) => (int) $id)->all();
+                            ?>
+                           
                             <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($role->id); ?>" <?php if(collect(old('roles', $userRoleIds))->contains($role->id)): echo 'selected'; endif; ?>>
-                                    <?php echo e(\Illuminate\Support\Str::headline($role->name)); ?>
-
-                                </option>
+                                <label class="flex items-center gap-3 text-sm text-slate-700">
+                                    <input
+                                        type="checkbox"
+                                        name="roles[]"
+                                        value="<?php echo e($role->id); ?>"
+                                        class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                        <?php if(in_array($role->id, $selectedRoles, true)): echo 'checked'; endif; ?>
+                                    >
+                                    <span><?php echo e(\Illuminate\Support\Str::headline($role->name)); ?></span>
+                                </label>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                        <p class="mt-1 text-xs text-slate-400">Hold CTRL / CMD to select multiple roles.</p>
+                        </div>
                     </div>
                 </div>
 

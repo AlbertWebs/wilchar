@@ -51,8 +51,9 @@ class DashboardController extends Controller
 
         $pendingApprovalBreakdown = [
             'loan_officer' => LoanApplication::where('approval_stage', 'loan_officer')->count(),
-            'collection_officer' => LoanApplication::where('approval_stage', 'collection_officer')->count(),
+            'credit_officer' => LoanApplication::where('approval_stage', 'credit_officer')->count(),
             'finance_officer' => LoanApplication::where('approval_stage', 'finance_officer')->count(),
+            'director' => LoanApplication::where('approval_stage', 'director')->count(),
         ];
 
         $teamStats = Team::with(['loanApplications', 'loans.repayments'])->get()->map(function (Team $team) {

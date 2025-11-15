@@ -78,6 +78,16 @@
     <?php endif; ?>
 
     <div class="space-y-6">
+        <?php if($errors->any()): ?>
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                <p class="font-semibold">Please fix the following before submitting:</p>
+                <ul class="mt-2 list-disc pl-5 text-xs">
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+            </div>
+        <?php endif; ?>
         <div class="rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
@@ -122,11 +132,45 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-slate-700">Business Type</label>
-                    <input type="text" name="business_type" value="<?php echo e(old('business_type', $application->business_type ?? '')); ?>" class="mt-1 w-full rounded-xl border-slate-200" placeholder="e.g. Retail, Agri-business" required>
+                    <input type="text" name="business_type" value="<?php echo e(old('business_type', $application->business_type ?? '')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['business_type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" placeholder="e.g. Retail, Agri-business" required>
+                    <?php $__errorArgs = ['business_type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
                 <div>
                     <label class="text-sm font-medium text-slate-700">Business Location</label>
-                    <input type="text" name="business_location" value="<?php echo e(old('business_location', $application->business_location ?? '')); ?>" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Town, Estate, Street" required>
+                    <input type="text" name="business_location" value="<?php echo e(old('business_location', $application->business_location ?? '')); ?>" class="mt-1 w-full rounded-xl border-slate-200 <?php $__errorArgs = ['business_location'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-rose-400 focus:border-rose-400 focus:ring-rose-300 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" placeholder="Town, Estate, Street" required>
+                    <?php $__errorArgs = ['business_location'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-xs text-rose-500"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
             </div>
         </div>
@@ -198,6 +242,18 @@
                             <option value="">Select</option>
                             <?php $__currentLoopData = $loanOfficers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $officer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($officer->id); ?>" <?php if(old('loan_officer_id', $application->loan_officer_id ?? '') == $officer->id): echo 'selected'; endif; ?>>
+                                    <?php echo e($officer->name); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium uppercase tracking-wide text-slate-500">Credit Officer</label>
+                        <select name="credit_officer_id" class="mt-1 w-full rounded-xl border-slate-200">
+                            <option value="">Select</option>
+                            <?php $__currentLoopData = $creditOfficers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $officer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($officer->id); ?>" <?php if(old('credit_officer_id', $application->credit_officer_id ?? '') == $officer->id): echo 'selected'; endif; ?>>
                                     <?php echo e($officer->name); ?>
 
                                 </option>

@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\StkPush;
+use App\Services\LoanPaymentService;
 use App\Services\MpesaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class StkPushController extends Controller
 {
-    protected $mpesaService;
+    protected MpesaService $mpesaService;
 
-    public function __construct(MpesaService $mpesaService)
-    {
+    public function __construct(
+        MpesaService $mpesaService,
+        private LoanPaymentService $loanPaymentService
+    ) {
         $this->mpesaService = $mpesaService;
     }
 
@@ -65,6 +69,7 @@ class StkPushController extends Controller
             'amount' => 'required|numeric|min:1',
             'account_reference' => 'nullable|string|max:255',
             'transaction_desc' => 'nullable|string|max:255',
+            'loan_id' => 'nullable|exists:loans,id',
         ]);
 
         try {
@@ -112,6 +117,7 @@ class StkPushController extends Controller
                     'result_desc' => $responseData['ResponseDescription'] ?? null,
                     'status' => isset($responseData['ResponseCode']) && $responseData['ResponseCode'] == '0' ? 'pending' : 'failed',
                     'initiated_by' => auth()->id(),
+                    'loan_id' => $validated['loan_id'] ?? null,
                 ]);
 
                 DB::commit();
@@ -193,6 +199,15 @@ class StkPushController extends Controller
                     'transaction_date' => $metadata['TransactionDate'] ?? null,
                     'status' => 'success',
                 ]);
+
+                $loan = $stkPush->loan ?? $this->resolveLoanFromReference($stkPush->account_reference);
+                if ($loan && !$stkPush->applied_at) {
+                    $this->loanPaymentService->applyPaymentToLoan($loan, (float) $stkPush->amount, 'stk', $stkPush->mpesa_receipt_number);
+                    $stkPush->update([
+                        'loan_id' => $loan->id,
+                        'applied_at' => now(),
+                    ]);
+                }
             } else {
                 $stkPush->update(['status' => 'failed']);
             }
@@ -205,5 +220,20 @@ class StkPushController extends Controller
             Log::error('STK Push Callback Processing Error: ' . $e->getMessage());
             return response()->json(['ResultCode' => 1, 'ResultDesc' => 'Error processing callback'], 500);
         }
+    }
+
+    private function resolveLoanFromReference(?string $reference): ?Loan
+    {
+        if (!$reference) {
+            return null;
+        }
+
+        if (is_numeric($reference)) {
+            return Loan::find((int) $reference);
+        }
+
+        return Loan::whereHas('application', function ($query) use ($reference) {
+            $query->where('application_number', $reference);
+        })->first();
     }
 }

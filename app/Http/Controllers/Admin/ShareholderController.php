@@ -98,7 +98,7 @@ class ShareholderController extends Controller
         return redirect()->route('shareholders.index')->with('success', 'Shareholder deleted successfully.');
     }
 
-    public function storeContribution(Request $request, Shareholder $shareholder): JsonResponse
+    public function storeContribution(Request $request, Shareholder $shareholder): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
             'contribution_date' => 'required|date',
@@ -118,14 +118,18 @@ class ShareholderController extends Controller
             $contribution->toArray()
         );
 
-        return response()->json([
-            'message' => 'Contribution recorded successfully.',
-            'contribution' => $contribution,
-            'totals' => [
-                'contributions_total' => $shareholder->contributions()->sum('amount'),
-                'contributions_count' => $shareholder->contributions()->count(),
-            ],
-        ]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Contribution recorded successfully.',
+                'contribution' => $contribution,
+                'totals' => [
+                    'contributions_total' => $shareholder->contributions()->sum('amount'),
+                    'contributions_count' => $shareholder->contributions()->count(),
+                ],
+            ]);
+        }
+
+        return back()->with('success', 'Contribution recorded successfully.');
     }
 }
 

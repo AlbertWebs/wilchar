@@ -78,6 +78,16 @@
     @endif
 
     <div class="space-y-6">
+        @if($errors->any())
+            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                <p class="font-semibold">Please fix the following before submitting:</p>
+                <ul class="mt-2 list-disc pl-5 text-xs">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="rounded-2xl border border-slate-200 bg-white p-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
@@ -120,11 +130,17 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-slate-700">Business Type</label>
-                    <input type="text" name="business_type" value="{{ old('business_type', $application->business_type ?? '') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="e.g. Retail, Agri-business" required>
+                    <input type="text" name="business_type" value="{{ old('business_type', $application->business_type ?? '') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('business_type') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" placeholder="e.g. Retail, Agri-business" required>
+                    @error('business_type')
+                        <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="text-sm font-medium text-slate-700">Business Location</label>
-                    <input type="text" name="business_location" value="{{ old('business_location', $application->business_location ?? '') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Town, Estate, Street" required>
+                    <input type="text" name="business_location" value="{{ old('business_location', $application->business_location ?? '') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('business_location') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" placeholder="Town, Estate, Street" required>
+                    @error('business_location')
+                        <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
         </div>
@@ -194,6 +210,17 @@
                             <option value="">Select</option>
                             @foreach($loanOfficers as $officer)
                                 <option value="{{ $officer->id }}" @selected(old('loan_officer_id', $application->loan_officer_id ?? '') == $officer->id)>
+                                    {{ $officer->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium uppercase tracking-wide text-slate-500">Credit Officer</label>
+                        <select name="credit_officer_id" class="mt-1 w-full rounded-xl border-slate-200">
+                            <option value="">Select</option>
+                            @foreach($creditOfficers as $officer)
+                                <option value="{{ $officer->id }}" @selected(old('credit_officer_id', $application->credit_officer_id ?? '') == $officer->id)>
                                     {{ $officer->name }}
                                 </option>
                             @endforeach

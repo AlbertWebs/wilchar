@@ -26,6 +26,7 @@ class LoanApplicationController extends Controller
         $query = LoanApplication::with([
             'client',
             'loanOfficer',
+            'creditOfficer',
             'collectionOfficer',
             'financeOfficer',
             'loanProduct',
@@ -110,6 +111,7 @@ class LoanApplicationController extends Controller
             'registration_fee' => 'nullable|numeric|min:0|max:1000000',
             'purpose' => 'nullable|string|max:1000',
             'loan_officer_id' => 'nullable|exists:users,id',
+            'credit_officer_id' => 'nullable|exists:users,id',
             'collection_officer_id' => 'nullable|exists:users,id',
             'finance_officer_id' => 'nullable|exists:users,id',
             'onboarding_data' => 'nullable|array',
@@ -182,6 +184,7 @@ class LoanApplicationController extends Controller
                 'onboarding_data' => $validated['onboarding_data'] ?? null,
                 'created_by' => auth()->id(),
                 'loan_officer_id' => $validated['loan_officer_id'] ?? (auth()->user()?->hasRole('Loan Officer') ? auth()->id() : null),
+                'credit_officer_id' => $validated['credit_officer_id'] ?? null,
                 'collection_officer_id' => $validated['collection_officer_id'] ?? null,
                 'finance_officer_id' => $validated['finance_officer_id'] ?? null,
             ]);
@@ -306,6 +309,7 @@ class LoanApplicationController extends Controller
             'registration_fee' => 'nullable|numeric|min:0|max:1000000',
             'purpose' => 'nullable|string|max:1000',
             'loan_officer_id' => 'nullable|exists:users,id',
+            'credit_officer_id' => 'nullable|exists:users,id',
             'collection_officer_id' => 'nullable|exists:users,id',
             'finance_officer_id' => 'nullable|exists:users,id',
             'onboarding_data' => 'nullable|array',
@@ -419,12 +423,13 @@ class LoanApplicationController extends Controller
     public function assignLoanOfficer(Request $request, LoanApplication $loanApplication): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
-            'role' => 'required|in:loan_officer,collection_officer,finance_officer',
+            'role' => 'required|in:loan_officer,credit_officer,collection_officer,finance_officer',
             'user_id' => 'required|exists:users,id',
         ]);
 
         $column = match ($validated['role']) {
             'loan_officer' => 'loan_officer_id',
+            'credit_officer' => 'credit_officer_id',
             'collection_officer' => 'collection_officer_id',
             'finance_officer' => 'finance_officer_id',
         };
@@ -441,7 +446,7 @@ class LoanApplicationController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Officer assigned successfully.',
-                'application' => $loanApplication->load(['loanOfficer', 'collectionOfficer', 'financeOfficer']),
+                'application' => $loanApplication->load(['loanOfficer', 'creditOfficer', 'collectionOfficer', 'financeOfficer']),
             ]);
         }
 
@@ -459,6 +464,7 @@ class LoanApplicationController extends Controller
             'teams' => Team::orderBy('name')->get(),
             'loanProducts' => LoanProduct::where('is_active', true)->orderBy('name')->get(),
             'loanOfficers' => $usersByRole('Loan Officer'),
+            'creditOfficers' => $usersByRole('Credit Officer'),
             'collectionOfficers' => $usersByRole('Collection Officer'),
             'financeOfficers' => $usersByRole('Finance'),
             'repaymentFrequencies' => $this->repaymentFrequencyOptions(),
@@ -583,9 +589,9 @@ class LoanApplicationController extends Controller
     private function syncSpecialDocumentUploads(LoanApplication $application, array $filePaths): void
     {
         $mapping = [
-            'loan_form_files' => 'loan_form',
-            'mpesa_statement_files' => 'mpesa_statement',
-            'business_photo_files' => 'business_photo',
+            'loan_form_files' => 'other',
+            'mpesa_statement_files' => 'bank_statement',
+            'business_photo_files' => 'business_license',
         ];
 
         foreach ($mapping as $key => $type) {
@@ -595,13 +601,13 @@ class LoanApplicationController extends Controller
 
             $this->deleteDocumentSet($application, $type);
 
-            $additionalFiles = array_slice($filePaths[$key], 1);
+                $additionalFiles = array_slice($filePaths[$key], 1);
 
             foreach ($additionalFiles as $file) {
                 KycDocument::create([
                     'loan_application_id' => $application->id,
-                    'document_type' => $type,
-                    'document_name' => $file['name'] ?? basename($file['path']),
+                        'document_type' => $type,
+                        'document_name' => ucfirst(str_replace('_files', '', $key)) . ' - ' . ($file['name'] ?? basename($file['path'])),
                     'file_path' => $file['path'],
                     'file_type' => $file['mime'] ?? null,
                     'file_size' => $file['size'] ?? null,

@@ -8,26 +8,15 @@ use App\Models\Disbursement;
 use App\Models\Transaction;
 use App\Models\Account;
 use App\Models\AuditLog;
+use App\Services\B2cPaymentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MpesaDisbursementController extends Controller
 {
-    private $mpesaConsumerKey;
-    private $mpesaConsumerSecret;
-    private $mpesaShortcode;
-    private $mpesaPasskey;
-    private $mpesaEnvironment; // sandbox or production
-
-    public function __construct()
+    public function __construct(private B2cPaymentService $b2cPaymentService)
     {
-        $this->mpesaConsumerKey = config('services.mpesa.consumer_key', env('MPESA_CONSUMER_KEY'));
-        $this->mpesaConsumerSecret = config('services.mpesa.consumer_secret', env('MPESA_CONSUMER_SECRET'));
-        $this->mpesaShortcode = config('services.mpesa.shortcode', env('MPESA_SHORTCODE'));
-        $this->mpesaPasskey = config('services.mpesa.passkey', env('MPESA_PASSKEY'));
-        $this->mpesaEnvironment = config('services.mpesa.environment', env('MPESA_ENVIRONMENT', 'sandbox'));
     }
 
     /**
@@ -104,7 +93,7 @@ class MpesaDisbursementController extends Controller
             ]);
 
             // Generate M-Pesa request
-            $result = $this->initiateB2C($disbursement, $validated['remarks'] ?? '');
+            $result = $this->b2cPaymentService->initiate($disbursement, $validated['remarks'] ?? '');
 
             if ($result['success']) {
                 $disbursement->update([
@@ -290,7 +279,7 @@ class MpesaDisbursementController extends Controller
         try {
             $disbursement->incrementRetry();
             
-            $result = $this->initiateB2C($disbursement);
+            $result = $this->b2cPaymentService->initiate($disbursement);
 
             if ($result['success']) {
                 $disbursement->update([
@@ -310,95 +299,6 @@ class MpesaDisbursementController extends Controller
         }
     }
 
-    /**
-     * Initiate M-Pesa B2C payment
-     */
-    private function initiateB2C(Disbursement $disbursement, string $remarks = ''): array
-    {
-        try {
-            // Get access token
-            $accessToken = $this->getAccessToken();
-
-            if (!$accessToken) {
-                return ['success' => false, 'error' => 'Failed to get access token'];
-            }
-
-            // Generate security credentials
-            $timestamp = now()->format('YmdHis');
-            $password = base64_encode($this->mpesaShortcode . $this->mpesaPasskey . $timestamp);
-
-            // Prepare B2C request
-            $url = $this->mpesaEnvironment === 'production' 
-                ? 'https://api.safaricom.co.ke/mpesa/b2c/v1/paymentrequest'
-                : 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest';
-
-            $requestData = [
-                'InitiatorName' => config('services.mpesa.initiator_name', 'testapi'),
-                'SecurityCredential' => config('services.mpesa.security_credential', ''),
-                'CommandID' => 'BusinessPayment',
-                'Amount' => $disbursement->amount,
-                'PartyA' => $this->mpesaShortcode,
-                'PartyB' => $disbursement->recipient_phone,
-                'Remarks' => $remarks ?: "Loan disbursement for {$disbursement->loanApplication->application_number}",
-                'QueueTimeOutURL' => config('services.mpesa.queue_timeout_url', url('/api/mpesa/b2c/timeout')),
-                'ResultURL' => route('disbursements.callback'),
-                'Occasion' => 'Loan Disbursement',
-            ];
-
-            $response = Http::withToken($accessToken)
-                ->post($url, $requestData);
-
-            $responseData = $response->json();
-
-            if ($response->successful() && isset($responseData['ResponseCode']) && $responseData['ResponseCode'] == '0') {
-                return [
-                    'success' => true,
-                    'request_id' => $responseData['RequestID'] ?? null,
-                    'response_code' => $responseData['ResponseCode'] ?? null,
-                    'response_description' => $responseData['ResponseDescription'] ?? null,
-                    'originator_conversation_id' => $responseData['OriginatorConversationID'] ?? null,
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'error' => $responseData['errorMessage'] ?? $responseData['ResponseDescription'] ?? 'Unknown error',
-                    'response_code' => $responseData['ResponseCode'] ?? null,
-                ];
-            }
-
-        } catch (\Exception $e) {
-            Log::error('M-Pesa B2C Initiation Error: ' . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
-    /**
-     * Get M-Pesa access token
-     */
-    private function getAccessToken(): ?string
-    {
-        try {
-            $url = $this->mpesaEnvironment === 'production'
-                ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-                : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-
-            $credentials = base64_encode($this->mpesaConsumerKey . ':' . $this->mpesaConsumerSecret);
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Basic ' . $credentials,
-            ])->get($url);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data['access_token'] ?? null;
-            }
-
-            return null;
-        } catch (\Exception $e) {
-            Log::error('M-Pesa Access Token Error: ' . $e->getMessage());
-            return null;
-        }
-    }
 }
 
 

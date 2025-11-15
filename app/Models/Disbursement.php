@@ -9,6 +9,7 @@ class Disbursement extends Model
 {
     protected $fillable = [
         'loan_application_id',
+        'prepared_by',
         'disbursed_by',
         'amount',
         'method',
@@ -22,6 +23,11 @@ class Disbursement extends Model
         'mpesa_result_description',
         'mpesa_originator_conversation_id',
         'mpesa_conversation_id',
+        'otp_code_hash',
+        'otp_expires_at',
+        'otp_verified_at',
+        'otp_attempts',
+        'otp_sent_at',
         'recipient_phone',
         'transaction_receipt',
         'transaction_amount',
@@ -40,6 +46,9 @@ class Disbursement extends Model
         'processing_fee' => 'decimal:2',
         'disbursement_date' => 'date',
         'approved_at' => 'datetime',
+        'otp_expires_at' => 'datetime',
+        'otp_verified_at' => 'datetime',
+        'otp_sent_at' => 'datetime',
         'mpesa_callback_data' => 'array',
         'retry_count' => 'integer',
         'last_retry_at' => 'datetime',
@@ -51,6 +60,11 @@ class Disbursement extends Model
     public function loanApplication(): BelongsTo
     {
         return $this->belongsTo(LoanApplication::class, 'loan_application_id');
+    }
+
+    public function preparedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'prepared_by');
     }
 
     /**

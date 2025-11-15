@@ -73,6 +73,10 @@
                                 <dd class="font-semibold">{{ $loanApplication->loanOfficer->name ?? 'Not assigned' }}</dd>
                             </div>
                             <div class="flex items-center justify-between">
+                                <dt>Credit Officer</dt>
+                                <dd class="font-semibold">{{ $loanApplication->creditOfficer->name ?? 'Not assigned' }}</dd>
+                            </div>
+                            <div>
                                 <dt>Collection Officer</dt>
                                 <dd class="font-semibold">{{ $loanApplication->collectionOfficer->name ?? 'Not assigned' }}</dd>
                             </div>

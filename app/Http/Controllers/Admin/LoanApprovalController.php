@@ -9,10 +9,13 @@ use App\Models\Instalment;
 use App\Models\Loan;
 use App\Models\LoanApplication;
 use App\Models\LoanApproval;
+use App\Models\User;
+use App\Notifications\LoanApprovalStageNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 
 class LoanApprovalController extends Controller
@@ -23,23 +26,28 @@ class LoanApprovalController extends Controller
         $query = LoanApplication::with([
             'client',
             'loanOfficer',
+            'creditOfficer',
             'collectionOfficer',
             'financeOfficer',
             'loanProduct',
             'team',
         ])->whereIn('status', ['submitted', 'under_review']);
 
-        if ($user->hasRole('Loan Officer') || $user->hasRole('Marketer')) {
-            $query->where('approval_stage', 'loan_officer');
-        } elseif ($user->hasRole('Collection Officer')) {
-            $query->where('approval_stage', 'collection_officer');
-        } elseif ($user->hasRole('Finance')) {
-            $query->where('approval_stage', 'finance_officer');
-        } else {
-            // Admins see everything
+        if ($user->hasRole('Admin') || $user->can('approvals.view')) {
             if ($request->filled('stage')) {
                 $query->where('approval_stage', $request->stage);
             }
+        } elseif ($user->hasRole('Loan Officer') || $user->hasRole('Marketer')) {
+            $query->where('approval_stage', 'loan_officer');
+        } elseif ($user->hasRole('Credit Officer')) {
+            $query->where('approval_stage', 'credit_officer');
+        } elseif ($user->hasRole('Finance')) {
+            $query->where('approval_stage', 'finance_officer');
+        } elseif ($user->hasRole('Director')) {
+            $query->where('approval_stage', 'director');
+        } else {
+            // fallback: restrict to none by forcing impossible where
+            $query->whereRaw('1 = 0');
         }
 
         if ($request->filled('team_id')) {
@@ -63,7 +71,7 @@ class LoanApprovalController extends Controller
     {
         $user = auth()->user();
 
-        if (!$this->canApproveAtStage($user, $loanApplication)) {
+        if (!$this->canViewApplication($user, $loanApplication)) {
             return redirect()->route('approvals.index')
                 ->with('error', 'You do not have permission to manage this application at this stage.');
         }
@@ -71,12 +79,14 @@ class LoanApprovalController extends Controller
         $loanApplication->load([
             'client',
             'loanOfficer',
+            'creditOfficer',
             'collectionOfficer',
             'financeOfficer',
             'loanProduct',
             'team',
             'kycDocuments',
             'approvals.approver',
+            'loan.instalments',
         ]);
 
         if ($request->wantsJson()) {
@@ -87,6 +97,7 @@ class LoanApprovalController extends Controller
 
         return view('admin.approvals.show', [
             'loanApplication' => $loanApplication,
+            'canApprove' => $this->canApproveAtStage($user, $loanApplication),
         ]);
     }
 
@@ -102,7 +113,7 @@ class LoanApprovalController extends Controller
             'comment' => 'nullable|string|max:1000',
         ];
 
-        if ($loanApplication->approval_stage === 'collection_officer') {
+        if ($loanApplication->approval_stage === 'credit_officer') {
             $rules['amount_approved'] = 'required|numeric|min:1000';
             $rules['interest_rate'] = 'required|numeric|min:0|max:100';
             $rules['duration_months'] = 'required|integer|min:1';
@@ -148,6 +159,8 @@ class LoanApprovalController extends Controller
                 ]);
 
                 $loanApplication->moveToNextStage();
+                $loanApplication->refresh();
+                $this->notifyStageUsers($loanApplication);
 
                 AuditLog::log(
                     LoanApplication::class,
@@ -155,9 +168,9 @@ class LoanApprovalController extends Controller
                     'loan_officer_approved',
                     "Loan Officer {$user->name} approved onboarding & KYC."
                 );
-            } elseif ($currentStage === 'collection_officer') {
+            } elseif ($currentStage === 'credit_officer') {
                 $loanApplication->update([
-                    'collection_officer_id' => $user->id,
+                    'credit_officer_id' => $user->id,
                     'amount_approved' => $validated['amount_approved'],
                     'interest_rate' => $validated['interest_rate'],
                     'duration_months' => $validated['duration_months'],
@@ -166,22 +179,48 @@ class LoanApprovalController extends Controller
                 ]);
 
                 $loanApplication->moveToNextStage();
+                $loanApplication->refresh();
+                $this->notifyStageUsers($loanApplication);
 
                 AuditLog::log(
                     LoanApplication::class,
                     $loanApplication->id,
-                    'collection_officer_approved',
-                    "Collection Officer {$user->name} approved and calculated totals."
+                    'credit_officer_approved',
+                    "Credit Officer {$user->name} approved and calculated totals."
                 );
             } elseif ($currentStage === 'finance_officer') {
                 $amountApproved = $validated['amount_approved'];
+                $processingFee = $validated['processing_fee'] ?? 0;
+                $disbursementMethod = $validated['disbursement_method'];
+
                 $loanApplication->update([
-                    'finance_officer_id' => $user->id,
+                    'finance_officer_id' => $loanApplication->finance_officer_id ?? $user->id,
                     'amount_approved' => $amountApproved,
-                    'status' => 'approved',
-                    'approval_stage' => 'completed',
-                    'approved_at' => now(),
+                    'status' => 'under_review',
+                    'onboarding_data' => array_merge($loanApplication->onboarding_data ?? [], [
+                        'pending_disbursement' => [
+                            'amount_approved' => $amountApproved,
+                            'processing_fee' => $processingFee,
+                            'disbursement_method' => $disbursementMethod,
+                        ],
+                    ]),
                 ]);
+
+                $loanApplication->moveToNextStage();
+                $loanApplication->refresh();
+                $this->notifyStageUsers($loanApplication);
+
+                AuditLog::log(
+                    LoanApplication::class,
+                    $loanApplication->id,
+                    'finance_officer_approved',
+                    "Finance Officer {$user->name} prepared disbursement for KES {$amountApproved}."
+                );
+            } elseif ($currentStage === 'director') {
+                $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
+                $amountApproved = $pending['amount_approved'] ?? $loanApplication->amount_approved ?? $validated['amount_approved'] ?? 0;
+                $processingFee = $pending['processing_fee'] ?? $validated['processing_fee'] ?? 0;
+                $disbursementMethod = $pending['disbursement_method'] ?? $validated['disbursement_method'] ?? 'M-PESA B2C';
 
                 $loan = Loan::create([
                     'client_id' => $loanApplication->client_id,
@@ -198,15 +237,22 @@ class LoanApprovalController extends Controller
                     'interest_rate' => $loanApplication->interest_rate,
                     'repayment_frequency' => 'monthly',
                     'status' => 'approved',
-                    'collection_officer_id' => $loanApplication->collection_officer_id,
+                    'collection_officer_id' => $loanApplication->collection_officer_id ?? $loanApplication->credit_officer_id,
                     'recovery_officer_id' => null,
                     'finance_officer_id' => $user->id,
-                    'processing_fee' => $validated['processing_fee'] ?? 0,
+                    'processing_fee' => $processingFee,
                     'late_fee_accrued' => 0,
                     'next_due_date' => now()->addMonth(),
                 ]);
 
                 $loanApplication->update(['loan_id' => $loan->id]);
+                $loanApplication->approval_stage = 'completed';
+                $loanApplication->status = 'approved';
+                $loanApplication->approved_at = now();
+                $meta = $loanApplication->onboarding_data ?? [];
+                unset($meta['pending_disbursement']);
+                $loanApplication->onboarding_data = $meta;
+                $loanApplication->save();
 
                 $this->generateInstalments($loan);
 
@@ -216,9 +262,9 @@ class LoanApprovalController extends Controller
                     'approved_by' => $user->id,
                     'approved_at' => now(),
                     'amount' => $amountApproved,
-                    'transaction_amount' => $amountApproved - ($validated['processing_fee'] ?? 0),
-                    'processing_fee' => $validated['processing_fee'] ?? 0,
-                    'method' => $validated['disbursement_method'],
+                    'transaction_amount' => $amountApproved - $processingFee,
+                    'processing_fee' => $processingFee,
+                    'method' => $disbursementMethod,
                     'disbursement_date' => now(),
                     'status' => 'pending',
                     'processing_notes' => $validated['comment'] ?? null,
@@ -227,8 +273,8 @@ class LoanApprovalController extends Controller
                 AuditLog::log(
                     LoanApplication::class,
                     $loanApplication->id,
-                    'finance_officer_approved',
-                    "Finance approved and prepared disbursement of KES {$amountApproved}."
+                    'director_approved',
+                    "Director {$user->name} approved and released disbursement of KES {$amountApproved}."
                 );
             }
 
@@ -318,14 +364,51 @@ class LoanApprovalController extends Controller
         }
     }
 
+    private function notifyStageUsers(LoanApplication $loanApplication): void
+    {
+        $stage = $loanApplication->approval_stage;
+
+        $roleMap = [
+            'loan_officer' => ['Loan Officer', 'Marketer'],
+            'credit_officer' => ['Credit Officer'],
+            'finance_officer' => ['Finance'],
+            'director' => ['Director'],
+        ];
+
+        $roles = $roleMap[$stage] ?? [];
+
+        if (empty($roles)) {
+            return;
+        }
+
+        $recipients = User::role($roles)->get();
+        if ($recipients->isEmpty()) {
+            return;
+        }
+
+        $loanApplication->loadMissing('client', 'team');
+
+        Notification::send($recipients, new LoanApprovalStageNotification($loanApplication));
+    }
+
     private function canApproveAtStage($user, LoanApplication $loanApplication): bool
     {
         return match ($loanApplication->approval_stage) {
-            'loan_officer' => $user->hasRole('Loan Officer') || $user->hasRole('Marketer') || $user->hasRole('Admin'),
-            'collection_officer' => $user->hasRole('Collection Officer') || $user->hasRole('Admin'),
-            'finance_officer' => $user->hasRole('Finance') || $user->hasRole('Admin'),
+            'loan_officer' => $user->hasRole('Loan Officer') || $user->hasRole('Marketer'),
+            'credit_officer' => $user->hasRole('Credit Officer'),
+            'finance_officer' => $user->hasRole('Finance'),
+            'director' => $user->hasRole('Director'),
             default => false,
         };
+    }
+
+    private function canViewApplication($user, LoanApplication $loanApplication): bool
+    {
+        if ($user->hasRole('Admin') || $user->can('approvals.view')) {
+            return true;
+        }
+
+        return $this->canApproveAtStage($user, $loanApplication);
     }
 
     /**

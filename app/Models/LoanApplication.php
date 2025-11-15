@@ -183,14 +183,6 @@ class LoanApplication extends Model
         return $this->approval_stage === 'loan_officer';
     }
 
-    public function isAtCollectionOfficerStage(): bool
-    {
-        return $this->approval_stage === 'collection_officer';
-    }
-
-    /**
-     * Check if application is at credit officer stage
-     */
     public function isAtCreditOfficerStage(): bool
     {
         return $this->approval_stage === 'credit_officer';
@@ -233,7 +225,7 @@ class LoanApplication extends Model
      */
     public function moveToNextStage(): void
     {
-        $stages = ['loan_officer', 'collection_officer', 'credit_officer', 'finance_officer', 'completed'];
+        $stages = ['loan_officer', 'credit_officer', 'finance_officer', 'director', 'completed'];
         $currentIndex = array_search($this->approval_stage, $stages);
         
         if ($currentIndex !== false && $currentIndex < count($stages) - 1) {
@@ -249,9 +241,9 @@ class LoanApplication extends Model
     {
         return match($this->approval_stage) {
             'loan_officer' => 'Loan Officer Review',
-            'collection_officer' => 'Collection Officer Approval',
             'credit_officer' => 'Credit Officer Review',
             'finance_officer' => 'Finance Office Disbursement',
+            'director' => 'Director Approval',
             'completed' => 'Approval Completed',
             default => 'Unknown'
         };
