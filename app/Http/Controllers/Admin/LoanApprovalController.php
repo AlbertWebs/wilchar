@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApprovalEmailLog;
 use App\Models\AuditLog;
 use App\Models\Disbursement;
 use App\Models\Instalment;
@@ -44,7 +45,7 @@ class LoanApprovalController extends Controller
         } elseif ($user->hasRole('Finance')) {
             $query->where('approval_stage', 'finance_officer');
         } elseif ($user->hasRole('Director')) {
-            $query->where('approval_stage', 'director');
+            $query->whereIn('approval_stage', ['finance_officer', 'director']);
         } else {
             // fallback: restrict to none by forcing impossible where
             $query->whereRaw('1 = 0');
@@ -62,9 +63,176 @@ class LoanApprovalController extends Controller
             ]);
         }
 
+        // Load email status for each application
+        $applications->getCollection()->transform(function ($application) {
+            $application->email_status = $this->getEmailStatus($application);
+            return $application;
+        });
+
         return view('admin.approvals.index', [
             'applications' => $applications,
         ]);
+    }
+
+    /**
+     * Manually send email notification to approvers
+     */
+    public function sendEmail(Request $request, LoanApplication $loanApplication): RedirectResponse|JsonResponse
+    {
+        try {
+            $loanApplication->loadMissing('client', 'team');
+            
+            // Get recipients for the current stage
+            $recipients = $this->getStageRecipients($loanApplication);
+            
+            if ($recipients->isEmpty()) {
+                $message = 'No approvers found for this stage.';
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 422);
+                }
+                return back()->with('error', $message);
+            }
+
+            // Send notifications synchronously (not queued) so we can catch errors immediately
+            $sentCount = 0;
+            $errors = [];
+            $recipientEmails = [];
+            
+            foreach ($recipients as $recipient) {
+                $recipientEmails[] = $recipient->email;
+                try {
+                    // Send immediately without queueing
+                    $recipient->notifyNow(new LoanApprovalStageNotification($loanApplication, 'approval'));
+                    $sentCount++;
+                } catch (\Exception $e) {
+                    $errorMessage = "Failed to send to {$recipient->email}: " . $e->getMessage();
+                    $errors[] = $errorMessage;
+                    \Log::error('Failed to send approval email', [
+                        'recipient' => $recipient->email,
+                        'application_id' => $loanApplication->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            // Store email status in database for persistence
+            ApprovalEmailLog::create([
+                'loan_application_id' => $loanApplication->id,
+                'sent_by' => auth()->id(),
+                'sent_count' => $sentCount,
+                'total_recipients' => $recipients->count(),
+                'recipients' => $recipientEmails,
+                'errors' => $errors,
+                'sent_at' => now(),
+            ]);
+
+            // Also store in session for immediate display
+            session()->put("email_sent_{$loanApplication->id}", [
+                'sent_at' => now(),
+                'sent_count' => $sentCount,
+                'total_recipients' => $recipients->count(),
+                'errors' => $errors,
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Email sent to {$sentCount} approver(s).",
+                    'sent_count' => $sentCount,
+                    'total_recipients' => $recipients->count(),
+                    'errors' => $errors,
+                ]);
+            }
+
+            $message = "Email sent successfully to {$sentCount} approver(s).";
+            if (!empty($errors)) {
+                $message .= " Errors: " . implode(', ', $errors);
+            }
+
+            return back()->with('success', $message);
+        } catch (\Exception $e) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get recipients for the current approval stage
+     */
+    private function getStageRecipients(LoanApplication $loanApplication): \Illuminate\Support\Collection
+    {
+        $stage = $loanApplication->approval_stage;
+
+        $roleMap = [
+            'loan_officer' => ['Loan Officer', 'Marketer'],
+            'credit_officer' => ['Credit Officer'],
+            'finance_officer' => ['Finance', 'Director'],
+            'director' => ['Director'],
+        ];
+
+        $roles = $roleMap[$stage] ?? [];
+
+        if (empty($roles)) {
+            return collect([]);
+        }
+
+        return User::role($roles)
+            ->get()
+            ->filter(function ($user) use ($loanApplication) {
+                return $user->hasRole('Admin') || $user->can('approvals.view') || $this->canApproveAtStage($user, $loanApplication);
+            })
+            ->filter(function ($user) {
+                return !empty($user->email);
+            });
+    }
+
+    /**
+     * Get email status for an application
+     */
+    private function getEmailStatus(LoanApplication $loanApplication): array
+    {
+        // First check session for immediate status
+        $statusKey = "email_sent_{$loanApplication->id}";
+        $sessionStatus = session()->get($statusKey);
+
+        if ($sessionStatus) {
+            return [
+                'sent' => true,
+                'sent_at' => $sessionStatus['sent_at'],
+                'sent_count' => $sessionStatus['sent_count'],
+                'total_recipients' => $sessionStatus['total_recipients'],
+                'errors' => $sessionStatus['errors'] ?? [],
+            ];
+        }
+
+        // Check database for persisted status
+        $latestLog = ApprovalEmailLog::where('loan_application_id', $loanApplication->id)
+            ->latest('sent_at')
+            ->first();
+
+        if ($latestLog) {
+            return [
+                'sent' => true,
+                'sent_at' => $latestLog->sent_at,
+                'sent_count' => $latestLog->sent_count,
+                'total_recipients' => $latestLog->total_recipients,
+                'errors' => $latestLog->errors ?? [],
+            ];
+        }
+
+        return [
+            'sent' => false,
+            'sent_at' => null,
+            'sent_count' => 0,
+            'total_recipients' => 0,
+            'errors' => [],
+        ];
     }
 
     public function show(Request $request, LoanApplication $loanApplication): View|JsonResponse|RedirectResponse
@@ -374,7 +542,7 @@ class LoanApprovalController extends Controller
         $roleMap = [
             'loan_officer' => ['Loan Officer', 'Marketer'],
             'credit_officer' => ['Credit Officer'],
-            'finance_officer' => ['Finance'],
+            'finance_officer' => ['Finance', 'Director'],
             'director' => ['Director'],
         ];
 
@@ -419,7 +587,7 @@ class LoanApprovalController extends Controller
                 $roleMap = [
                     'loan_officer' => ['Loan Officer', 'Marketer'],
                     'credit_officer' => ['Credit Officer'],
-                    'finance_officer' => ['Finance'],
+                    'finance_officer' => ['Finance', 'Director'],
                     'director' => ['Director'],
                 ];
 
@@ -466,7 +634,7 @@ class LoanApprovalController extends Controller
         return match ($loanApplication->approval_stage) {
             'loan_officer' => $user->hasRole('Loan Officer') || $user->hasRole('Marketer'),
             'credit_officer' => $user->hasRole('Credit Officer'),
-            'finance_officer' => $user->hasRole('Finance'),
+            'finance_officer' => $user->hasRole('Finance') || $user->hasRole('Director'),
             'director' => $user->hasRole('Director'),
             default => false,
         };

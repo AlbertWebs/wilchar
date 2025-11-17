@@ -114,7 +114,7 @@
             $requiredRoleLabels = [
                 'loan_officer' => 'Loan Officer or Marketer',
                 'credit_officer' => 'Credit Officer',
-                'finance_officer' => 'Finance Officer',
+                'finance_officer' => 'Finance Officer or Director',
                 'director' => 'Director',
             ];
             $requiredRole = $requiredRoleLabels[$loanApplication->approval_stage] ?? 'authorized user';

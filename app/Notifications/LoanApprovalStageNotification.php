@@ -28,7 +28,7 @@ class LoanApprovalStageNotification extends Notification implements ShouldQueue
             $hasRequiredRole = match ($stage) {
                 'loan_officer' => $notifiable->hasRole('Loan Officer') || $notifiable->hasRole('Marketer'),
                 'credit_officer' => $notifiable->hasRole('Credit Officer'),
-                'finance_officer' => $notifiable->hasRole('Finance'),
+                'finance_officer' => $notifiable->hasRole('Finance') || $notifiable->hasRole('Director'),
                 'director' => $notifiable->hasRole('Director'),
                 default => false,
             };

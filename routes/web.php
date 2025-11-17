@@ -99,6 +99,7 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('approvals/{loanApplication}', [LoanApprovalController::class, 'show'])->name('approvals.show');
     Route::post('approvals/{loanApplication}/approve', [LoanApprovalController::class, 'approve'])->name('approvals.approve');
     Route::post('approvals/{loanApplication}/reject', [LoanApprovalController::class, 'reject'])->name('approvals.reject');
+    Route::post('approvals/{loanApplication}/send-email', [LoanApprovalController::class, 'sendEmail'])->name('approvals.send-email');
 
     // Teams & Members
     Route::resource('teams', TeamController::class);
