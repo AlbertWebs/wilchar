@@ -18,9 +18,11 @@ class UsersSeeder extends Seeder
             'Admin',
             'Finance',
             'Loan Officer',
+            'Credit Officer',
             'Collection Officer',
             'Marketer',
             'Recovery Officer',
+            'Director',
         ];
 
         foreach ($roles as $roleName) {
@@ -69,6 +71,18 @@ class UsersSeeder extends Seeder
                 'email' => 'recovery@nurusmesolution.co.ke',
                 'password' => Hash::make('password'),
                 'role' => 'Recovery Officer',
+            ],
+            [
+                'name' => 'Credit Officer',
+                'email' => 'credit@nurusmesolution.co.ke',
+                'password' => Hash::make('password'),
+                'role' => 'Credit Officer',
+            ],
+            [
+                'name' => 'Director',
+                'email' => 'director@nurusmesolution.co.ke',
+                'password' => Hash::make('password'),
+                'role' => 'Director',
             ],
         ];
 

@@ -16,7 +16,7 @@ class SiteSettingSeeder extends Seeder
             // General Settings
             [
                 'key' => 'site_name',
-                'value' => 'Wilchar Loan Management System',
+                'value' => 'Nuru Wilchar SME Solutions',
                 'type' => 'text',
                 'group' => 'general',
                 'description' => 'Site Name',
@@ -30,24 +30,38 @@ class SiteSettingSeeder extends Seeder
             ],
             [
                 'key' => 'site_email',
-                'value' => 'info@wilchar.com',
+                'value' => 'info@nurusmesolution.co.ke',
                 'type' => 'text',
                 'group' => 'general',
                 'description' => 'Contact Email',
             ],
             [
                 'key' => 'site_phone',
-                'value' => '+254 700 000 000',
+                'value' => '+254 704 388 759',
                 'type' => 'text',
                 'group' => 'general',
                 'description' => 'Contact Phone',
             ],
             [
+                'key' => 'site_phone_alt',
+                'value' => '+123 456 789',
+                'type' => 'text',
+                'group' => 'general',
+                'description' => 'Alternate Contact Phone',
+            ],
+            [
                 'key' => 'site_address',
-                'value' => '123 Main Street, Nairobi, Kenya',
+                'value' => '31 Brandy Way, Sutton, SM2 6SE',
                 'type' => 'text',
                 'group' => 'general',
                 'description' => 'Site Address',
+            ],
+            [
+                'key' => 'site_address_alt',
+                'value' => '6391 Celina, Delaware 10299',
+                'type' => 'text',
+                'group' => 'general',
+                'description' => 'Alternate Site Address',
             ],
             [
                 'key' => 'site_location',
@@ -57,11 +71,25 @@ class SiteSettingSeeder extends Seeder
                 'description' => 'Site Location',
             ],
             [
-                'key' => 'footer_text',
-                'value' => '© ' . date('Y') . ' Wilchar Loan Management System. All rights reserved.',
+                'key' => 'footer_description',
+                'value' => 'Welcome to Nuru SME Solutions, your trusted resource for financial support.',
                 'type' => 'text',
                 'group' => 'general',
-                'description' => 'Footer Text',
+                'description' => 'Footer Description',
+            ],
+            [
+                'key' => 'footer_text',
+                'value' => '© ' . date('Y') . ' Nuru Wilchar SME Solutions. All rights reserved.',
+                'type' => 'text',
+                'group' => 'general',
+                'description' => 'Footer Copyright Text',
+            ],
+            [
+                'key' => 'footer_powered_by',
+                'value' => 'Designekta Studios',
+                'type' => 'text',
+                'group' => 'general',
+                'description' => 'Footer Powered By Text',
             ],
 
             // M-Pesa Settings
@@ -130,25 +158,32 @@ class SiteSettingSeeder extends Seeder
                 'group' => 'social',
                 'description' => 'WhatsApp Business Number',
             ],
+            [
+                'key' => 'telegram_url',
+                'value' => '#',
+                'type' => 'url',
+                'group' => 'social',
+                'description' => 'Telegram URL',
+            ],
 
             // SEO Settings
             [
                 'key' => 'meta_title',
-                'value' => 'Wilchar Loan Management System - Your Trusted Financial Partner',
+                'value' => 'FINVIEW - Financial Loan Review and Comparison Website Template',
                 'type' => 'text',
                 'group' => 'seo',
                 'description' => 'Meta Title',
             ],
             [
                 'key' => 'meta_description',
-                'value' => 'Wilchar offers comprehensive loan management solutions with flexible repayment options and excellent customer service.',
+                'value' => 'FINVIEW HTML5 Template',
                 'type' => 'text',
                 'group' => 'seo',
                 'description' => 'Meta Description',
             ],
             [
                 'key' => 'meta_keywords',
-                'value' => 'loans, loan management, financial services, microloans, Kenya',
+                'value' => 'FINVIEW, Financial Loan, Financial Loan Review and Comparison',
                 'type' => 'text',
                 'group' => 'seo',
                 'description' => 'Meta Keywords',

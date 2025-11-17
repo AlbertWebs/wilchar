@@ -32,15 +32,23 @@ class SiteSettingController extends Controller
             'site_tagline' => 'nullable|string|max:255',
             'site_email' => 'nullable|email|max:255',
             'site_phone' => 'nullable|string|max:255',
+            'site_phone_alt' => 'nullable|string|max:255',
             'site_address' => 'nullable|string|max:500',
+            'site_address_alt' => 'nullable|string|max:500',
+            'site_location' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'logo_dark' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'favicon' => 'nullable|image|mimes:ico,png|max:512',
+            'footer_description' => 'nullable|string|max:500',
             'footer_text' => 'nullable|string|max:500',
+            'footer_powered_by' => 'nullable|string|max:255',
             'facebook_url' => 'nullable|url|max:255',
             'twitter_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
             'linkedin_url' => 'nullable|url|max:255',
+            'youtube_url' => 'nullable|url|max:255',
+            'whatsapp_number' => 'nullable|string|max:255',
+            'telegram_url' => 'nullable|url|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
@@ -51,8 +59,13 @@ class SiteSettingController extends Controller
         $this->updateSetting('site_tagline', $request->site_tagline, 'general', 'Site Tagline');
         $this->updateSetting('site_email', $request->site_email, 'general', 'Contact Email');
         $this->updateSetting('site_phone', $request->site_phone, 'general', 'Contact Phone');
+        $this->updateSetting('site_phone_alt', $request->site_phone_alt, 'general', 'Alternate Contact Phone');
         $this->updateSetting('site_address', $request->site_address, 'general', 'Site Address');
-        $this->updateSetting('footer_text', $request->footer_text, 'general', 'Footer Text');
+        $this->updateSetting('site_address_alt', $request->site_address_alt, 'general', 'Alternate Site Address');
+        $this->updateSetting('site_location', $request->site_location, 'general', 'Site Location');
+        $this->updateSetting('footer_description', $request->footer_description, 'general', 'Footer Description');
+        $this->updateSetting('footer_text', $request->footer_text, 'general', 'Footer Copyright Text');
+        $this->updateSetting('footer_powered_by', $request->footer_powered_by, 'general', 'Footer Powered By Text');
 
         // Branding (Images)
         if ($request->hasFile('logo')) {
@@ -75,6 +88,9 @@ class SiteSettingController extends Controller
         $this->updateSetting('twitter_url', $request->twitter_url, 'social', 'Twitter URL');
         $this->updateSetting('instagram_url', $request->instagram_url, 'social', 'Instagram URL');
         $this->updateSetting('linkedin_url', $request->linkedin_url, 'social', 'LinkedIn URL');
+        $this->updateSetting('youtube_url', $request->youtube_url, 'social', 'YouTube URL');
+        $this->updateSetting('whatsapp_number', $request->whatsapp_number, 'social', 'WhatsApp Business Number');
+        $this->updateSetting('telegram_url', $request->telegram_url, 'social', 'Telegram URL');
 
         // SEO
         $this->updateSetting('meta_title', $request->meta_title, 'seo', 'Meta Title');
@@ -118,8 +134,13 @@ class SiteSettingController extends Controller
                 'site_tagline' => SiteSetting::getValue('site_tagline', ''),
                 'site_email' => SiteSetting::getValue('site_email', ''),
                 'site_phone' => SiteSetting::getValue('site_phone', ''),
+                'site_phone_alt' => SiteSetting::getValue('site_phone_alt', ''),
                 'site_address' => SiteSetting::getValue('site_address', ''),
+                'site_address_alt' => SiteSetting::getValue('site_address_alt', ''),
+                'site_location' => SiteSetting::getValue('site_location', ''),
+                'footer_description' => SiteSetting::getValue('footer_description', ''),
                 'footer_text' => SiteSetting::getValue('footer_text', ''),
+                'footer_powered_by' => SiteSetting::getValue('footer_powered_by', ''),
             ],
             'branding' => [
                 'logo' => SiteSetting::getValue('logo', ''),
@@ -131,6 +152,9 @@ class SiteSettingController extends Controller
                 'twitter_url' => SiteSetting::getValue('twitter_url', ''),
                 'instagram_url' => SiteSetting::getValue('instagram_url', ''),
                 'linkedin_url' => SiteSetting::getValue('linkedin_url', ''),
+                'youtube_url' => SiteSetting::getValue('youtube_url', ''),
+                'whatsapp_number' => SiteSetting::getValue('whatsapp_number', ''),
+                'telegram_url' => SiteSetting::getValue('telegram_url', ''),
             ],
             'seo' => [
                 'meta_title' => SiteSetting::getValue('meta_title', ''),

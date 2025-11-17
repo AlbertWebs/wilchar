@@ -29,6 +29,17 @@ class LoanSeeder extends Seeder
         $financeOfficer = User::role('Finance')->first();
         $director = User::role('Director')->first();
 
+        // If any required users don't exist, warn and continue with null values
+        if (!$loanOfficer) {
+            $this->command->warn('No Loan Officer found. Some loan applications may not have assigned officers.');
+        }
+        if (!$creditOfficer) {
+            $this->command->warn('No Credit Officer found. Some loan applications may not have assigned officers.');
+        }
+        if (!$financeOfficer) {
+            $this->command->warn('No Finance Officer found. Some loan applications may not have assigned officers.');
+        }
+
         foreach ($clients as $index => $client) {
             $amount = Arr::random([75000, 125000, 200000]);
             $duration = Arr::random([6, 12, 18]);
@@ -129,7 +140,7 @@ class LoanSeeder extends Seeder
                     'amount' => $amount,
                     'transaction_amount' => $amount - 2500,
                     'processing_fee' => 2500,
-                    'method' => 'M-PESA B2C',
+                    'method' => 'mpesa_b2c',
                     'disbursement_date' => now()->subDay(),
                     'status' => 'pending',
                     'recipient_phone' => $client->mpesa_phone ?? $client->phone,

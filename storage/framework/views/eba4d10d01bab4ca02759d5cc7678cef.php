@@ -12,11 +12,11 @@
     <!-- #favicon -->
     <link rel="shortcut icon" href="<?php echo e(asset('main/assets/images/favicon.png')); ?>" type="image/x-icon">
     <!-- #title -->
-    <title>FINVIEW - Financial Loan Review and Comparison Website Template</title>
+    <title><?php echo e($settings['meta_title'] ?? 'FINVIEW - Financial Loan Review and Comparison Website Template'); ?></title>
     <!-- #keywords -->
-    <meta name="keywords" content="FINVIEW, Financial Loan, Financial Loan Review and Comparison">
+    <meta name="keywords" content="<?php echo e($settings['meta_keywords'] ?? 'FINVIEW, Financial Loan, Financial Loan Review and Comparison'); ?>">
     <!-- #description -->
-    <meta name="description" content="FINVIEW HTML5 Template">
+    <meta name="description" content="<?php echo e($settings['meta_description'] ?? 'FINVIEW HTML5 Template'); ?>">
 
     <!--  css dependencies start  -->
 
@@ -149,15 +149,15 @@
                         <ul class="custom-nevbar__right-location">
                             <li>
                                 <p class="mb-2">Phone: </p>
-                                <a href="tel:+123456789" class="fs-4 contact">+123 456 789</a>
+                                <a href="tel:<?php echo e(str_replace(' ', '', $settings['site_phone'] ?? '+123 456 789')); ?>" class="fs-4 contact"><?php echo e($settings['site_phone'] ?? '+123 456 789'); ?></a>
                             </li>
                             <li class="location">
                                 <p class="mb-2">Email: </p>
-                                <a href="https://pixner.net/cdn-cgi/l/email-protection#afe6c1c9c0efc8c2cec6c381ccc0c2" class="fs-4 contact"><span class="__cf_email__" data-cfemail="a2ebccc4cde2c5cfc3cbce8cc1cdcf">[email&#160;protected]</span></a>
+                                <a href="mailto:<?php echo e($settings['site_email'] ?? 'info@example.com'); ?>" class="fs-4 contact"><?php echo e($settings['site_email'] ?? 'info@example.com'); ?></a>
                             </li>
                             <li class="location">
                                 <p class="mb-2">Location: </p>
-                                <p class="fs-4 contact">6391 Celina, Delaware 10299</p>
+                                <p class="fs-4 contact"><?php echo e($settings['site_address'] ?? 'Quickmart Plaza, Kakamega'); ?></p>
                             </li>
                         </ul>
                     </div>
@@ -180,13 +180,23 @@
                                 <img src="<?php echo e(asset('main/assets/images/logo.png')); ?>" alt="Logo">
                             </a>
                         </div>
-                        <p>Welcome to Nuru SME Solutions, your trusted resource for financial support.</p>
+                        <p><?php echo e($settings['footer_description'] ?? 'Welcome to Nuru SME Solutions, your trusted resource for financial support.'); ?></p>
                         <div class="social mt_32">
-                            <a href="#" class="btn_theme social_box"><i class="bi bi-facebook"></i><span></span></a>
-                            <a href="#" class="btn_theme social_box"><i class="bi bi-twitter"></i><span></span></a>
-                            <a href="#" class="btn_theme social_box"><i class="bi bi-instagram"></i><span></span></a>
-                            <a href="#" class="btn_theme social_box"><i class="bi bi-whatsapp"></i><span></span></a>
-                            <a href="#" class="btn_theme social_box"><i class="bi bi-telegram"></i><span></span></a>
+                            <?php if(!empty($settings['facebook_url'])): ?>
+                                <a href="<?php echo e($settings['facebook_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-facebook"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['twitter_url'])): ?>
+                                <a href="<?php echo e($settings['twitter_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-twitter"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['instagram_url'])): ?>
+                                <a href="<?php echo e($settings['instagram_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-instagram"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['whatsapp_number'])): ?>
+                                <a href="https://wa.me/<?php echo e(str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'])); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-whatsapp"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['telegram_url'])): ?>
+                                <a href="<?php echo e($settings['telegram_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-telegram"></i><span></span></a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -194,9 +204,9 @@
                     <div class="footer__contact ms-sm-4 ms-xl-0 wow fadeInUp" data-wow-duration="0.8s">
                         <h4 class="footer__title mb-4">Contact</h4>
                         <div class="footer__content">
-                            <a href="tel:+1-234-567-891"> <span class="btn_theme social_box"> <i class="bi bi-telephone-plus"></i> </span> +254 704 388 759 <span></span> </a> 
-                            <a href="mailto:info@nurusmesolution.co.ke"> <span class="btn_theme social_box"> <i class="bi bi-envelope-open"></i> </span> <span class="__cf_email__" >info@nurusmesolution.co.ke</span> <span></span> </a> 
-                            <a href="#"> <span class="btn_theme social_box"> <i class="bi bi-geo-alt"></i> </span> 31 Brandy Way, Sutton, SM2 6SE <span></span> </a>
+                            <a href="tel:<?php echo e(str_replace(' ', '', $settings['site_phone'] ?? '+254704388759')); ?>"> <span class="btn_theme social_box"> <i class="bi bi-telephone-plus"></i> </span> <?php echo e($settings['site_phone'] ?? '+254 704 388 759'); ?> <span></span> </a> 
+                            <a href="mailto:<?php echo e($settings['site_email'] ?? 'info@nurusmesolution.co.ke'); ?>"> <span class="btn_theme social_box"> <i class="bi bi-envelope-open"></i> </span> <?php echo e($settings['site_email'] ?? 'info@nurusmesolution.co.ke'); ?> <span></span> </a> 
+                            <a href="#"> <span class="btn_theme social_box"> <i class="bi bi-geo-alt"></i> </span> <?php echo e($settings['site_address'] ?? 'Quickmart Plaza, Kakamega'); ?> <span></span> </a>
                         </div>
                     </div>
                 </div>
@@ -227,7 +237,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="footer__copyright">
-                        <p class="copyright text-center">Copyright © <span id="copyYear"></span> <a href="#" class="secondary_color">Nuru Wilchar SME Solutions</a>. Powered By <a href="#" class="secondary_color">Designekta Studios</a></p>
+                        <p class="copyright text-center">Copyright © <span id="copyYear"></span> <a href="#" class="secondary_color"><?php echo e($settings['site_name'] ?? 'Nuru Wilchar SME Solutions'); ?></a><?php if(!empty($settings['footer_powered_by'])): ?>. Powered By <a href="#" class="secondary_color"><?php echo e($settings['footer_powered_by']); ?></a><?php endif; ?></p>
                         <ul class="footer__copyright-conditions">
                             <li><a href="contact.html">Help & Support</a></li>
                             <li><a href="#">Sitemap</a></li>

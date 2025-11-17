@@ -433,6 +433,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const success = <?php echo json_encode(session('success'), 15, 512) ?>;
             const error = <?php echo json_encode(session('error'), 15, 512) ?>;
+            const permissionError = <?php echo json_encode(session('permission_error'), 15, 512) ?>;
 
             if (success) {
                 Swal.fire({
@@ -444,11 +445,162 @@
                 });
             }
 
-            if (error) {
+            if (error && !permissionError) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: error,
+                });
+            }
+
+            // Show permission error popup with detailed information
+            if (permissionError) {
+                const requiredRoles = permissionError.required_roles || [];
+                const userRoles = permissionError.user_roles || [];
+                
+                let html = `<div class="text-left">
+                    <p class="mb-4 text-slate-700">${permissionError.message || 'You do not have permission to access this resource.'}</p>`;
+                
+                if (requiredRoles.length > 0) {
+                    html += `<div class="mb-3">
+                        <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                        <div class="flex flex-wrap gap-2">`;
+                    requiredRoles.forEach(role => {
+                        html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                    });
+                    html += `</div></div>`;
+                }
+                
+                if (userRoles.length > 0) {
+                    html += `<div class="mb-3">
+                        <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                        <div class="flex flex-wrap gap-2">`;
+                    userRoles.forEach(role => {
+                        html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                    });
+                    html += `</div></div>`;
+                } else {
+                    html += `<div class="mb-3">
+                        <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                    </div>`;
+                }
+                
+                html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Access Denied',
+                    html: html,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#10b981',
+                    width: '500px'
+                });
+            }
+        });
+
+        // Handle AJAX 403 errors globally
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intercept fetch requests
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                return originalFetch.apply(this, args)
+                    .then(response => {
+                        if (response.status === 403) {
+                            return response.json().then(data => {
+                                const requiredRoles = data.required_roles || [];
+                                const userRoles = data.user_roles || [];
+                                
+                                let html = `<div class="text-left">
+                                    <p class="mb-4 text-slate-700">${data.message || 'You do not have permission to perform this action.'}</p>`;
+                                
+                                if (requiredRoles.length > 0) {
+                                    html += `<div class="mb-3">
+                                        <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                                        <div class="flex flex-wrap gap-2">`;
+                                    requiredRoles.forEach(role => {
+                                        html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                                    });
+                                    html += `</div></div>`;
+                                }
+                                
+                                if (userRoles.length > 0) {
+                                    html += `<div class="mb-3">
+                                        <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                                        <div class="flex flex-wrap gap-2">`;
+                                    userRoles.forEach(role => {
+                                        html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                                    });
+                                    html += `</div></div>`;
+                                } else {
+                                    html += `<div class="mb-3">
+                                        <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                                    </div>`;
+                                }
+                                
+                                html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                                
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Access Denied',
+                                    html: html,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#10b981',
+                                    width: '500px'
+                                });
+                                
+                                throw new Error(data.message || 'Forbidden');
+                            });
+                        }
+                        return response;
+                    });
+            };
+
+            // Intercept jQuery AJAX requests (if jQuery is used)
+            if (typeof jQuery !== 'undefined') {
+                $(document).ajaxError(function(event, xhr) {
+                    if (xhr.status === 403) {
+                        const data = xhr.responseJSON || {};
+                        const requiredRoles = data.required_roles || [];
+                        const userRoles = data.user_roles || [];
+                        
+                        let html = `<div class="text-left">
+                            <p class="mb-4 text-slate-700">${data.message || 'You do not have permission to perform this action.'}</p>`;
+                        
+                        if (requiredRoles.length > 0) {
+                            html += `<div class="mb-3">
+                                <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                                <div class="flex flex-wrap gap-2">`;
+                            requiredRoles.forEach(role => {
+                                html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                            });
+                            html += `</div></div>`;
+                        }
+                        
+                        if (userRoles.length > 0) {
+                            html += `<div class="mb-3">
+                                <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                                <div class="flex flex-wrap gap-2">`;
+                            userRoles.forEach(role => {
+                                html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                            });
+                            html += `</div></div>`;
+                        } else {
+                            html += `<div class="mb-3">
+                                <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                            </div>`;
+                        }
+                        
+                        html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                        
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Access Denied',
+                            html: html,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#10b981',
+                            width: '500px'
+                        });
+                    }
                 });
             }
         });
