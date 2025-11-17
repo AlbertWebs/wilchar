@@ -334,6 +334,9 @@ class LoanApprovalController extends Controller
                 'rejected_at' => now(),
             ]);
 
+            // Notify relevant users about the rejection
+            $this->notifyRejection($loanApplication, $stage);
+
             AuditLog::log(
                 LoanApplication::class,
                 $loanApplication->id,
@@ -381,14 +384,81 @@ class LoanApprovalController extends Controller
             return;
         }
 
-        $recipients = User::role($roles)->get();
+        // Get users with the required roles who also have permission to view approvals
+        $recipients = User::role($roles)
+            ->get()
+            ->filter(function ($user) use ($loanApplication) {
+                // Check if user has Admin role, approvals.view permission, or can approve at this stage
+                return $user->hasRole('Admin') || $user->can('approvals.view') || $this->canApproveAtStage($user, $loanApplication);
+            });
+
         if ($recipients->isEmpty()) {
             return;
         }
 
         $loanApplication->loadMissing('client', 'team');
 
-        Notification::send($recipients, new LoanApprovalStageNotification($loanApplication));
+        Notification::send($recipients, new LoanApprovalStageNotification($loanApplication, 'approval'));
+    }
+
+    private function notifyRejection(LoanApplication $loanApplication, string $rejectedAtStage): void
+    {
+        // Notify Admin users and users with approvals.view permission
+        $recipients = User::where(function ($query) {
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', 'Admin');
+            })->orWhereHas('permissions', function ($q) {
+                $q->where('name', 'approvals.view');
+            });
+        })->get();
+
+        // Also notify the next approver in the workflow if application wasn't completed
+        if ($rejectedAtStage !== 'completed') {
+            $nextStage = $this->getNextStage($rejectedAtStage);
+            if ($nextStage) {
+                $roleMap = [
+                    'loan_officer' => ['Loan Officer', 'Marketer'],
+                    'credit_officer' => ['Credit Officer'],
+                    'finance_officer' => ['Finance'],
+                    'director' => ['Director'],
+                ];
+
+                $nextRoles = $roleMap[$nextStage] ?? [];
+                if (!empty($nextRoles)) {
+                    $nextApprovers = User::role($nextRoles)
+                        ->where(function ($query) {
+                            $query->whereHas('roles', function ($q) {
+                                $q->where('name', 'Admin');
+                            })->orWhereHas('permissions', function ($q) {
+                                $q->where('name', 'approvals.view');
+                            });
+                        })
+                        ->get();
+                    
+                    $recipients = $recipients->merge($nextApprovers)->unique('id');
+                }
+            }
+        }
+
+        if ($recipients->isEmpty()) {
+            return;
+        }
+
+        $loanApplication->loadMissing('client', 'team');
+
+        Notification::send($recipients, new LoanApprovalStageNotification($loanApplication, 'rejection'));
+    }
+
+    private function getNextStage(string $currentStage): ?string
+    {
+        $stages = ['loan_officer', 'credit_officer', 'finance_officer', 'director', 'completed'];
+        $currentIndex = array_search($currentStage, $stages);
+        
+        if ($currentIndex !== false && $currentIndex < count($stages) - 1) {
+            return $stages[$currentIndex + 1];
+        }
+        
+        return null;
     }
 
     private function canApproveAtStage($user, LoanApplication $loanApplication): bool

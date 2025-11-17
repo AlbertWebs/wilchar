@@ -77,15 +77,19 @@
 <body>
     <div class="wrapper">
         <div class="container">
-            <div class="header">
-                <p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">Loan approval needed</p>
+            <div class="header" style="background: linear-gradient(135deg, {{ $action === 'rejection' ? '#dc2626, #ef4444' : '#059669, #10b981' }});">
+                <p style="margin:0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">{{ $action === 'rejection' ? 'Application Rejected' : 'Loan approval needed' }}</p>
                 <h1>Hi {{ $notifiable->name }},</h1>
-                <p style="margin:8px 0 0;font-size:14px;opacity:0.85;">{{ $stageDisplay }} for {{ $loanApplication->application_number }}</p>
+                <p style="margin:8px 0 0;font-size:14px;opacity:0.85;">{{ $action === 'rejection' ? 'Application rejected at ' . $stageDisplay : $stageDisplay . ' for ' . $loanApplication->application_number }}</p>
             </div>
             <div class="content">
-                <h2>Application ready for your review</h2>
+                <h2>{{ $action === 'rejection' ? 'Application has been rejected' : 'Application ready for your review' }}</h2>
                 <p>
-                    The loan application below has entered your queue. Please log into the admin panel to review the supporting documents and take the next action.
+                    @if($action === 'rejection')
+                        The loan application below has been rejected at the {{ $stageDisplay }} stage. Please review the details and rejection reason in the admin panel.
+                    @else
+                        The loan application below has entered your queue. Please log into the admin panel to review the supporting documents and take the next action.
+                    @endif
                 </p>
 
                 <div class="details">
@@ -93,12 +97,15 @@
                     <p><strong>Amount Requested:</strong> KES {{ number_format($loanApplication->amount, 2) }}</p>
                     <p><strong>Current Stage:</strong> {{ $stageDisplay }}</p>
                     <p><strong>Submitted:</strong> {{ $loanApplication->created_at?->format('d M Y, H:i') }}</p>
+                    @if($action === 'rejection' && $loanApplication->rejection_reason)
+                        <p><strong>Rejection Reason:</strong> {{ $loanApplication->rejection_reason }}</p>
+                    @endif
                     @if($loanApplication->team?->name)
                         <p><strong>Team:</strong> {{ $loanApplication->team->name }}</p>
                     @endif
                 </div>
 
-                <a href="{{ $ctaUrl }}" class="cta">Review in Admin Panel</a>
+                <a href="{{ $ctaUrl }}" class="cta" style="background-color: {{ $action === 'rejection' ? '#dc2626' : '#059669' }};">{{ $action === 'rejection' ? 'View Application Details' : 'Review in Admin Panel' }}</a>
                 <p style="font-size:12px;color:#94a3b8;margin-top:16px;">If the button does not work, copy this link into your browser: <br>{{ $ctaUrl }}</p>
             </div>
             <div class="footer">
