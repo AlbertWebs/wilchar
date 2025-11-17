@@ -1,17 +1,18 @@
-@extends('layouts.admin', ['title' => 'Create Client'])
+@extends('layouts.admin', ['title' => 'Edit Client'])
 
 @section('header')
-    Create Client
+    Edit Client: {{ $client->full_name }}
 @endsection
 
 @section('content')
     <div class="space-y-6">
-        <x-admin.section title="Client Profile" description="Capture the borrower’s personal details and business background.">
-            <form action="{{ route('admin.clients.store') }}" method="POST" class="space-y-6">
+        <x-admin.section title="Client Profile" description="Update the borrower's personal details and business background.">
+            <form action="{{ route('admin.clients.update', $client) }}" method="POST" class="space-y-6">
                 @csrf
+                @method('PUT')
                 @if($errors->any())
                     <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-                        <p class="font-semibold">We couldn’t save the client yet.</p>
+                        <p class="font-semibold">We couldn't save the changes yet.</p>
                         <ul class="mt-2 list-disc pl-5 text-xs">
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -22,18 +23,18 @@
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">First Name</label>
-                        <input type="text" name="first_name" value="{{ old('first_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('first_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        <input type="text" name="first_name" value="{{ old('first_name', $client->first_name) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('first_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
                         @error('first_name')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Middle Name</label>
-                        <input type="text" name="middle_name" value="{{ old('middle_name') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        <input type="text" name="middle_name" value="{{ old('middle_name', $client->middle_name) }}" class="mt-1 w-full rounded-xl border-slate-200">
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Last Name</label>
-                        <input type="text" name="last_name" value="{{ old('last_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('last_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        <input type="text" name="last_name" value="{{ old('last_name', $client->last_name) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('last_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
                         @error('last_name')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
@@ -43,21 +44,21 @@
                 <div class="grid gap-4 md:grid-cols-3">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">National ID / Passport</label>
-                        <input type="text" name="id_number" value="{{ old('id_number') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('id_number') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                        <input type="text" name="id_number" value="{{ old('id_number', $client->id_number) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('id_number') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
                         @error('id_number')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Phone Number</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('phone') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" placeholder="2547XXXXXXXX" required>
+                        <input type="text" name="phone" value="{{ old('phone', $client->phone) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('phone') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" placeholder="2547XXXXXXXX" required>
                         @error('phone')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Email (optional)</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('email') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror">
+                        <input type="email" name="email" value="{{ old('email', $client->email) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('email') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror">
                         @error('email')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
@@ -67,27 +68,27 @@
                 <div class="grid gap-4 md:grid-cols-4">
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Date of Birth</label>
-                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $client->date_of_birth?->format('Y-m-d')) }}" class="mt-1 w-full rounded-xl border-slate-200">
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Gender</label>
                         <select name="gender" class="mt-1 w-full rounded-xl border-slate-200">
                             <option value="">Select</option>
-                            <option value="male" @selected(old('gender') === 'male')>Male</option>
-                            <option value="female" @selected(old('gender') === 'female')>Female</option>
-                            <option value="other" @selected(old('gender') === 'other')>Other</option>
+                            <option value="male" @selected(old('gender', $client->gender) === 'male')>Male</option>
+                            <option value="female" @selected(old('gender', $client->gender) === 'female')>Female</option>
+                            <option value="other" @selected(old('gender', $client->gender) === 'other')>Other</option>
                         </select>
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Nationality</label>
-                        <input type="text" name="nationality" value="{{ old('nationality') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                        <input type="text" name="nationality" value="{{ old('nationality', $client->nationality) }}" class="mt-1 w-full rounded-xl border-slate-200">
                     </div>
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
                         <select name="status" class="mt-1 w-full rounded-xl border-slate-200">
-                            <option value="active" @selected(old('status') === 'active')>Active</option>
-                            <option value="inactive" @selected(old('status') === 'inactive')>Inactive</option>
-                            <option value="blacklisted" @selected(old('status') === 'blacklisted')>Blacklisted</option>
+                            <option value="active" @selected(old('status', $client->status) === 'active')>Active</option>
+                            <option value="inactive" @selected(old('status', $client->status) === 'inactive')>Inactive</option>
+                            <option value="blacklisted" @selected(old('status', $client->status) === 'blacklisted')>Blacklisted</option>
                         </select>
                     </div>
                 </div>
@@ -97,22 +98,22 @@
                     <div class="mt-4 grid gap-4 md:grid-cols-3">
                         <div class="md:col-span-2">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Name</label>
-                            <input type="text" name="business_name" value="{{ old('business_name') }}" class="mt-1 w-full rounded-xl border-slate-200 @error('business_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
+                            <input type="text" name="business_name" value="{{ old('business_name', $client->business_name) }}" class="mt-1 w-full rounded-xl border-slate-200 @error('business_name') border-rose-400 focus:border-rose-400 focus:ring-rose-300 @enderror" required>
                             @error('business_name')
                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Type</label>
-                            <input type="text" name="business_type" value="{{ old('business_type') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Retail, Farming..." required>
+                            <input type="text" name="business_type" value="{{ old('business_type', $client->business_type) }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Retail, Farming..." required>
                         </div>
                         <div class="md:col-span-2">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Location</label>
-                            <input type="text" name="location" value="{{ old('location') }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Town · Street · Landmark" required>
+                            <input type="text" name="location" value="{{ old('location', $client->location) }}" class="mt-1 w-full rounded-xl border-slate-200" placeholder="Town · Street · Landmark" required>
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Address (optional)</label>
-                            <input type="text" name="address" value="{{ old('address') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                            <input type="text" name="address" value="{{ old('address', $client->address) }}" class="mt-1 w-full rounded-xl border-slate-200">
                         </div>
                     </div>
                 </div>
@@ -122,29 +123,29 @@
                     <div class="mt-4 grid gap-4 md:grid-cols-2">
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Occupation</label>
-                            <input type="text" name="occupation" value="{{ old('occupation') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                            <input type="text" name="occupation" value="{{ old('occupation', $client->occupation) }}" class="mt-1 w-full rounded-xl border-slate-200">
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employer</label>
-                            <input type="text" name="employer" value="{{ old('employer') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                            <input type="text" name="employer" value="{{ old('employer', $client->employer) }}" class="mt-1 w-full rounded-xl border-slate-200">
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">M-PESA Phone</label>
-                            <input type="text" name="mpesa_phone" value="{{ old('mpesa_phone') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                            <input type="text" name="mpesa_phone" value="{{ old('mpesa_phone', $client->mpesa_phone) }}" class="mt-1 w-full rounded-xl border-slate-200">
                         </div>
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Alternate Phone</label>
-                            <input type="text" name="alternate_phone" value="{{ old('alternate_phone') }}" class="mt-1 w-full rounded-xl border-slate-200">
+                            <input type="text" name="alternate_phone" value="{{ old('alternate_phone', $client->alternate_phone) }}" class="mt-1 w-full rounded-xl border-slate-200">
                         </div>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-3">
-                    <a href="{{ route('admin.clients.index') }}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                    <a href="{{ route('admin.clients.show', $client) }}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
                         Cancel
                     </a>
                     <button type="submit" class="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300">
-                        Save Client
+                        Update Client
                     </button>
                 </div>
             </form>

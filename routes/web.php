@@ -80,7 +80,15 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Clients
-    Route::resource('clients', ClientController::class);
+    Route::resource('clients', ClientController::class)->names([
+        'index' => 'admin.clients.index',
+        'create' => 'admin.clients.create',
+        'store' => 'admin.clients.store',
+        'show' => 'admin.clients.show',
+        'edit' => 'admin.clients.edit',
+        'update' => 'admin.clients.update',
+        'destroy' => 'admin.clients.destroy',
+    ]);
 
     // Loan Applications (Admin can manage all)
     Route::resource('loan-applications', LoanApplicationController::class);

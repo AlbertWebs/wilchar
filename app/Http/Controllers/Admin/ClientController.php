@@ -100,7 +100,7 @@ class ClientController extends Controller
             throw $e;
         }
 
-        return redirect()->route('clients.index')
+        return redirect()->route('admin.clients.index')
             ->with('success', 'Client created successfully.');
     }
 
@@ -109,6 +109,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
+        $client->load(['loans', 'loanApplications']);
         return view('admin.clients.show', compact('client'));
     }
 
@@ -148,7 +149,7 @@ class ClientController extends Controller
 
         $client->update($validated);
 
-        return redirect()->route('clients.index')
+        return redirect()->route('admin.clients.index')
             ->with('success', 'Client updated successfully.');
     }
 
@@ -159,7 +160,7 @@ class ClientController extends Controller
     {
         $client->delete();
 
-        return redirect()->route('clients.index')
+        return redirect()->route('admin.clients.index')
             ->with('success', 'Client deleted successfully.');
     }
 }

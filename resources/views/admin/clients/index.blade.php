@@ -12,7 +12,7 @@
                 <p class="text-sm text-slate-500">Search, filter and manage your borrower profiles.</p>
             </div>
             <a
-                href="{{ route('clients.create') }}"
+                href="{{ route('admin.clients.create') }}"
                 class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,10 +78,10 @@
                                 </td>
                                 <td class="px-4 py-4 text-right">
                                     <div class="inline-flex items-center gap-2">
-                                        <a href="{{ route('clients.show', $client) }}" class="rounded-xl border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                                        <a href="{{ route('admin.clients.show', $client) }}" class="rounded-xl border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
                                             View
                                         </a>
-                                        <a href="{{ route('clients.edit', $client) }}" class="rounded-xl border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                                        <a href="{{ route('admin.clients.edit', $client) }}" class="rounded-xl border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
                                             Edit
                                         </a>
                                     </div>

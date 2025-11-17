@@ -9,6 +9,7 @@ use App\Models\Client;
 use App\Models\LoanApplication;
 use App\Models\Collection;
 use App\Models\Loan;
+use App\Models\Disbursement;
 use Illuminate\Support\Facades\DB;
 use App\Models\Team;
 use App\Models\Expense;
@@ -24,13 +25,22 @@ class DashboardController extends Controller
         $loanApplications = LoanApplication::count();
         $approvedLoans = Loan::count();
         $pendingApprovals = LoanApplication::where('status', 'pending')->count();
-        $totalDisbursed = Loan::sum('amount_approved');
+        $totalDisbursed = Disbursement::where('status', 'success')->sum('amount');
         $totalCollections = Collection::sum('amount');
 
         // Monthly disbursements & collections for chart
         $monthExpression = $this->monthExpression();
 
-        $monthlyDisbursements = Loan::selectRaw("{$monthExpression} as month, SUM(amount_approved) as total")
+        // Use Disbursement table for accurate monthly disbursements
+        $driver = DB::connection()->getDriverName();
+        $disbursementMonthExpression = $driver === 'sqlite'
+            ? "CAST(strftime('%m', disbursement_date) AS INTEGER)"
+            : ($driver === 'pgsql' 
+                ? "EXTRACT(MONTH FROM disbursement_date)"
+                : "MONTH(disbursement_date)");
+
+        $monthlyDisbursements = Disbursement::selectRaw("{$disbursementMonthExpression} as month, SUM(amount) as total")
+            ->where('status', 'success')
             ->groupBy('month')
             ->pluck('total', 'month');
 
