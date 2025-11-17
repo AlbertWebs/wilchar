@@ -39,6 +39,9 @@ use App\Http\Controllers\LoanCalculatorController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Public page routes
+Route::get('/page/{slug}', [\App\Http\Controllers\PageController::class, 'show'])->name('page.show');
+
 Route::post('/calculate-loan', [LoanCalculatorController::class, 'calculate'])->name('loan.calculate');
 
 // Common Dashboard Route (fallback if role not handled)
@@ -194,6 +197,11 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     // Site Settings
     Route::get('site-settings', [SiteSettingController::class, 'edit'])->name('admin.site-settings.edit');
     Route::patch('site-settings', [SiteSettingController::class, 'update'])->name('admin.site-settings.update');
+
+    // Website CMS
+    Route::prefix('website')->name('admin.website.')->group(function () {
+        Route::resource('pages', \App\Http\Controllers\Admin\WebsiteController::class);
+    });
 
     // Admin Profile
     Route::get('profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');

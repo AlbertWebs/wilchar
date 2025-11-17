@@ -5,8 +5,29 @@
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="h-full bg-slate-100">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Wilchar LMS">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wilchar LMS">
+    <meta name="description" content="Comprehensive loan management system with flexible repayment options, M-Pesa integration, and excellent customer service.">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#10b981">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="theme-color" content="#10b981">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
 
     <title><?php echo e($title ?? config('app.name', 'Admin Panel')); ?></title>
 
@@ -131,6 +152,19 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 4.5l1-1 1 1m8 8l1 1-1 1m-15-8l-1 1 1 1m8 8l-1 1 1 1M12 9v3l2 2" />
                             </svg>
                             <span>System Settings</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Website</p>
+                <ul class="mt-3 space-y-1 text-sm">
+                    <li>
+                        <a href="<?php echo e(route('admin.website.pages.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.website.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                            <svg class="h-5 w-5 shrink-0 text-blue-400 group-hover:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>Pages</span>
                         </a>
                     </li>
                 </ul>
