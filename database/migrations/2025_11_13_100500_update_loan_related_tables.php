@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,8 +14,29 @@ return new class extends Migration
     {
         Schema::table('loan_applications', function (Blueprint $table) {
             if (!Schema::hasColumn('loan_applications', 'loan_product_id')) {
-                $table->foreignId('loan_product_id')->nullable()->after('client_id')->constrained()->nullOnDelete();
+                $table->unsignedBigInteger('loan_product_id')->nullable()->after('client_id');
             }
+        });
+        
+        // Drop existing foreign key if it exists
+        $foreignKeys = DB::select("
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.KEY_COLUMN_USAGE 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'loan_applications' 
+            AND COLUMN_NAME = 'loan_product_id' 
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+        ");
+        
+        foreach ($foreignKeys as $foreignKey) {
+            Schema::table('loan_applications', function (Blueprint $table) use ($foreignKey) {
+                $table->dropForeign($foreignKey->CONSTRAINT_NAME);
+            });
+        }
+        
+        Schema::table('loan_applications', function (Blueprint $table) {
+            // Add foreign key constraint explicitly
+            $table->foreign('loan_product_id')->references('id')->on('loan_products')->nullOnDelete();
             if (!Schema::hasColumn('loan_applications', 'team_id')) {
                 $table->foreignId('team_id')->nullable()->after('client_id')->constrained()->nullOnDelete();
             }
@@ -58,8 +80,29 @@ return new class extends Migration
                 $table->foreignId('loan_application_id')->nullable()->after('client_id')->constrained()->nullOnDelete();
             }
             if (!Schema::hasColumn('loans', 'loan_product_id')) {
-                $table->foreignId('loan_product_id')->nullable()->after('loan_type')->constrained()->nullOnDelete();
+                $table->unsignedBigInteger('loan_product_id')->nullable()->after('loan_type');
             }
+        });
+        
+        // Drop existing foreign key if it exists for loans table
+        $loansForeignKeys = DB::select("
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.KEY_COLUMN_USAGE 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'loans' 
+            AND COLUMN_NAME = 'loan_product_id' 
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+        ");
+        
+        foreach ($loansForeignKeys as $foreignKey) {
+            Schema::table('loans', function (Blueprint $table) use ($foreignKey) {
+                $table->dropForeign($foreignKey->CONSTRAINT_NAME);
+            });
+        }
+        
+        Schema::table('loans', function (Blueprint $table) {
+            // Add foreign key constraint explicitly
+            $table->foreign('loan_product_id')->references('id')->on('loan_products')->nullOnDelete();
             if (!Schema::hasColumn('loans', 'team_id')) {
                 $table->foreignId('team_id')->nullable()->after('loan_product_id')->constrained()->nullOnDelete();
             }
