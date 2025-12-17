@@ -63,13 +63,34 @@ class LoanController extends Controller
             'client',
             'loanProduct',
             'team',
-            'disbursements',
-            'repayments',
+            'collectionOfficer',
+            'recoveryOfficer',
+            'financeOfficer',
+            'application',
+            'disbursements.disburser',
+            'disbursements.preparedBy',
+            'repayments' => fn($q) => $q->orderBy('paid_at', 'desc'),
+            'repayments.receiver',
             'instalments' => fn($q) => $q->orderBy('due_date'),
+            'approvals.approver',
         ]);
+
+        // Calculate loan statistics
+        $totalPaid = $loan->repayments->sum('amount');
+        $totalDisbursed = $loan->disbursements->where('status', 'success')->sum('amount');
+        $paidInstalments = $loan->instalments->where('status', 'paid')->count();
+        $totalInstalments = $loan->instalments->count();
+        $overdueInstalments = $loan->instalments->where('status', 'overdue')->count();
+        $nextInstalment = $loan->instalments->where('status', 'pending')->sortBy('due_date')->first();
 
         return view('admin.loans.show', [
             'loan' => $loan,
+            'totalPaid' => $totalPaid,
+            'totalDisbursed' => $totalDisbursed,
+            'paidInstalments' => $paidInstalments,
+            'totalInstalments' => $totalInstalments,
+            'overdueInstalments' => $overdueInstalments,
+            'nextInstalment' => $nextInstalment,
         ]);
     }
 
