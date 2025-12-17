@@ -395,29 +395,29 @@
     <!-- Modal -->
     <div
         x-cloak
-        x-show="$store.modal.open"
+        x-show="$store.modal && $store.modal.open"
         x-transition.opacity
         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-10 backdrop-blur"
     >
         <div
             x-transition
             x-bind:class="{
-                'max-w-lg': $store.modal.size === 'md',
-                'max-w-2xl': $store.modal.size === 'lg',
-                'max-w-4xl': $store.modal.size === 'xl',
+                'max-w-lg': $store.modal && $store.modal.size === 'md',
+                'max-w-2xl': $store.modal && $store.modal.size === 'lg',
+                'max-w-4xl': $store.modal && $store.modal.size === 'xl',
             }"
             class="w-full overflow-hidden rounded-2xl bg-white shadow-2xl"
         >
             <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-                <h2 class="text-lg font-semibold text-slate-900" x-text="$store.modal.title"></h2>
-                <button class="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200" @click="$store.modal.close()">
+                <h2 class="text-lg font-semibold text-slate-900" x-text="$store.modal && $store.modal.title ? $store.modal.title : ''"></h2>
+                <button class="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200" @click="$store.modal && $store.modal.close()">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
             <div class="relative max-h-[70vh] overflow-y-auto px-6 py-5 text-sm text-slate-700" x-data>
-                <template x-if="$store.modal.loading">
+                <template x-if="$store.modal && $store.modal.loading">
                     <div class="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
                         <svg class="h-8 w-8 animate-spin text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -428,9 +428,11 @@
                 <div
                     data-modal-body
                     x-effect="
-                        $el.innerHTML = $store.modal.body || '';
-                        if ($store.modal.body && window.Alpine?.initTree) {
-                            queueMicrotask(() => window.Alpine.initTree($el));
+                        if ($store.modal) {
+                            $el.innerHTML = $store.modal.body || '';
+                            if ($store.modal.body && window.Alpine?.initTree) {
+                                queueMicrotask(() => window.Alpine.initTree($el));
+                            }
                         }
                     "
                 ></div>
