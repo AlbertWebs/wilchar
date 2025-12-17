@@ -124,6 +124,11 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('disbursements/{loanApplication}', [MpesaDisbursementController::class, 'store'])->name('disbursements.store');
     Route::get('disbursements/{disbursement}', [MpesaDisbursementController::class, 'show'])->name('disbursements.show');
     Route::post('disbursements/{disbursement}/retry', [MpesaDisbursementController::class, 'retry'])->name('disbursements.retry');
+    
+    // Disbursement Initiation (with OTP)
+    Route::post('disbursements/{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
+    Route::post('disbursements/{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
+    Route::get('disbursements/{disbursement}/status', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'getStatus'])->name('disbursements.status');
 
 
     // Collections
