@@ -194,55 +194,120 @@ window.openDisbursementModalHandler = function(disbursementId) {
         console.error('Disbursement ID is missing');
         return;
     }
-    const url = `{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', disbursementId);
-    fetch(url, {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-        }
-    })
-        .then(res => {
-            if (!res.ok) {
-                return res.json().then(data => {
-                    throw new Error(data.message || `HTTP error! status: ${res.status}`);
-                });
-            }
-            return res.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const html = window.getDisbursementModalHtml(disbursementId, data);
-                Admin.showModal({
-                    title: 'Initiate Disbursement',
-                    body: html,
-                    size: 'lg'
-                });
-                setTimeout(() => {
-                    if (window.Alpine) {
-                        const modalContent = document.querySelector('[x-data*="disbursementFlow"]');
-                        if (modalContent) {
-                            window.Alpine.initTree(modalContent);
-                        }
-                    }
-                }, 200);
+    
+    // Wait for Alpine to be ready
+    const waitForAlpine = () => {
+        return new Promise((resolve) => {
+            if (window.Alpine && window.Alpine.store('modal')) {
+                resolve();
             } else {
-                console.error('Failed to load disbursement status:', data);
-                alert('Failed to load disbursement details: ' + (data.message || 'Unknown error'));
+                document.addEventListener('alpine:init', resolve, { once: true });
+                // Also check periodically in case Alpine is already initialized
+                const checkInterval = setInterval(() => {
+                    if (window.Alpine && window.Alpine.store('modal')) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 50);
+                // Timeout after 2 seconds
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    resolve();
+                }, 2000);
+            }
+        });
+    };
+    
+    waitForAlpine().then(() => {
+        // Check if Admin and Alpine are available
+        if (!window.Admin) {
+            console.error('Admin object not found');
+            alert('Admin modal system not initialized. Please refresh the page.');
+            return;
+        }
+        
+        if (!window.Alpine) {
+            console.error('Alpine.js not found');
+            alert('Alpine.js not initialized. Please refresh the page.');
+            return;
+        }
+        
+        const modalStore = window.Alpine.store('modal');
+        if (!modalStore) {
+            console.error('Modal store not found');
+            alert('Modal store not initialized. Please refresh the page.');
+            return;
+        }
+        
+        console.log('Fetching disbursement status for ID:', disbursementId);
+        const url = `{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', disbursementId);
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
             }
         })
-        .catch(error => {
-            console.error('Error loading disbursement:', error);
-            alert('An error occurred while loading disbursement details: ' + error.message);
-        });
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(data => {
+                        throw new Error(data.message || `HTTP error! status: ${res.status}`);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log('Disbursement data received:', data);
+                if (data.success) {
+                    const html = window.getDisbursementModalHtml(disbursementId, data);
+                    console.log('Generated HTML length:', html.length);
+                    console.log('Calling Admin.showModal...');
+                    try {
+                        Admin.showModal({
+                            title: 'Initiate Disbursement',
+                            body: html,
+                            size: 'lg'
+                        });
+                        console.log('Admin.showModal called successfully');
+                        // Check modal state after a short delay
+                        setTimeout(() => {
+                            const store = window.Alpine.store('modal');
+                            console.log('Modal store state after show:', {
+                                open: store?.open,
+                                title: store?.title,
+                                bodyLength: store?.body?.length,
+                                size: store?.size
+                            });
+                            // Force Alpine to re-evaluate if needed
+                            if (store && !store.open) {
+                                console.warn('Modal store open is false, forcing open');
+                                store.open = true;
+                            }
+                        }, 100);
+                    } catch (error) {
+                        console.error('Error calling Admin.showModal:', error);
+                        alert('Failed to open modal: ' + error.message);
+                    }
+                } else {
+                    console.error('Failed to load disbursement status:', data);
+                    alert('Failed to load disbursement details: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error loading disbursement:', error);
+                alert('An error occurred while loading disbursement details: ' + error.message);
+            });
+    });
 };
 
 window.getDisbursementModalHtml = function(disbursementId, initialData) {
-    const dataStr = JSON.stringify(initialData).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    // Escape JSON for HTML attribute - use base64 encoding to avoid escaping issues
+    const dataStr = btoa(JSON.stringify(initialData));
     const amount = parseFloat(initialData.disbursement?.amount || 0).toLocaleString();
     const method = (initialData.disbursement?.method || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const recipient = (initialData.disbursement?.recipient_phone || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     
-    let html = '<div x-data="disbursementFlow(' + disbursementId + ', ' + dataStr + ')" class="space-y-6">';
+    // Use data attribute to pass the JSON safely, then decode in Alpine
+    let html = '<div data-disbursement-id="' + disbursementId + '" data-initial-data="' + dataStr + '" x-data="disbursementFlowFromData($el)" class="space-y-6">';
     html += '<div class="space-y-4">';
     html += '<div class="rounded-xl border border-slate-200 bg-slate-50 p-4">';
     html += '<h3 class="text-sm font-semibold text-slate-900">Disbursement Details</h3>';
@@ -310,6 +375,18 @@ window.getDisbursementModalHtml = function(disbursementId, initialData) {
     
     return html;
 };
+
+function disbursementFlowFromData(el) {
+    const disbursementId = parseInt(el.getAttribute('data-disbursement-id'));
+    const dataStr = el.getAttribute('data-initial-data');
+    let initialData = {};
+    try {
+        initialData = JSON.parse(atob(dataStr));
+    } catch (e) {
+        console.error('Failed to parse initial data:', e);
+    }
+    return disbursementFlow(disbursementId, initialData);
+}
 
 function disbursementFlow(disbursementId, initialData) {
     return {
