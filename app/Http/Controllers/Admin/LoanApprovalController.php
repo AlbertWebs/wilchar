@@ -359,7 +359,8 @@ class LoanApprovalController extends Controller
             } elseif ($currentStage === 'finance_officer') {
                 $amountApproved = $validated['amount_approved'];
                 $processingFee = $validated['processing_fee'] ?? 0;
-                $disbursementMethod = $validated['disbursement_method'];
+                $disbursementMethodRaw = $validated['disbursement_method'];
+                $disbursementMethod = $this->normalizeDisbursementMethod($disbursementMethodRaw);
 
                 $loanApplication->update([
                     'finance_officer_id' => $loanApplication->finance_officer_id ?? $user->id,
@@ -388,7 +389,8 @@ class LoanApprovalController extends Controller
                 $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
                 $amountApproved = $pending['amount_approved'] ?? $loanApplication->amount_approved ?? $validated['amount_approved'] ?? 0;
                 $processingFee = $pending['processing_fee'] ?? $validated['processing_fee'] ?? 0;
-                $disbursementMethod = $pending['disbursement_method'] ?? $validated['disbursement_method'] ?? 'M-PESA B2C';
+                $disbursementMethodRaw = $pending['disbursement_method'] ?? $validated['disbursement_method'] ?? 'M-PESA B2C';
+                $disbursementMethod = $this->normalizeDisbursementMethod($disbursementMethodRaw);
 
                 $loan = Loan::create([
                     'client_id' => $loanApplication->client_id,
@@ -652,6 +654,26 @@ class LoanApprovalController extends Controller
         }
 
         return $this->canApproveAtStage($user, $loanApplication);
+    }
+
+    /**
+     * Normalize disbursement method to match enum values
+     */
+    private function normalizeDisbursementMethod(string $method): string
+    {
+        $normalized = strtolower(trim($method));
+        
+        $methodMap = [
+            'm-pesa b2c' => 'mpesa_b2c',
+            'mpesa b2c' => 'mpesa_b2c',
+            'mpesa_b2c' => 'mpesa_b2c',
+            'bank transfer' => 'bank_transfer',
+            'bank_transfer' => 'bank_transfer',
+            'cash' => 'cash',
+            'cheque' => 'cheque',
+        ];
+
+        return $methodMap[$normalized] ?? 'mpesa_b2c';
     }
 
     /**
