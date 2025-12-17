@@ -26,9 +26,29 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        $user = Auth::user();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Generate two-factor code
+        $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        $user->two_factor_code = $code;
+        $user->two_factor_expires_at = now()->addMinutes(10);
+        $user->save();
+
+        // Send two-factor code via email
+        $user->notify(new \App\Notifications\TwoFactorCodeNotification($code));
+
+        // Store user ID in session for verification
+        session(['login.id' => $user->id]);
+        session(['login.remember' => $request->boolean('remember')]);
+
+        // Logout the user temporarily until 2FA is verified
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('two-factor.show')
+            ->with('status', 'A verification code has been sent to your email address.');
     }
 
     /**

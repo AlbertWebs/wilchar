@@ -124,7 +124,7 @@
                 <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
                     <p class="font-semibold">Action locked</p>
                     <p class="mt-1 text-xs text-amber-600">
-                        Only a {{ $requiredRole }} can take action at this stage. You can still view the details, but approval buttons are disabled.
+                        Only a {{ $requiredRole }} or Admin can take action at this stage. You can still view the details, but approval buttons are disabled.
                     </p>
                 </div>
             @endunless

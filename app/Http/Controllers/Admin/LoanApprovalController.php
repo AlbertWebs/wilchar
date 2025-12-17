@@ -631,6 +631,11 @@ class LoanApprovalController extends Controller
 
     private function canApproveAtStage($user, LoanApplication $loanApplication): bool
     {
+        // Admin has all rights and permissions to approve at any stage
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+
         return match ($loanApplication->approval_stage) {
             'loan_officer' => $user->hasRole('Loan Officer') || $user->hasRole('Marketer'),
             'credit_officer' => $user->hasRole('Credit Officer'),
