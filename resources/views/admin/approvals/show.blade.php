@@ -171,7 +171,12 @@
                                 <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Processing Fee</label>
                                 <input type="number" name="processing_fee" step="0.01" class="mt-1 w-full rounded-xl border-slate-200" value="{{ old('processing_fee', 0) }}">
                             </div>
-                            <div class="md:col-span-2">
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Recipient Phone</label>
+                                <input type="text" name="recipient_phone" pattern="^254[0-9]{9}$" class="mt-1 w-full rounded-xl border-slate-200" value="{{ old('recipient_phone', $loanApplication->client->phone ?? '') }}" placeholder="254712345678" required>
+                                <p class="mt-1 text-xs text-slate-500">Format: 254712345678</p>
+                            </div>
+                            <div>
                                 <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Disbursement Method</label>
                                 <input type="text" name="disbursement_method" class="mt-1 w-full rounded-xl border-slate-200" value="{{ old('disbursement_method', 'M-PESA B2C') }}" required>
                             </div>
@@ -179,9 +184,40 @@
                     @endif
 
                     @if($loanApplication->approval_stage === 'director')
+                        @php
+                            $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
+                            $otpSent = !empty($pending['otp_sent_at']);
+                        @endphp
                         <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 text-sm text-slate-700">
                             <p class="font-semibold text-slate-900">Finance officer has prepared disbursement instructions.</p>
                             <p class="mt-1 text-xs text-slate-500">Review and approve to release funds.</p>
+                            @if($otpSent)
+                                <p class="mt-2 text-xs font-medium text-emerald-700">
+                                    ✓ OTP sent to your email. Please check your inbox and enter the code below.
+                                </p>
+                            @else
+                                <p class="mt-2 text-xs text-amber-600">
+                                    An OTP will be sent to your email when you view this page.
+                                </p>
+                            @endif
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Email OTP <span class="text-rose-500">*</span></label>
+                            <input 
+                                type="text" 
+                                name="otp" 
+                                class="mt-1 w-full rounded-xl border-slate-200 text-sm font-mono text-center text-lg tracking-widest" 
+                                placeholder="000000"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                inputmode="numeric"
+                                required
+                                autocomplete="one-time-code"
+                            >
+                            <p class="mt-1 text-xs text-slate-500">Enter the 6-digit code sent to your email address</p>
+                            @error('otp')
+                                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                            @enderror
                         </div>
                     @endif
                 </fieldset>
@@ -219,6 +255,76 @@
             </form>
         </x-admin.section>
     </div>
+
+    @if(isset($latestDisbursement) && $latestDisbursement)
+        <x-admin.section class="mt-6" title="Disbursement & B2C Payment Status">
+            <div class="space-y-4">
+                <div class="rounded-xl border border-slate-200 bg-white p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900">Disbursement Details</p>
+                            <p class="mt-1 text-xs text-slate-500">
+                                Amount: KES {{ number_format($latestDisbursement->amount, 2) }}
+                                @if($latestDisbursement->processing_fee > 0)
+                                    · Fee: KES {{ number_format($latestDisbursement->processing_fee, 2) }}
+                                @endif
+                            </p>
+                            <p class="mt-1 text-xs text-slate-500">
+                                Method: {{ ucfirst(str_replace('_', ' ', $latestDisbursement->method)) }}
+                                @if($latestDisbursement->recipient_phone)
+                                    · Phone: {{ $latestDisbursement->recipient_phone }}
+                                @endif
+                            </p>
+                        </div>
+                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold
+                            {{ $latestDisbursement->status === 'success' ? 'bg-emerald-100 text-emerald-800' : '' }}
+                            {{ $latestDisbursement->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                            {{ $latestDisbursement->status === 'failed' ? 'bg-rose-100 text-rose-800' : '' }}
+                        ">
+                            {{ ucfirst($latestDisbursement->status) }}
+                        </span>
+                    </div>
+                </div>
+
+                @if($latestDisbursement->method === 'mpesa_b2c')
+                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-sm font-semibold text-slate-900">M-Pesa B2C Payment Status</p>
+                        @if($latestDisbursement->status === 'success')
+                            <div class="mt-2 space-y-1 text-xs">
+                                @if($latestDisbursement->transaction_receipt)
+                                    <p class="text-slate-700"><span class="font-medium">Receipt:</span> {{ $latestDisbursement->transaction_receipt }}</p>
+                                @endif
+                                @if($latestDisbursement->mpesa_conversation_id)
+                                    <p class="text-slate-700"><span class="font-medium">Conversation ID:</span> {{ $latestDisbursement->mpesa_conversation_id }}</p>
+                                @endif
+                                <p class="text-emerald-700 font-medium">✓ Payment successfully sent via M-Pesa B2C</p>
+                            </div>
+                        @elseif($latestDisbursement->status === 'pending')
+                            <div class="mt-2 space-y-1 text-xs">
+                                @if($latestDisbursement->mpesa_request_id)
+                                    <p class="text-slate-700"><span class="font-medium">Request ID:</span> {{ $latestDisbursement->mpesa_request_id }}</p>
+                                @endif
+                                @if($latestDisbursement->mpesa_response_description)
+                                    <p class="text-slate-700"><span class="font-medium">Response:</span> {{ $latestDisbursement->mpesa_response_description }}</p>
+                                @endif
+                                <p class="text-yellow-700 font-medium">⏳ Payment initiated, awaiting M-Pesa callback confirmation</p>
+                            </div>
+                        @elseif($latestDisbursement->status === 'failed')
+                            <div class="mt-2 space-y-1 text-xs">
+                                @if($latestDisbursement->mpesa_result_description)
+                                    <p class="text-rose-700"><span class="font-medium">Error:</span> {{ $latestDisbursement->mpesa_result_description }}</p>
+                                @elseif($latestDisbursement->mpesa_response_description)
+                                    <p class="text-rose-700"><span class="font-medium">Error:</span> {{ $latestDisbursement->mpesa_response_description }}</p>
+                                @endif
+                                <p class="text-rose-700 font-medium">✗ Payment failed. Please check the error message above.</p>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        </x-admin.section>
+    @endif
+
     @if($loanApplication->loan && $loanApplication->loan->instalments->isNotEmpty())
         <x-admin.section class="xl:col-span-3 mt-6" title="Repayment Schedule" description="Projected instalments from first to final payment">
             <div class="overflow-hidden rounded-2xl border border-slate-200">

@@ -11,16 +11,24 @@ use App\Models\Loan;
 use App\Models\LoanApplication;
 use App\Models\LoanApproval;
 use App\Models\User;
+use App\Notifications\DirectorApprovalOtpNotification;
+use App\Notifications\DisbursementOtpNotification;
 use App\Notifications\LoanApprovalStageNotification;
+use App\Services\B2cPaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 
 class LoanApprovalController extends Controller
 {
+    public function __construct(private B2cPaymentService $b2cPaymentService)
+    {
+    }
+
     public function index(Request $request): View|JsonResponse
     {
         $user = auth()->user();
@@ -255,7 +263,16 @@ class LoanApprovalController extends Controller
             'kycDocuments',
             'approvals.approver',
             'loan.instalments',
+            'disbursements' => fn($q) => $q->latest(),
         ]);
+
+        // Send OTP if at director stage and OTP not yet sent
+        if ($loanApplication->approval_stage === 'director' && $this->canApproveAtStage($user, $loanApplication)) {
+            $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
+            if (empty($pending['otp_code_hash']) || (isset($pending['otp_expires_at']) && now()->greaterThan($pending['otp_expires_at']))) {
+                $this->sendDirectorOtp($loanApplication, $user);
+            }
+        }
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -263,9 +280,13 @@ class LoanApprovalController extends Controller
             ]);
         }
 
+        // Get latest disbursement for B2C status
+        $latestDisbursement = $loanApplication->disbursements->first();
+
         return view('admin.approvals.show', [
             'loanApplication' => $loanApplication,
             'canApprove' => $this->canApproveAtStage($user, $loanApplication),
+            'latestDisbursement' => $latestDisbursement,
         ]);
     }
 
@@ -291,6 +312,11 @@ class LoanApprovalController extends Controller
             $rules['amount_approved'] = 'required|numeric|min:1000';
             $rules['processing_fee'] = 'nullable|numeric|min:0';
             $rules['disbursement_method'] = 'required|string|max:255';
+            $rules['recipient_phone'] = 'required|string|regex:/^254[0-9]{9}$/';
+        }
+
+        if ($loanApplication->approval_stage === 'director') {
+            $rules['otp'] = 'required|string|size:6';
         }
 
         $validated = $request->validate($rules);
@@ -302,10 +328,13 @@ class LoanApprovalController extends Controller
 
             $loanApplication->approvals()->update(['is_current_level' => false]);
 
+            // Use 'director' for approval_level if stage is 'completed' (final approval)
+            $approvalLevel = ($currentStage === 'completed' || $currentStage === 'director') ? 'director' : $currentStage;
+
             LoanApproval::create([
                 'loan_application_id' => $loanApplication->id,
                 'approved_by' => $user->id,
-                'approval_level' => $currentStage,
+                'approval_level' => $approvalLevel,
                 'previous_level' => $loanApplication->approvals()->latest()->value('approval_level'),
                 'is_current_level' => true,
                 'comment' => $validated['comment'] ?? null,
@@ -361,6 +390,7 @@ class LoanApprovalController extends Controller
                 $processingFee = $validated['processing_fee'] ?? 0;
                 $disbursementMethodRaw = $validated['disbursement_method'];
                 $disbursementMethod = $this->normalizeDisbursementMethod($disbursementMethodRaw);
+                $recipientPhone = $validated['recipient_phone'] ?? $loanApplication->client->phone ?? null;
 
                 $loanApplication->update([
                     'finance_officer_id' => $loanApplication->finance_officer_id ?? $user->id,
@@ -370,7 +400,8 @@ class LoanApprovalController extends Controller
                         'pending_disbursement' => [
                             'amount_approved' => $amountApproved,
                             'processing_fee' => $processingFee,
-                            'disbursement_method' => $disbursementMethod,
+                            'disbursement_method' => $disbursementMethodRaw,
+                            'recipient_phone' => $recipientPhone,
                         ],
                     ]),
                 ]);
@@ -391,6 +422,27 @@ class LoanApprovalController extends Controller
                 $processingFee = $pending['processing_fee'] ?? $validated['processing_fee'] ?? 0;
                 $disbursementMethodRaw = $pending['disbursement_method'] ?? $validated['disbursement_method'] ?? 'M-PESA B2C';
                 $disbursementMethod = $this->normalizeDisbursementMethod($disbursementMethodRaw);
+                $recipientPhone = $pending['recipient_phone'] ?? $loanApplication->client->phone ?? null;
+
+                // Verify OTP
+                $storedOtpHash = $pending['otp_code_hash'] ?? null;
+                if (!$storedOtpHash) {
+                    DB::rollBack();
+                    return back()->withErrors(['otp' => 'OTP not found. Please refresh the page to receive a new OTP.'])->withInput();
+                }
+
+                if (!Hash::check($validated['otp'], $storedOtpHash)) {
+                    DB::rollBack();
+                    return back()->withErrors(['otp' => 'Invalid OTP. Please check your email and try again.'])->withInput();
+                }
+
+                if (isset($pending['otp_expires_at'])) {
+                    $expiresAt = \Carbon\Carbon::parse($pending['otp_expires_at']);
+                    if (now()->greaterThan($expiresAt)) {
+                        DB::rollBack();
+                        return back()->withErrors(['otp' => 'OTP has expired. Please refresh the page to receive a new OTP.'])->withInput();
+                    }
+                }
 
                 $loan = Loan::create([
                     'client_id' => $loanApplication->client_id,
@@ -426,7 +478,8 @@ class LoanApprovalController extends Controller
 
                 $this->generateInstalments($loan);
 
-                Disbursement::create([
+                // Create disbursement
+                $disbursement = Disbursement::create([
                     'loan_application_id' => $loanApplication->id,
                     'disbursed_by' => $user->id,
                     'approved_by' => $user->id,
@@ -435,10 +488,30 @@ class LoanApprovalController extends Controller
                     'transaction_amount' => $amountApproved - $processingFee,
                     'processing_fee' => $processingFee,
                     'method' => $disbursementMethod,
+                    'recipient_phone' => $recipientPhone,
                     'disbursement_date' => now(),
                     'status' => 'pending',
                     'processing_notes' => $validated['comment'] ?? null,
                 ]);
+
+                // Initiate B2C payment if method is mpesa_b2c
+                if ($disbursementMethod === 'mpesa_b2c' && $recipientPhone) {
+                    $result = $this->b2cPaymentService->initiate($disbursement, $validated['comment'] ?? 'Loan disbursement');
+
+                    if ($result['success']) {
+                        $disbursement->update([
+                            'mpesa_request_id' => $result['request_id'] ?? null,
+                            'mpesa_response_code' => $result['response_code'] ?? null,
+                            'mpesa_response_description' => $result['response_description'] ?? null,
+                            'mpesa_originator_conversation_id' => $result['originator_conversation_id'] ?? null,
+                        ]);
+                    } else {
+                        $disbursement->update([
+                            'status' => 'failed',
+                            'mpesa_response_description' => $result['error'] ?? 'Failed to initiate payment',
+                        ]);
+                    }
+                }
 
                 AuditLog::log(
                     LoanApplication::class,
@@ -654,6 +727,28 @@ class LoanApprovalController extends Controller
         }
 
         return $this->canApproveAtStage($user, $loanApplication);
+    }
+
+    /**
+     * Send OTP to director for approval
+     */
+    private function sendDirectorOtp(LoanApplication $loanApplication, User $user): void
+    {
+        $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
+        $otp = (string) random_int(100000, 999999);
+        $amountApproved = $pending['amount_approved'] ?? $loanApplication->amount_approved ?? 0;
+        
+        $pending['otp_code_hash'] = Hash::make($otp);
+        $pending['otp_expires_at'] = now()->addMinutes(10)->toIso8601String();
+        $pending['otp_sent_at'] = now()->toIso8601String();
+        
+        $onboardingData = $loanApplication->onboarding_data ?? [];
+        $onboardingData['pending_disbursement'] = $pending;
+        $loanApplication->onboarding_data = $onboardingData;
+        $loanApplication->save();
+
+        // Send OTP via email
+        $user->notify(new DirectorApprovalOtpNotification($loanApplication, $otp, $amountApproved));
     }
 
     /**

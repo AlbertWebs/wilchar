@@ -112,6 +112,23 @@
                                 >
                                     {{ ucfirst(str_replace('_', ' ', $application->status)) }}
                                 </span>
+                                @if($application->status === 'approved' && $application->approval_stage === 'completed')
+                                    @php
+                                        $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
+                                    @endphp
+                                    @if($disbursement)
+                                        <span
+                                            class="mt-1 block inline-flex rounded-full px-3 py-1 text-xs font-semibold
+                                                {{ $disbursement->status === 'success' ? 'bg-emerald-100 text-emerald-700' : ($disbursement->status === 'failed' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700') }}"
+                                        >
+                                            {{ $disbursement->status === 'success' ? '✓ Disbursed' : ($disbursement->status === 'failed' ? '✗ Disbursement Failed' : '⏳ Pending Disbursement') }}
+                                        </span>
+                                    @else
+                                        <span class="mt-1 block inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                            Not Disbursed
+                                        </span>
+                                    @endif
+                                @endif
                             </td>
                             <td class="px-4 py-4 text-right">
                                 <div class="flex justify-end gap-2">
