@@ -614,7 +614,7 @@
                     <div class="section__content me-lg-5 me-xxl-0">
                         <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(asset('main/assets/images/title_vector.png')); ?>" alt="vector"> About Us</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Your Trusted Guideline to Finding the Perfect Loan</h2>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">At FINVIEW, we understand the significance of making informed financial decisions, especially when it comes to loans. Our mission is to provide you with a reliable platform</p>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">At <?php echo e($settings['site_name'] ?? 'FINVIEW'); ?>, we understand the significance of making informed financial decisions, especially when it comes to loans. Our mission is to provide you with a reliable platform</p>
                         
                         <div class="progress-area mt_32 wow fadeInUp" data-wow-duration="0.8s">
                             <p class="progress-title headingFive">Marketing</p>
@@ -654,7 +654,7 @@
                                 </div>
                                 <div class="card--small-content">
                                     <p class="card--small-title">Support us</p>
-                                    <a href="tel:+1234567891" class="card--small-call">(123) 456-7891</a>
+                                    <a href="tel:<?php echo e(str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+1234567891')); ?>" class="card--small-call"><?php echo e($settings['site_phone'] ?? '(123) 456-7891'); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -717,7 +717,7 @@
                         <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(asset('main/assets/images/title_vector.png')); ?>" alt="vector"> Loan Calculators</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Empower Yourself with Accurate Loan Estimates</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">
-                            At Nuru Wilchar, we believe financial decisions should never be based on guesswork. 
+                            At <?php echo e($settings['site_name'] ?? 'Nuru Wilchar'); ?>, we believe financial decisions should never be based on guesswork. 
                             Our loan calculator gives you clear, reliable estimates tailored to your needs, helping you understand repayment amounts, interest costs, and timelines before you commit. 
                             With accurate insights at your fingertips, you can plan better, borrow smarter, and take control of your financial journey with confidence.
                         </p>
