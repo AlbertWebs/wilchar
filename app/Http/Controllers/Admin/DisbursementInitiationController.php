@@ -17,13 +17,18 @@ class DisbursementInitiationController extends Controller
 {
     public function __construct(private B2cPaymentService $b2cPaymentService)
     {
-        $this->middleware(function ($request, $next) {
-            $user = auth()->user();
-            if (!$user->hasAnyRole(['Admin', 'Finance Officer', 'Director'])) {
-                abort(403, 'Unauthorized. Only Admin, Finance Officer, and Director can initiate disbursements.');
-            }
-            return $next($request);
-        });
+        // Authorization is handled at route level
+    }
+    
+    /**
+     * Check if user can access disbursement
+     */
+    private function authorizeAccess(): void
+    {
+        $user = auth()->user();
+        if (!$user || !$user->hasAnyRole(['Admin', 'Finance Officer', 'Director'])) {
+            abort(403, 'Unauthorized. Only Admin, Finance Officer, and Director can initiate disbursements.');
+        }
     }
 
     /**
@@ -31,6 +36,8 @@ class DisbursementInitiationController extends Controller
      */
     public function generateOtp(Request $request, $disbursementId): JsonResponse
     {
+        $this->authorizeAccess();
+        
         try {
             $user = auth()->user();
             $disbursement = Disbursement::findOrFail($disbursementId);
@@ -84,6 +91,8 @@ class DisbursementInitiationController extends Controller
      */
     public function verifyOtpAndDisburse(Request $request, $disbursementId): JsonResponse
     {
+        $this->authorizeAccess();
+        
         $validated = $request->validate([
             'otp' => 'required|string|size:6',
         ]);
@@ -195,6 +204,8 @@ class DisbursementInitiationController extends Controller
      */
     public function getStatus(Request $request, $disbursementId): JsonResponse
     {
+        $this->authorizeAccess();
+        
         try {
             $disbursement = Disbursement::findOrFail($disbursementId);
             $disbursement->refresh();
