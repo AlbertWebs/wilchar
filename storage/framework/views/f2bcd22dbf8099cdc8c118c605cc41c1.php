@@ -5,8 +5,29 @@
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="h-full bg-slate-100">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Wilchar LMS">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wilchar LMS">
+    <meta name="description" content="Comprehensive loan management system with flexible repayment options, M-Pesa integration, and excellent customer service.">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#10b981">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="theme-color" content="#10b981">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
 
     <title><?php echo e($title ?? config('app.name', 'Admin Panel')); ?></title>
 
@@ -55,6 +76,15 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
                             </svg>
                             <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('admin.clients.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.clients.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                            <svg class="h-5 w-5 shrink-0 text-purple-400 group-hover:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>Client Management</span>
                         </a>
                     </li>
                     <li>
@@ -131,6 +161,19 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 4.5l1-1 1 1m8 8l1 1-1 1m-15-8l-1 1 1 1m8 8l-1 1 1 1M12 9v3l2 2" />
                             </svg>
                             <span>System Settings</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Website</p>
+                <ul class="mt-3 space-y-1 text-sm">
+                    <li>
+                        <a href="<?php echo e(route('admin.website.pages.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.website.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                            <svg class="h-5 w-5 shrink-0 text-blue-400 group-hover:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>Pages</span>
                         </a>
                     </li>
                 </ul>
@@ -399,6 +442,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const success = <?php echo json_encode(session('success'), 15, 512) ?>;
             const error = <?php echo json_encode(session('error'), 15, 512) ?>;
+            const permissionError = <?php echo json_encode(session('permission_error'), 15, 512) ?>;
 
             if (success) {
                 Swal.fire({
@@ -410,11 +454,162 @@
                 });
             }
 
-            if (error) {
+            if (error && !permissionError) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: error,
+                });
+            }
+
+            // Show permission error popup with detailed information
+            if (permissionError) {
+                const requiredRoles = permissionError.required_roles || [];
+                const userRoles = permissionError.user_roles || [];
+                
+                let html = `<div class="text-left">
+                    <p class="mb-4 text-slate-700">${permissionError.message || 'You do not have permission to access this resource.'}</p>`;
+                
+                if (requiredRoles.length > 0) {
+                    html += `<div class="mb-3">
+                        <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                        <div class="flex flex-wrap gap-2">`;
+                    requiredRoles.forEach(role => {
+                        html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                    });
+                    html += `</div></div>`;
+                }
+                
+                if (userRoles.length > 0) {
+                    html += `<div class="mb-3">
+                        <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                        <div class="flex flex-wrap gap-2">`;
+                    userRoles.forEach(role => {
+                        html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                    });
+                    html += `</div></div>`;
+                } else {
+                    html += `<div class="mb-3">
+                        <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                    </div>`;
+                }
+                
+                html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Access Denied',
+                    html: html,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#10b981',
+                    width: '500px'
+                });
+            }
+        });
+
+        // Handle AJAX 403 errors globally
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intercept fetch requests
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                return originalFetch.apply(this, args)
+                    .then(response => {
+                        if (response.status === 403) {
+                            return response.json().then(data => {
+                                const requiredRoles = data.required_roles || [];
+                                const userRoles = data.user_roles || [];
+                                
+                                let html = `<div class="text-left">
+                                    <p class="mb-4 text-slate-700">${data.message || 'You do not have permission to perform this action.'}</p>`;
+                                
+                                if (requiredRoles.length > 0) {
+                                    html += `<div class="mb-3">
+                                        <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                                        <div class="flex flex-wrap gap-2">`;
+                                    requiredRoles.forEach(role => {
+                                        html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                                    });
+                                    html += `</div></div>`;
+                                }
+                                
+                                if (userRoles.length > 0) {
+                                    html += `<div class="mb-3">
+                                        <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                                        <div class="flex flex-wrap gap-2">`;
+                                    userRoles.forEach(role => {
+                                        html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                                    });
+                                    html += `</div></div>`;
+                                } else {
+                                    html += `<div class="mb-3">
+                                        <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                                    </div>`;
+                                }
+                                
+                                html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                                
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Access Denied',
+                                    html: html,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#10b981',
+                                    width: '500px'
+                                });
+                                
+                                throw new Error(data.message || 'Forbidden');
+                            });
+                        }
+                        return response;
+                    });
+            };
+
+            // Intercept jQuery AJAX requests (if jQuery is used)
+            if (typeof jQuery !== 'undefined') {
+                $(document).ajaxError(function(event, xhr) {
+                    if (xhr.status === 403) {
+                        const data = xhr.responseJSON || {};
+                        const requiredRoles = data.required_roles || [];
+                        const userRoles = data.user_roles || [];
+                        
+                        let html = `<div class="text-left">
+                            <p class="mb-4 text-slate-700">${data.message || 'You do not have permission to perform this action.'}</p>`;
+                        
+                        if (requiredRoles.length > 0) {
+                            html += `<div class="mb-3">
+                                <p class="font-semibold text-slate-900 mb-2">Required Role(s):</p>
+                                <div class="flex flex-wrap gap-2">`;
+                            requiredRoles.forEach(role => {
+                                html += `<span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">${role}</span>`;
+                            });
+                            html += `</div></div>`;
+                        }
+                        
+                        if (userRoles.length > 0) {
+                            html += `<div class="mb-3">
+                                <p class="font-semibold text-slate-900 mb-2">Your Current Role(s):</p>
+                                <div class="flex flex-wrap gap-2">`;
+                            userRoles.forEach(role => {
+                                html += `<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">${role}</span>`;
+                            });
+                            html += `</div></div>`;
+                        } else {
+                            html += `<div class="mb-3">
+                                <p class="text-sm text-slate-600">You currently have no assigned roles.</p>
+                            </div>`;
+                        }
+                        
+                        html += `<p class="mt-4 text-sm text-slate-600">Please contact your administrator to request the necessary permissions.</p></div>`;
+                        
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Access Denied',
+                            html: html,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#10b981',
+                            width: '500px'
+                        });
+                    }
                 });
             }
         });

@@ -6,25 +6,45 @@
             <x-admin.stat-card
                 title="Active Clients"
                 :value="number_format($totalClients)"
-                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M5.121 17.804A4 4 0 018 17h8a4 4 0 013.879 2.804M15 11a3 3 0 10-6 0 3 3 0 006 0z&quot; /></svg>'"
-            />
+            >
+                <x-slot:icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 013.879 2.804M15 11a3 3 0 10-6 0 3 3 0 006 0z" />
+                    </svg>
+                </x-slot:icon>
+            </x-admin.stat-card>
             <x-admin.stat-card
                 title="Loan Applications"
                 :value="number_format($loanApplications)"
-                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M9 13h6m-6 4h6M5 7h14M5 11h14M5 15h14M5 19h14&quot; /></svg>'"
-            />
+            >
+                <x-slot:icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-6 4h6M5 7h14M5 11h14M5 15h14M5 19h14" />
+                    </svg>
+                </x-slot:icon>
+            </x-admin.stat-card>
             <x-admin.stat-card
                 title="Approved Loans"
                 :value="number_format($approvedLoans)"
                 :trend="$approvalGrowth"
                 trend-label="vs last month"
-                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M4 12l6 6L20 6&quot; /></svg>'"
-            />
+            >
+                <x-slot:icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12l6 6L20 6" />
+                    </svg>
+                </x-slot:icon>
+            </x-admin.stat-card>
             <x-admin.stat-card
                 title="Disbursed Amount"
                 :value="number_format($totalDisbursed, 2)"
-                :icon="'<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; class=&quot;h-5 w-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.5&quot; d=&quot;M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z&quot; /></svg>'"
-            />
+            >
+                <x-slot:icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z" />
+                    </svg>
+                </x-slot:icon>
+            </x-admin.stat-card>
         </div>
 
         <div class="grid gap-6 lg:grid-cols-3">
