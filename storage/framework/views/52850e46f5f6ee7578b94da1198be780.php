@@ -23,6 +23,13 @@
                 Admin.showModal({ title: 'Edit Loan Application', url, method: 'get', size: 'xl' });
             },
             openDisbursementModal(disbursementId) {
+                console.log('Button clicked, disbursementId:', disbursementId);
+                // Test if modal store is accessible
+                if (window.Alpine && window.Alpine.store('modal')) {
+                    console.log('Modal store is accessible');
+                } else {
+                    console.error('Modal store not accessible');
+                }
                 window.openDisbursementModalHandler(disbursementId);
             }
         }"
@@ -160,7 +167,7 @@
                                     
                                     <?php if($canDisburse): ?>
                                         <button 
-                                            @click="openDisbursementModal(<?php echo e($disbursement->id); ?>)" 
+                                            @click="console.log('Button clicked!'); openDisbursementModal(<?php echo e($disbursement->id); ?>)" 
                                             class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
                                         >
                                             Disburse Now
@@ -195,56 +202,38 @@
 <?php $__env->startPush('scripts'); ?>
 <script>
 window.openDisbursementModalHandler = function(disbursementId) {
+    console.log('=== openDisbursementModalHandler START ===');
+    console.log('Disbursement ID:', disbursementId);
+    
     if (!disbursementId) {
         console.error('Disbursement ID is missing');
         return;
     }
     
-    // Wait for Alpine to be ready
-    const waitForAlpine = () => {
-        return new Promise((resolve) => {
-            if (window.Alpine && window.Alpine.store('modal')) {
-                resolve();
-            } else {
-                document.addEventListener('alpine:init', resolve, { once: true });
-                // Also check periodically in case Alpine is already initialized
-                const checkInterval = setInterval(() => {
-                    if (window.Alpine && window.Alpine.store('modal')) {
-                        clearInterval(checkInterval);
-                        resolve();
-                    }
-                }, 50);
-                // Timeout after 2 seconds
-                setTimeout(() => {
-                    clearInterval(checkInterval);
-                    resolve();
-                }, 2000);
-            }
-        });
-    };
+    // Check Alpine immediately
+    if (!window.Alpine) {
+        console.error('Alpine.js not found');
+        alert('Alpine.js not initialized. Please refresh the page.');
+        return;
+    }
     
-    waitForAlpine().then(() => {
-        // Check if Admin and Alpine are available
-        if (!window.Admin) {
-            console.error('Admin object not found');
-            alert('Admin modal system not initialized. Please refresh the page.');
-            return;
-        }
-        
-        if (!window.Alpine) {
-            console.error('Alpine.js not found');
-            alert('Alpine.js not initialized. Please refresh the page.');
-            return;
-        }
-        
-        const modalStore = window.Alpine.store('modal');
-        if (!modalStore) {
-            console.error('Modal store not found');
-            alert('Modal store not initialized. Please refresh the page.');
-            return;
-        }
-        
-        console.log('Fetching disbursement status for ID:', disbursementId);
+    const modalStore = window.Alpine.store('modal');
+    if (!modalStore) {
+        console.error('Modal store not found');
+        alert('Modal store not initialized. Please refresh the page.');
+        return;
+    }
+    
+    console.log('Alpine and modal store are available');
+    
+    // Check if Admin is available
+    if (!window.Admin) {
+        console.error('Admin object not found');
+        alert('Admin modal system not initialized. Please refresh the page.');
+        return;
+    }
+    
+    console.log('Fetching disbursement status for ID:', disbursementId);
         const url = `<?php echo e(route('disbursements.status', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', disbursementId);
         fetch(url, {
             headers: {
@@ -267,29 +256,88 @@ window.openDisbursementModalHandler = function(disbursementId) {
                     console.log('Generated HTML length:', html.length);
                     console.log('Calling Admin.showModal...');
                     try {
+                        console.log('About to call Admin.showModal with:', {
+                            title: 'Initiate Disbursement',
+                            bodyLength: html.length,
+                            size: 'lg'
+                        });
+                        
+                        // Directly access modal store and set values
+                        const modalStore = window.Alpine.store('modal');
+                        if (!modalStore) {
+                            throw new Error('Modal store not found');
+                        }
+                        
+                        console.log('Modal store before show:', {
+                            open: modalStore.open,
+                            title: modalStore.title
+                        });
+                        
+                        // Call Admin.showModal
                         Admin.showModal({
                             title: 'Initiate Disbursement',
                             body: html,
                             size: 'lg'
                         });
+                        
                         console.log('Admin.showModal called successfully');
-                        // Check modal state after a short delay
+                        
+                        // Immediately check modal store
+                        const checkStore = () => {
+                            const store = window.Alpine.store('modal');
+                            console.log('Modal store after show:', {
+                                open: store?.open,
+                                title: store?.title,
+                                bodyLength: store?.body?.length,
+                                size: store?.size,
+                                storeExists: !!store
+                            });
+                            
+                            // If store exists but open is false, force it
+                            if (store && !store.open) {
+                                console.warn('Forcing modal open');
+                                store.open = true;
+                            }
+                        };
+                        
+                        checkStore();
+                        
+                        // Also check after a microtask
+                        queueMicrotask(checkStore);
+                        
+                        // Force Alpine to re-evaluate if needed
                         setTimeout(() => {
                             const store = window.Alpine.store('modal');
-                            console.log('Modal store state after show:', {
+                            console.log('Modal store state after 100ms:', {
                                 open: store?.open,
                                 title: store?.title,
                                 bodyLength: store?.body?.length,
                                 size: store?.size
                             });
-                            // Force Alpine to re-evaluate if needed
+                            
+                            // Double-check and force if needed
                             if (store && !store.open) {
                                 console.warn('Modal store open is false, forcing open');
                                 store.open = true;
+                                // Trigger Alpine reactivity
+                                if (window.Alpine && window.Alpine.evaluateLater) {
+                                    window.Alpine.evaluateLater(() => {}).then(() => {
+                                        console.log('Alpine reactivity triggered');
+                                    });
+                                }
                             }
-                        }, 100);
+                            
+                            // Check if modal element is visible
+                            const modalElement = document.querySelector('[x-show="$store.modal.open"]');
+                            console.log('Modal element found:', modalElement);
+                            if (modalElement) {
+                                const isVisible = window.getComputedStyle(modalElement).display !== 'none';
+                                console.log('Modal element visible:', isVisible);
+                            }
+                        }, 200);
                     } catch (error) {
                         console.error('Error calling Admin.showModal:', error);
+                        console.error('Error stack:', error.stack);
                         alert('Failed to open modal: ' + error.message);
                     }
                 } else {
@@ -301,7 +349,6 @@ window.openDisbursementModalHandler = function(disbursementId) {
                 console.error('Error loading disbursement:', error);
                 alert('An error occurred while loading disbursement details: ' + error.message);
             });
-    });
 };
 
 window.getDisbursementModalHtml = function(disbursementId, initialData) {
