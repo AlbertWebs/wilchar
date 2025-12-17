@@ -23,27 +23,7 @@
                 Admin.showModal({ title: 'Edit Loan Application', url, method: 'get', size: 'xl' });
             },
             openDisbursementModal(disbursementId) {
-                const url = `{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', disbursementId);
-                fetch(url)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            const html = window.getDisbursementModalHtml(disbursementId, data);
-                            Admin.showModal({
-                                title: 'Initiate Disbursement',
-                                body: html,
-                                size: 'lg'
-                            });
-                            setTimeout(() => {
-                                if (window.Alpine) {
-                                    const modalContent = document.querySelector('[x-data*="disbursementFlow"]');
-                                    if (modalContent) {
-                                        window.Alpine.initTree(modalContent);
-                                    }
-                                }
-                            }, 200);
-                        }
-                    });
+                window.openDisbursementModalHandler(disbursementId);
             }
         }"
         class="space-y-6"
@@ -165,8 +145,15 @@
                                     @endif
                                     @php
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
-                                        $canDisburse = $disbursement && $disbursement->status === 'pending' && (auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']));
+                                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
+                                        $canDisburse = $disbursement && in_array($disbursement->status, ['pending', 'processing']) && $hasRole;
+                                        $showApprove = $application->status !== 'approved' || $application->approval_stage !== 'completed';
                                     @endphp
+                                    {{-- Debug: Uncomment to see why button isn't showing
+                                    @if($application->status === 'approved' && $application->approval_stage === 'completed')
+                                        <!-- Debug: Disbursement exists: {{ $disbursement ? 'Yes' : 'No' }}, Status: {{ $disbursement?->status }}, Has Role: {{ $hasRole ? 'Yes' : 'No' }} -->
+                                    @endif
+                                    --}}
                                     @if($canDisburse)
                                         <button 
                                             @click="openDisbursementModal({{ $disbursement->id }})" 
@@ -174,7 +161,8 @@
                                         >
                                             Disburse Now
                                         </button>
-                                    @elseif($application->status !== 'approved' || $application->approval_stage !== 'completed')
+                                    @endif
+                                    @if($showApprove && !$canDisburse)
                                         <a href="{{ route('approvals.show', $application) }}" class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
                                             Approve
                                         </a>
@@ -201,6 +189,41 @@
 
 @push('scripts')
 <script>
+window.openDisbursementModalHandler = function(disbursementId) {
+    if (!disbursementId) {
+        console.error('Disbursement ID is missing');
+        return;
+    }
+    const url = `{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', disbursementId);
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const html = window.getDisbursementModalHtml(disbursementId, data);
+                Admin.showModal({
+                    title: 'Initiate Disbursement',
+                    body: html,
+                    size: 'lg'
+                });
+                setTimeout(() => {
+                    if (window.Alpine) {
+                        const modalContent = document.querySelector('[x-data*="disbursementFlow"]');
+                        if (modalContent) {
+                            window.Alpine.initTree(modalContent);
+                        }
+                    }
+                }, 200);
+            } else {
+                console.error('Failed to load disbursement status:', data);
+                alert('Failed to load disbursement details. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading disbursement:', error);
+            alert('An error occurred while loading disbursement details.');
+        });
+};
+
 window.getDisbursementModalHtml = function(disbursementId, initialData) {
     const dataStr = JSON.stringify(initialData).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const amount = parseFloat(initialData.disbursement?.amount || 0).toLocaleString();
