@@ -124,11 +124,6 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('disbursements/{loanApplication}', [MpesaDisbursementController::class, 'store'])->name('disbursements.store');
     Route::get('disbursements/{disbursement}', [MpesaDisbursementController::class, 'show'])->name('disbursements.show');
     Route::post('disbursements/{disbursement}/retry', [MpesaDisbursementController::class, 'retry'])->name('disbursements.retry');
-    
-    // Disbursement Initiation (with OTP)
-    Route::post('disbursements/{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
-    Route::post('disbursements/{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
-    Route::get('disbursements/{disbursement}/status', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'getStatus'])->name('disbursements.status');
 
 
     // Collections
@@ -240,6 +235,15 @@ Route::prefix('admin/payments')
     ->group(function () {
         Route::get('/', [PaymentDashboardController::class, 'index'])->name('index');
         Route::post('/attach', [PaymentDashboardController::class, 'attach'])->name('attach');
+    });
+
+// Disbursement Initiation (with OTP) - Accessible to Admin, Finance Officer, and Director
+Route::prefix('admin/disbursements')
+    ->middleware(['auth', 'role:Admin|Finance Officer|Director'])
+    ->group(function () {
+        Route::post('{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
+        Route::post('{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
+        Route::get('{disbursement}/status', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'getStatus'])->name('disbursements.status');
     });
 
 Route::middleware(['auth'])->prefix('admin/sandbox')->name('sandbox.')->group(function () {

@@ -29,10 +29,11 @@ class DisbursementInitiationController extends Controller
     /**
      * Generate and send OTP for disbursement
      */
-    public function generateOtp(Request $request, Disbursement $disbursement): JsonResponse
+    public function generateOtp(Request $request, $disbursementId): JsonResponse
     {
         try {
             $user = auth()->user();
+            $disbursement = Disbursement::findOrFail($disbursementId);
             
             // Load relationship
             $disbursement->load('loanApplication');
@@ -81,13 +82,14 @@ class DisbursementInitiationController extends Controller
     /**
      * Verify OTP and initiate B2C payment
      */
-    public function verifyOtpAndDisburse(Request $request, Disbursement $disbursement): JsonResponse
+    public function verifyOtpAndDisburse(Request $request, $disbursementId): JsonResponse
     {
         $validated = $request->validate([
             'otp' => 'required|string|size:6',
         ]);
 
         try {
+            $disbursement = Disbursement::findOrFail($disbursementId);
             DB::beginTransaction();
 
             // Check if disbursement is pending
@@ -191,42 +193,54 @@ class DisbursementInitiationController extends Controller
     /**
      * Get disbursement status
      */
-    public function getStatus(Disbursement $disbursement): JsonResponse
+    public function getStatus(Request $request, $disbursementId): JsonResponse
     {
-        $disbursement->refresh();
-        $disbursement->load('loanApplication');
+        try {
+            $disbursement = Disbursement::findOrFail($disbursementId);
+            $disbursement->refresh();
+            $disbursement->load('loanApplication');
 
-        $steps = [
-            'otp_generation' => [
-                'label' => 'Generate and Send OTP',
-                'status' => $disbursement->otp_sent_at ? 'completed' : ($disbursement->otp_code_hash ? 'completed' : 'pending'),
-            ],
-            'otp_verification' => [
-                'label' => 'Verify OTP',
-                'status' => $disbursement->otp_verified_at ? 'completed' : ($disbursement->otp_sent_at ? 'in_progress' : 'pending'),
-            ],
-            'payment_initiation' => [
-                'label' => 'Initiate B2C Payment',
-                'status' => $disbursement->mpesa_request_id 
-                    ? 'completed' 
-                    : ($disbursement->otp_verified_at ? 'in_progress' : 'pending'),
-            ],
-            'payment_confirmation' => [
-                'label' => 'Confirm Payment',
-                'status' => $disbursement->status === 'success' 
-                    ? 'completed' 
-                    : ($disbursement->status === 'processing' 
-                        ? 'in_progress' 
-                        : ($disbursement->status === 'failed' ? 'failed' : 'pending')),
-            ],
-        ];
+            $steps = [
+                'otp_generation' => [
+                    'label' => 'Generate and Send OTP',
+                    'status' => $disbursement->otp_sent_at ? 'completed' : ($disbursement->otp_code_hash ? 'completed' : 'pending'),
+                ],
+                'otp_verification' => [
+                    'label' => 'Verify OTP',
+                    'status' => $disbursement->otp_verified_at ? 'completed' : ($disbursement->otp_sent_at ? 'in_progress' : 'pending'),
+                ],
+                'payment_initiation' => [
+                    'label' => 'Initiate B2C Payment',
+                    'status' => $disbursement->mpesa_request_id 
+                        ? 'completed' 
+                        : ($disbursement->otp_verified_at ? 'in_progress' : 'pending'),
+                ],
+                'payment_confirmation' => [
+                    'label' => 'Confirm Payment',
+                    'status' => $disbursement->status === 'success' 
+                        ? 'completed' 
+                        : ($disbursement->status === 'processing' 
+                            ? 'in_progress' 
+                            : ($disbursement->status === 'failed' ? 'failed' : 'pending')),
+                ],
+            ];
 
-        return response()->json([
-            'success' => true,
-            'disbursement' => $disbursement,
-            'steps' => $steps,
-            'current_step' => $this->getCurrentStep($steps),
-        ]);
+            return response()->json([
+                'success' => true,
+                'disbursement' => $disbursement,
+                'steps' => $steps,
+                'current_step' => $this->getCurrentStep($steps),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Disbursement Status Error: ' . $e->getMessage(), [
+                'disbursement_id' => $disbursementId ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load disbursement status: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     private function getCurrentStep(array $steps): ?string

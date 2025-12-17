@@ -161,7 +161,7 @@
                                     <?php if($canDisburse): ?>
                                         <button 
                                             @click="openDisbursementModal(<?php echo e($disbursement->id); ?>)" 
-                                            class="rounded-lg bg-blue-500 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-600"
+                                            class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
                                         >
                                             Disburse Now
                                         </button>
@@ -200,8 +200,20 @@ window.openDisbursementModalHandler = function(disbursementId) {
         return;
     }
     const url = `<?php echo e(route('disbursements.status', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', disbursementId);
-    fetch(url)
-        .then(res => res.json())
+    fetch(url, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(data => {
+                    throw new Error(data.message || `HTTP error! status: ${res.status}`);
+                });
+            }
+            return res.json();
+        })
         .then(data => {
             if (data.success) {
                 const html = window.getDisbursementModalHtml(disbursementId, data);
@@ -220,12 +232,12 @@ window.openDisbursementModalHandler = function(disbursementId) {
                 }, 200);
             } else {
                 console.error('Failed to load disbursement status:', data);
-                alert('Failed to load disbursement details. Please try again.');
+                alert('Failed to load disbursement details: ' + (data.message || 'Unknown error'));
             }
         })
         .catch(error => {
             console.error('Error loading disbursement:', error);
-            alert('An error occurred while loading disbursement details.');
+            alert('An error occurred while loading disbursement details: ' + error.message);
         });
 };
 
