@@ -243,6 +243,7 @@ Route::prefix('admin/disbursements')
     ->group(function () {
         Route::post('{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
         Route::post('{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
+        Route::post('{disbursement}/abort', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'abort'])->name('disbursements.abort');
         Route::get('{disbursement}/status', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'getStatus'])->name('disbursements.status');
     });
 

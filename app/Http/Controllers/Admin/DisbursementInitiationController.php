@@ -45,12 +45,41 @@ class DisbursementInitiationController extends Controller
             // Load relationship
             $disbursement->load('loanApplication');
 
-            // Check if disbursement is pending
-            if ($disbursement->status !== 'pending') {
+            // Allow OTP only for pending or failed disbursements (failed can be retried)
+            if (!in_array($disbursement->status, ['pending', 'failed'], true)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Disbursement is not in pending status.',
+                    'message' => 'Disbursement is not in a retryable state.',
                 ], 400);
+            }
+
+            // If it previously failed, reset OTP-related fields for a fresh attempt
+            if ($disbursement->status === 'failed') {
+                $disbursement->update([
+                    'status' => 'pending',
+                    'otp_code_hash' => null,
+                    'otp_expires_at' => null,
+                    'otp_verified_at' => null,
+                    'otp_attempts' => 0,
+                    'otp_sent_at' => null,
+                ]);
+            }
+
+            // Enforce a 2-minute cooldown between OTP generations
+            if ($disbursement->otp_sent_at) {
+                $secondsSinceLast = now()->diffInSeconds($disbursement->otp_sent_at);
+                $minInterval = 120;
+
+                if ($secondsSinceLast < $minInterval) {
+                    $retryAfter = $minInterval - $secondsSinceLast;
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You can request a new OTP after ' . $retryAfter . ' seconds.',
+                        'step' => 'otp_generation',
+                        'retry_after_seconds' => $retryAfter,
+                    ], 429);
+                }
             }
 
             // Generate 6-digit OTP
@@ -72,16 +101,86 @@ class DisbursementInitiationController extends Controller
                 $otp
             ));
 
-            return response()->json([
+            // Log OTP so it can be retrieved when mailer is not working (useful in local/sandbox)
+            Log::info('Disbursement OTP generated', [
+                'disbursement_id' => $disbursement->id,
+                'loan_application_id' => $disbursement->loan_application_id ?? $disbursement->loanApplication?->id,
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'otp' => $otp,
+                'environment' => app()->environment(),
+            ]);
+
+            $response = [
                 'success' => true,
                 'message' => 'OTP sent to your email.',
                 'step' => 'otp_sent',
-            ]);
+            ];
+
+            // In local / sandbox environments, also return OTP in the JSON response for easier testing
+            if (app()->environment('local') || config('app.sandbox_mode')) {
+                $response['otp'] = $otp;
+            }
+
+            return response()->json($response);
         } catch (\Throwable $e) {
             Log::error('Disbursement OTP Generation Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to generate OTP: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Abort the disbursement initiation process
+     */
+    public function abort(Request $request, $disbursementId): JsonResponse
+    {
+        $this->authorizeAccess();
+
+        try {
+            $disbursement = Disbursement::findOrFail($disbursementId);
+
+            // Allow aborting when disbursement is still pending or has failed
+            if (!in_array($disbursement->status, ['pending', 'failed'], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending or failed disbursements can be aborted.',
+                ], 400);
+            }
+
+            // Reset OTP fields and mark as pending again, but record that user aborted
+            $disbursement->update([
+                'status' => 'pending',
+                'otp_code_hash' => null,
+                'otp_expires_at' => null,
+                'otp_verified_at' => null,
+                'otp_attempts' => 0,
+                'otp_sent_at' => null,
+                'mpesa_response_description' => 'Aborted by user',
+            ]);
+
+            Log::info('Disbursement aborted', [
+                'disbursement_id' => $disbursement->id,
+                'loan_application_id' => $disbursement->loan_application_id,
+                'aborted_by' => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Disbursement process aborted.',
+                'step' => 'aborted',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Disbursement Abort Error: ' . $e->getMessage(), [
+                'disbursement_id' => $disbursementId ?? null,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to abort disbursement: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -211,20 +310,26 @@ class DisbursementInitiationController extends Controller
             $disbursement->refresh();
             $disbursement->load('loanApplication');
 
+            $hasSentOtp = !is_null($disbursement->otp_sent_at);
+            $hasVerifiedOtp = !is_null($disbursement->otp_verified_at);
+
             $steps = [
                 'otp_generation' => [
                     'label' => 'Generate and Send OTP',
-                    'status' => $disbursement->otp_sent_at ? 'completed' : ($disbursement->otp_code_hash ? 'completed' : 'pending'),
+                    // We only consider an OTP "generated" when we've actually sent one in this flow.
+                    'status' => $hasSentOtp ? 'completed' : 'pending',
                 ],
                 'otp_verification' => [
                     'label' => 'Verify OTP',
-                    'status' => $disbursement->otp_verified_at ? 'completed' : ($disbursement->otp_sent_at ? 'in_progress' : 'pending'),
+                    'status' => $hasVerifiedOtp
+                        ? 'completed'
+                        : ($hasSentOtp ? 'in_progress' : 'pending'),
                 ],
                 'payment_initiation' => [
                     'label' => 'Initiate B2C Payment',
                     'status' => $disbursement->mpesa_request_id 
                         ? 'completed' 
-                        : ($disbursement->otp_verified_at ? 'in_progress' : 'pending'),
+                        : ($hasVerifiedOtp ? 'in_progress' : 'pending'),
                 ],
                 'payment_confirmation' => [
                     'label' => 'Confirm Payment',

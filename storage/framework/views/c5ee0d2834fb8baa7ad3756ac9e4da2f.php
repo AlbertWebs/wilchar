@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-@php
+<?php
     use Illuminate\Support\Str;
-@endphp
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-100">
+?>
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="h-full bg-slate-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     
     <!-- PWA Meta Tags -->
     <meta name="application-name" content="Wilchar LMS">
@@ -29,17 +29,17 @@
     <!-- Manifest -->
     <link rel="manifest" href="/manifest.json">
 
-    <title>{{ $title ?? config('app.name', 'Admin Panel') }}</title>
+    <title><?php echo e($title ?? config('app.name', 'Admin Panel')); ?></title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    @vite(['resources/css/app.css', 'resources/js/admin.js', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/admin.js', 'resources/js/app.js']); ?>
 
     <script>
-        window.csrfToken = '{{ csrf_token() }}';
+        window.csrfToken = '<?php echo e(csrf_token()); ?>';
     </script>
-    @stack('head')
+    <?php echo $__env->yieldPushContent('head'); ?>
 </head>
 <body class="h-full font-sans antialiased text-slate-900">
     <div
@@ -62,11 +62,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center gap-2">
                     <span class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-lg font-semibold text-emerald-50">AD</span>
                     <div>
                         <p class="text-base font-semibold text-white">Admin Dashboard</p>
-                        <p class="text-xs text-slate-400">{{ config('app.name') }}</p>
+                        <p class="text-xs text-slate-400"><?php echo e(config('app.name')); ?></p>
                     </div>
                 </a>
             </div>
@@ -74,8 +74,8 @@
                 <p class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Overview</p>
                 <ul class="mt-3 space-y-1 text-sm">
                     <li>
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('admin.dashboard')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
                             </svg>
@@ -83,8 +83,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.clients.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.clients.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('admin.clients.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.clients.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-purple-400 group-hover:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
@@ -92,8 +92,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('loan-applications.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loan-applications.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('loan-applications.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loan-applications.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-indigo-400 group-hover:text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 3h-9A1.5 1.5 0 006 4.5v15L12 16l6 3.5v-15A1.5 1.5 0 0016.5 3z" />
                             </svg>
@@ -101,8 +101,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('loans.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loans.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('loans.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loans.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-amber-400 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z" />
                             </svg>
@@ -110,8 +110,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('disbursements.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('disbursements.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-rose-400 group-hover:text-rose-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8" />
                             </svg>
@@ -119,8 +119,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('collections.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('collections.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('collections.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('collections.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-cyan-400 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h8m-8 5h16" />
                             </svg>
@@ -132,8 +132,8 @@
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Organization</p>
                 <ul class="mt-3 space-y-1 text-sm">
                     <li>
-                        <a href="{{ route('admin.roles.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.roles.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('admin.roles.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.roles.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-fuchsia-400 group-hover:text-fuchsia-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 013.879 2.804M15 11a3 3 0 10-6 0 3 3 0 006 0z" />
                             </svg>
@@ -141,8 +141,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('users.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('users.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('users.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('users.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-teal-400 group-hover:text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7a4 4 0 118 0 4 4 0 01-8 0zm12 13a8 8 0 10-16 0" />
                             </svg>
@@ -150,8 +150,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('reports.dashboard') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('reports.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('reports.dashboard')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('reports.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-lime-400 group-hover:text-lime-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h10m-10 6h16" />
                             </svg>
@@ -159,8 +159,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.site-settings.edit') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.site-settings.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('admin.site-settings.edit')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.site-settings.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 4.5l1-1 1 1m8 8l1 1-1 1m-15-8l-1 1 1 1m8 8l-1 1 1 1M12 9v3l2 2" />
                             </svg>
@@ -172,8 +172,8 @@
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Website</p>
                 <ul class="mt-3 space-y-1 text-sm">
                     <li>
-                        <a href="{{ route('admin.website.pages.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.website.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('admin.website.pages.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.website.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-blue-400 group-hover:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -185,52 +185,52 @@
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Financial</p>
                 <ul class="mt-3 space-y-1 text-sm">
                     <li>
-                        <a href="{{ route('loan-products.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loan-products.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('loan-products.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loan-products.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-sky-400 group-hover:text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.657 0 3-1.343 3-3S13.657 2 12 2 9 3.343 9 5s1.343 3 3 3zM5 21h14l-3-8H8l-3 8z" />
                             </svg>
                             <span>Loan Products</span>
                         </a>
                     </li>
-                    @if(auth()->user()->hasAnyRole(['Finance', 'Director']))
+                    <?php if(auth()->user()->hasAnyRole(['Finance', 'Director'])): ?>
                         <li>
-                            <a href="{{ route('finance-disbursements.index') }}"
-                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('finance-disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                            <a href="<?php echo e(route('finance-disbursements.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('finance-disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                                 <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8m10 9H6a2 2 0 01-2-2V7.5A1.5 1.5 0 015.5 6h13A1.5 1.5 0 0120 7.5V19a2 2 0 01-2 2z" />
                                 </svg>
                                 <span>Finance Desk</span>
                             </a>
                         </li>
-                    @endif
-                    @if(auth()->user()->hasAnyRole(['Finance', 'Director', 'Collection Officer', 'Admin']))
+                    <?php endif; ?>
+                    <?php if(auth()->user()->hasAnyRole(['Finance', 'Director', 'Collection Officer', 'Admin'])): ?>
                         <li>
-                            <a href="{{ route('payments.index') }}"
-                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('payments.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                            <a href="<?php echo e(route('payments.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('payments.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                                 <svg class="h-5 w-5 shrink-0 text-cyan-400 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a5 5 0 00-10 0v2M5 10h14l-1 11H6L5 10zm6 4v4m4-4v4" />
                                 </svg>
                                 <span>Client Payments</span>
                             </a>
                         </li>
-                    @endif
+                    <?php endif; ?>
                     
-                    @if(config('app.sandbox_mode') || app()->environment('local'))
+                    <?php if(config('app.sandbox_mode') || app()->environment('local')): ?>
                         <li>
-                            <a href="{{ route('sandbox.purge.index') }}"
-                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-rose-900/40 {{ request()->routeIs('sandbox.*') ? 'bg-rose-900/40 text-white' : 'text-rose-200' }}">
+                            <a href="<?php echo e(route('sandbox.purge.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-rose-900/40 <?php echo e(request()->routeIs('sandbox.*') ? 'bg-rose-900/40 text-white' : 'text-rose-200'); ?>">
                                 <svg class="h-5 w-5 shrink-0 text-rose-400 group-hover:text-rose-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8m11 11H5a2 2 0 01-2-2V7.5A1.5 1.5 0 014.5 6h15A1.5 1.5 0 0121 7.5V21a2 2 0 01-2 2z" />
                                 </svg>
                                 <span>Sandbox Purge</span>
                             </a>
                         </li>
-                    @endif
+                    <?php endif; ?>
                     
                     <li>
-                        <a href="{{ route('teams.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('teams.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('teams.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('teams.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-amber-400 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5V4H2v16h5m10 0h-6a3 3 0 11-6 0h12a3 3 0 11-6 0" />
                             </svg>
@@ -238,8 +238,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('expenses.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('expenses.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('expenses.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('expenses.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-orange-400 group-hover:text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9h18M3 15h18M9 3v18" />
                             </svg>
@@ -247,8 +247,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('assets.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('assets.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('assets.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('assets.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M6 10v8m12-8v8M3 18h18" />
                             </svg>
@@ -256,8 +256,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('liabilities.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('liabilities.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('liabilities.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('liabilities.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-red-400 group-hover:text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2" />
                             </svg>
@@ -265,8 +265,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('shareholders.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('shareholders.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('shareholders.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('shareholders.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-purple-400 group-hover:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m-4 4h10M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
                             </svg>
@@ -274,8 +274,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('trial-balances.index') }}"
-                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('trial-balances.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                        <a href="<?php echo e(route('trial-balances.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('trial-balances.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                             <svg class="h-5 w-5 shrink-0 text-yellow-400 group-hover:text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-6h6v6m-7-8h8l-4-4-4 4z" />
                             </svg>
@@ -288,14 +288,15 @@
             <div class="border-t border-slate-800/80 px-4 py-4">
                 <div class="flex items-center gap-3 rounded-lg bg-slate-800/40 p-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold">
-                        {{ strtoupper(Str::substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                        <?php echo e(strtoupper(Str::substr(auth()->user()->name ?? 'A', 0, 1))); ?>
+
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-slate-400">{{ auth()->user()->roles->pluck('name')->implode(', ') }}</p>
+                        <p class="text-sm font-semibold text-white"><?php echo e(auth()->user()->name); ?></p>
+                        <p class="text-xs text-slate-400"><?php echo e(auth()->user()->roles->pluck('name')->implode(', ')); ?></p>
                     </div>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
+                    <form method="POST" action="<?php echo e(route('logout')); ?>">
+                        <?php echo csrf_field(); ?>
                         <button type="submit" class="rounded-full bg-slate-700 p-2 text-slate-300 transition hover:bg-slate-600">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12H3m0 0l4-4m-4 4l4 4m12-8v8" />
@@ -320,17 +321,19 @@
                     </button>
                     <div>
                         <h1 class="text-lg font-semibold text-slate-900">
-                            @hasSection('header')
-                                @yield('header')
-                            @else
-                                {{ $header ?? 'Dashboard' }}
-                            @endif
+                            <?php if (! empty(trim($__env->yieldContent('header')))): ?>
+                                <?php echo $__env->yieldContent('header'); ?>
+                            <?php else: ?>
+                                <?php echo e($header ?? 'Dashboard'); ?>
+
+                            <?php endif; ?>
                         </h1>
-                        @isset($breadcrumbs)
+                        <?php if(isset($breadcrumbs)): ?>
                             <nav class="mt-1 flex items-center text-xs text-slate-500">
-                                {!! $breadcrumbs !!}
+                                <?php echo $breadcrumbs; ?>
+
                             </nav>
-                        @endisset
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -344,7 +347,7 @@
                     </button>
                     <div class="relative" x-data="{ open:false }" @keydown.escape.window="open=false">
                         <button @click="open = !open" class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                            <span>{{ auth()->user()->name }}</span>
+                            <span><?php echo e(auth()->user()->name); ?></span>
                             <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -357,12 +360,12 @@
                             class="absolute right-0 z-40 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
                         >
                             <div class="px-4 py-3 text-sm">
-                                <p class="font-semibold text-slate-900">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-slate-500">{{ auth()->user()->email }}</p>
+                                <p class="font-semibold text-slate-900"><?php echo e(auth()->user()->name); ?></p>
+                                <p class="text-xs text-slate-500"><?php echo e(auth()->user()->email); ?></p>
                             </div>
                             <div class="border-t border-slate-100">
                                 <a
-                                    href="{{ route('admin.profile.edit') }}"
+                                    href="<?php echo e(route('admin.profile.edit')); ?>"
                                     class="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-50"
                                 >
                                     <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -370,8 +373,8 @@
                                     </svg>
                                     My Profile
                                 </a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
+                                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-600 transition hover:bg-rose-50">
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12H3m0 0l4-4m-4 4l4 4m12-8v8" />
@@ -387,7 +390,7 @@
 
             <main class="flex-1 overflow-y-auto">
                 <div class="w-full px-4 py-6 sm:px-6 lg:px-8">
-                    @yield('content', $slot ?? '')
+                    <?php echo $__env->yieldContent('content', $slot ?? ''); ?>
                 </div>
             </main>
         </div>
@@ -444,9 +447,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const success = @json(session('success'));
-            const error = @json(session('error'));
-            const permissionError = @json(session('permission_error'));
+            const success = <?php echo json_encode(session('success'), 15, 512) ?>;
+            const error = <?php echo json_encode(session('error'), 15, 512) ?>;
+            const permissionError = <?php echo json_encode(session('permission_error'), 15, 512) ?>;
 
             if (success) {
                 Swal.fire({
@@ -619,7 +622,8 @@
         });
     </script>
 
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 
+<?php /**PATH C:\xampp\htdocs\wilchar\resources\views/layouts/admin.blade.php ENDPATH**/ ?>
