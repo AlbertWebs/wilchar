@@ -105,12 +105,14 @@ class LoanApprovalController extends Controller
                     $recipient->notifyNow(new LoanApprovalStageNotification($loanApplication, 'approval'));
                     $sentCount++;
                 } catch (\Exception $e) {
-                    $errorMessage = "Failed to send to {$recipient->email}: " . $e->getMessage();
+                    // Extract user-friendly error message
+                    $errorMessage = $this->extractUserFriendlyError($e, $recipient->email);
                     $errors[] = $errorMessage;
                     \Log::error('Failed to send approval email', [
                         'recipient' => $recipient->email,
                         'application_id' => $loanApplication->id,
                         'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
                     ]);
                 }
             }
@@ -233,6 +235,32 @@ class LoanApprovalController extends Controller
             'total_recipients' => 0,
             'errors' => [],
         ];
+    }
+
+    /**
+     * Extract user-friendly error message from exception
+     */
+    private function extractUserFriendlyError(\Exception $e, string $recipientEmail): string
+    {
+        $message = $e->getMessage();
+        
+        // SMTP Authentication errors
+        if (str_contains($message, 'Failed to authenticate on SMTP server') || str_contains($message, '535 Incorrect authentication data')) {
+            return "SMTP authentication failed for {$recipientEmail}. Please check your email configuration (MAIL_USERNAME and MAIL_PASSWORD in .env file).";
+        }
+        
+        // Connection errors
+        if (str_contains($message, 'Connection could not be established') || str_contains($message, 'Connection timed out')) {
+            return "Could not connect to email server for {$recipientEmail}. Please check MAIL_HOST and MAIL_PORT settings.";
+        }
+        
+        // SSL/TLS errors
+        if (str_contains($message, 'SSL') || str_contains($message, 'TLS') || str_contains($message, 'certificate')) {
+            return "Email encryption error for {$recipientEmail}. Please check MAIL_ENCRYPTION setting (should be 'tls' or 'ssl').";
+        }
+        
+        // Generic error - show simplified message
+        return "Failed to send email to {$recipientEmail}. Please check your email configuration.";
     }
 
     public function show(Request $request, LoanApplication $loanApplication): View|JsonResponse|RedirectResponse
