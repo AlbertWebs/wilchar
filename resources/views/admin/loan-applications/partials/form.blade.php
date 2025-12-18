@@ -101,7 +101,7 @@
                     <div class="flex items-center justify-between">
                         <label class="text-sm font-medium text-slate-700">Client</label>
                         <a
-                            href="{{ route('clients.create') }}"
+                            href="{{ route('admin.clients.create') }}"
                             target="_blank"
                             class="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
                         >

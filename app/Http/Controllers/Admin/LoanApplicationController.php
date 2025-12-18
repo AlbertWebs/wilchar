@@ -31,6 +31,10 @@ class LoanApplicationController extends Controller
             'financeOfficer',
             'loanProduct',
             'team',
+            'loan.disbursements',
+            'disbursements' => function($query) {
+                $query->latest();
+            },
         ])->latest();
 
         if ($request->filled('status')) {

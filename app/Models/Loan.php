@@ -83,12 +83,12 @@ class Loan extends Model
 
     public function approvals(): HasMany
     {
-        return $this->hasMany(LoanApproval::class);
+        return $this->hasMany(LoanApproval::class, 'loan_application_id', 'loan_application_id');
     }
 
     public function disbursements(): HasMany
     {
-        return $this->hasMany(Disbursement::class);
+        return $this->hasMany(Disbursement::class, 'loan_application_id', 'loan_application_id');
     }
 
     public function repayments(): HasMany

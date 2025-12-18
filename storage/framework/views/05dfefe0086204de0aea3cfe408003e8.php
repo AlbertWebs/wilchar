@@ -20,6 +20,14 @@
     </title>
 
     
+    <!-- IFrame Preloader Removal Workaround -->
+    <style type="text/css">
+        body.iframe-mode .preloader {
+            display: none !important;
+        }
+    </style>
+
+    
     <?php echo $__env->yieldContent('adminlte_css_pre'); ?>
 
     
@@ -85,7 +93,7 @@
         <link rel="icon" type="image/png" sizes="192x192" href="<?php echo e(asset('favicons/android-icon-192x192.png')); ?>">
         <link rel="manifest" crossorigin="use-credentials" href="<?php echo e(asset('favicons/manifest.json')); ?>">
         <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-TileImage" content="<?php echo e(asset('favicon/ms-icon-144x144.png')); ?>">
+        <meta name="msapplication-TileImage" content="<?php echo e(asset('favicons/ms-icon-144x144.png')); ?>">
     <?php endif; ?>
 
 </head>

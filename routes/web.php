@@ -237,6 +237,15 @@ Route::prefix('admin/payments')
         Route::post('/attach', [PaymentDashboardController::class, 'attach'])->name('attach');
     });
 
+// Disbursement Initiation (with OTP) - Accessible to Admin, Finance Officer, and Director
+Route::prefix('admin/disbursements')
+    ->middleware(['auth', 'role:Admin|Finance Officer|Director'])
+    ->group(function () {
+        Route::post('{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
+        Route::post('{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
+        Route::get('{disbursement}/status', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'getStatus'])->name('disbursements.status');
+    });
+
 Route::middleware(['auth'])->prefix('admin/sandbox')->name('sandbox.')->group(function () {
     Route::get('/purge', [SandboxController::class, 'index'])->name('purge.index');
     Route::post('/purge', [SandboxController::class, 'purge'])->name('purge.run');

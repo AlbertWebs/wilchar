@@ -85,10 +85,66 @@ class RepaymentController extends Controller
 
         $validated['received_by'] = auth()->id();
 
-        Repayment::create($validated);
+        DB::beginTransaction();
+        try {
+            $loan = Loan::findOrFail($validated['loan_id']);
+            
+            // Create repayment
+            Repayment::create($validated);
 
-        return redirect()->route('collections.index')
-            ->with('success', 'Collection recorded successfully.');
+            // Update loan outstanding balance
+            $newBalance = max(0, $loan->outstanding_balance - $validated['amount']);
+            $loan->outstanding_balance = $newBalance;
+            
+            // Update loan status if fully paid
+            if ($newBalance <= 0 && $loan->status === 'disbursed') {
+                $loan->status = 'closed';
+            }
+            
+            $loan->save();
+
+            // Update instalments if applicable
+            $paymentAmount = $validated['amount'];
+            foreach ($loan->instalments()->where('status', 'pending')->orderBy('due_date')->get() as $instalment) {
+                if ($paymentAmount <= 0) break;
+                
+                $remaining = $instalment->total_amount - $instalment->amount_paid;
+                $toPay = min($paymentAmount, $remaining);
+                
+                $instalment->amount_paid += $toPay;
+                if ($instalment->amount_paid >= $instalment->total_amount) {
+                    $instalment->status = 'paid';
+                }
+                $instalment->save();
+                
+                $paymentAmount -= $toPay;
+            }
+
+            DB::commit();
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Payment recorded successfully.',
+                    'loan' => $loan->fresh(['repayments', 'instalments']),
+                ]);
+            }
+
+            return redirect()->back()
+                ->with('success', 'Payment recorded successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to record payment: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Failed to record payment: ' . $e->getMessage());
+        }
     }
 
     /**
