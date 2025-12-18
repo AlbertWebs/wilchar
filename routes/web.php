@@ -316,7 +316,8 @@ Route::middleware(['auth', 'role:Collections'])->prefix('collections')->group(fu
     // Add more collections routes here
 });
 
-// M-Pesa B2C Callback (public route, no auth)
+// M-Pesa B2C Callbacks (public routes, no auth)
 Route::post('/api/mpesa/b2c/callback', [MpesaDisbursementController::class, 'callback'])->name('disbursements.callback');
+Route::post('/api/mpesa/b2c/timeout', [MpesaDisbursementController::class, 'timeout'])->name('disbursements.timeout');
 
 require __DIR__.'/auth.php';

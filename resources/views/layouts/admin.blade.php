@@ -214,6 +214,69 @@
                                 <span>Client Payments</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('mpesa.dashboard') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z" />
+                                </svg>
+                                <span>M-Pesa Overview</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.stk-push.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.stk-push.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-emerald-300 group-hover:text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                                </svg>
+                                <span>STK Push</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.c2b.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.c2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-sky-300 group-hover:text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h8m-8 5h16" />
+                                </svg>
+                                <span>C2B Collections</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.b2b.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.b2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-indigo-300 group-hover:text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h10m-8 4h6M5 6l2-3h10l2 3" />
+                                </svg>
+                                <span>B2B Payments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.b2c.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.b2c.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-amber-300 group-hover:text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8" />
+                                </svg>
+                                <span>B2C Disbursements</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.account-balance.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.account-balance.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-slate-300 group-hover:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.5-1 3-1 4 0s1 3 0 4-2.5 1-4 2-2 3 0 4 3 1 4 0M12 3v18" />
+                                </svg>
+                                <span>Account Balance</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mpesa.transaction-status.index') }}"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.transaction-status.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
+                                <svg class="h-4 w-4 shrink-0 text-rose-300 group-hover:text-rose-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>Transaction Status</span>
+                            </a>
+                        </li>
                     @endif
                     
                     @if(config('app.sandbox_mode') || app()->environment('local'))
