@@ -36,6 +36,30 @@
 
     @vite(['resources/css/app.css', 'resources/js/admin.js', 'resources/js/app.js'])
 
+    <style>
+        /* Soft Borders for Admin Sidebar Menu Items */
+        aside nav ul li a {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        aside nav ul li a:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        aside nav ul li a.bg-slate-800 {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+        
+        /* Enhanced hover effect with border */
+        aside nav ul li a:hover:not(.bg-slate-800) {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(2px);
+        }
+    </style>
+
     <script>
         window.csrfToken = '{{ csrf_token() }}';
     </script>
