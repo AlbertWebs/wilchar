@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class LoanApprovalController extends Controller
@@ -124,15 +125,18 @@ class LoanApprovalController extends Controller
             }
 
             // Store email status in database for persistence
-            ApprovalEmailLog::create([
-                'loan_application_id' => $loanApplication->id,
-                'sent_by' => auth()->id(),
-                'sent_count' => $sentCount,
-                'total_recipients' => $recipients->count(),
-                'recipients' => $recipientEmails,
-                'errors' => $errors,
-                'sent_at' => now(),
-            ]);
+            // Only create log if table exists
+            if (Schema::hasTable('approval_email_logs')) {
+                ApprovalEmailLog::create([
+                    'loan_application_id' => $loanApplication->id,
+                    'sent_by' => auth()->id(),
+                    'sent_count' => $sentCount,
+                    'total_recipients' => $recipients->count(),
+                    'recipients' => $recipientEmails,
+                    'errors' => $errors,
+                    'sent_at' => now(),
+                ]);
+            }
 
             // Also store in session for immediate display
             session()->put("email_sent_{$loanApplication->id}", [
@@ -220,9 +224,13 @@ class LoanApprovalController extends Controller
         }
 
         // Check database for persisted status
-        $latestLog = ApprovalEmailLog::where('loan_application_id', $loanApplication->id)
-            ->latest('sent_at')
-            ->first();
+        // Check if table exists before querying
+        $latestLog = null;
+        if (Schema::hasTable('approval_email_logs')) {
+            $latestLog = ApprovalEmailLog::where('loan_application_id', $loanApplication->id)
+                ->latest('sent_at')
+                ->first();
+        }
 
         if ($latestLog) {
             return [
