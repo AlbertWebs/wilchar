@@ -162,6 +162,43 @@
                 }
             </script>
 
+            <x-admin.section title="Home Page Section Images" description="Upload images for different sections on the home page. Recommended: PNG or JPG format, max 2MB each.">
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    @php
+                        $homeImageFields = [
+                            'home_hero_image' => ['label' => 'Hero Section Image', 'default' => 'main/assets/images/hero_img2.png'],
+                            'home_why_choose_image' => ['label' => 'Why Choose Us Image', 'default' => 'main/assets/images/choose_us2.png'],
+                            'home_how_works_image' => ['label' => 'How It Works Image', 'default' => 'main/assets/images/how_works.png'],
+                            'home_about_image' => ['label' => 'About Us Image', 'default' => 'main/assets/images/about_guideline.png'],
+                            'home_loan_solution_image' => ['label' => 'Loan Solution Image', 'default' => 'main/assets/images/loan_solution.png'],
+                            'home_title_vector' => ['label' => 'Title Vector Icon', 'default' => 'main/assets/images/title_vector.png'],
+                        ];
+                    @endphp
+                    @foreach($homeImageFields as $key => $config)
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-slate-700">{{ $config['label'] }}</label>
+                            <div class="flex flex-col gap-3">
+                                <div class="h-32 w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-2 flex items-center justify-center">
+                                    @php
+                                        $currentImage = $defaultSettings['home_images'][$key] ?? '';
+                                        $previewSrc = $currentImage ? asset('storage/' . $currentImage) : asset($config['default']);
+                                    @endphp
+                                    <img src="{{ $previewSrc }}" alt="{{ $config['label'] }}" class="max-h-full max-w-full object-contain" id="preview-{{ $key }}" onerror="this.src='{{ asset($config['default']) }}'">
+                                </div>
+                                <label class="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-3 py-3 text-center text-xs font-medium text-slate-500 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-500 transition">
+                                    <svg class="mb-1 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l6-6 4 4 5-5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4h16v16H4z"/></svg>
+                                    <span>Click to Upload</span>
+                                    <input type="file" name="{{ $key }}" class="hidden" accept="image/*" onchange="previewImage(this, 'preview-{{ $key }}')">
+                                </label>
+                                @if($currentImage)
+                                    <p class="text-xs text-slate-500">Current: {{ basename($currentImage) }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </x-admin.section>
+
             <x-admin.section title="Social Media Links" description="Add your social media profiles to display in the footer.">
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>

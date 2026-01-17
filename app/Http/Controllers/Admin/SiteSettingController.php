@@ -53,6 +53,12 @@ class SiteSettingController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
+            'home_hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'home_why_choose_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'home_how_works_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'home_about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'home_loan_solution_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'home_title_vector' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:512',
         ]);
 
         // General Settings
@@ -83,6 +89,37 @@ class SiteSettingController extends Controller
         if ($request->hasFile('favicon')) {
             $faviconPath = $request->file('favicon')->store('settings', 'public');
             $this->updateSetting('favicon', $faviconPath, 'branding', 'Favicon', 'image');
+        }
+
+        // Home Page Section Images
+        if ($request->hasFile('home_hero_image')) {
+            $heroPath = $request->file('home_hero_image')->store('settings', 'public');
+            $this->updateSetting('home_hero_image', $heroPath, 'home_images', 'Hero Section Image', 'image');
+        }
+
+        if ($request->hasFile('home_why_choose_image')) {
+            $whyChoosePath = $request->file('home_why_choose_image')->store('settings', 'public');
+            $this->updateSetting('home_why_choose_image', $whyChoosePath, 'home_images', 'Why Choose Us Image', 'image');
+        }
+
+        if ($request->hasFile('home_how_works_image')) {
+            $howWorksPath = $request->file('home_how_works_image')->store('settings', 'public');
+            $this->updateSetting('home_how_works_image', $howWorksPath, 'home_images', 'How It Works Image', 'image');
+        }
+
+        if ($request->hasFile('home_about_image')) {
+            $aboutPath = $request->file('home_about_image')->store('settings', 'public');
+            $this->updateSetting('home_about_image', $aboutPath, 'home_images', 'About Us Image', 'image');
+        }
+
+        if ($request->hasFile('home_loan_solution_image')) {
+            $loanSolutionPath = $request->file('home_loan_solution_image')->store('settings', 'public');
+            $this->updateSetting('home_loan_solution_image', $loanSolutionPath, 'home_images', 'Loan Solution Image', 'image');
+        }
+
+        if ($request->hasFile('home_title_vector')) {
+            $titleVectorPath = $request->file('home_title_vector')->store('settings', 'public');
+            $this->updateSetting('home_title_vector', $titleVectorPath, 'home_images', 'Title Vector Icon', 'image');
         }
 
         // Social Media
@@ -163,6 +200,14 @@ class SiteSettingController extends Controller
                 'meta_title' => SiteSetting::getValue('meta_title', ''),
                 'meta_description' => SiteSetting::getValue('meta_description', ''),
                 'meta_keywords' => SiteSetting::getValue('meta_keywords', ''),
+            ],
+            'home_images' => [
+                'home_hero_image' => SiteSetting::getValue('home_hero_image', ''),
+                'home_why_choose_image' => SiteSetting::getValue('home_why_choose_image', ''),
+                'home_how_works_image' => SiteSetting::getValue('home_how_works_image', ''),
+                'home_about_image' => SiteSetting::getValue('home_about_image', ''),
+                'home_loan_solution_image' => SiteSetting::getValue('home_loan_solution_image', ''),
+                'home_title_vector' => SiteSetting::getValue('home_title_vector', ''),
             ],
         ];
     }

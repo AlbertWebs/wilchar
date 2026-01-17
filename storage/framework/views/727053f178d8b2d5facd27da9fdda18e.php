@@ -1,14 +1,11 @@
-@extends('front.master')
-
-
-@section('content')
+<?php $__env->startSection('content'); ?>
         <!-- Hero Section Start -->
     <section class="hero hero--secondary">
         <div class="container">
             <div class="row gy-5 gy-lg-0 align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector"> Empowering Small Businesses Across Western Region</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector"> Empowering Small Businesses Across Western Region</span>
                         <h1 class="section__content-title display-4 wow fadeInUp" data-wow-duration="1s" style="font-size: 2.5rem; line-height: 1.2;">NURU WILCHAR<br>SME CAPITAL LIMITED</h1>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">A supportive company focused on empowering small businesses in rural and peri-urban areas. We provide financial support through cash advances to meet your business needs, enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs.</p>
                         <div class="btn-group mt_40 wow fadeInUp" data-wow-duration="0.8s">
@@ -19,7 +16,7 @@
                 </div>
                 <div class="col-12 col-md-9 col-lg-5 col-xxl-5">
                     <div class="hero--secondary__thumb wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{ !empty($settings['home_hero_image']) ? asset('storage/' . $settings['home_hero_image']) : asset('main/assets/images/hero_img2.png') }}" alt="Image">
+                        <img src="<?php echo e(!empty($settings['home_hero_image']) ? asset('storage/' . $settings['home_hero_image']) : asset('main/assets/images/hero_img2.png')); ?>" alt="Image">
                     </div>
                 </div>
             </div>
@@ -33,25 +30,25 @@
             <div class="row">
                 <div class="sponsor__company" id="sponsor__company">
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo2.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo2.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo3.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo3.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo4.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo4.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo2.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo2.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo4.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo4.png')); ?>" alt="Image">
                     </div>
                     <div class="sponsor__logo wow fadeInUp" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/sponsor_logo3.png')}}" alt="Image">
+                        <img src="<?php echo e(asset('main/assets/images/sponsor_logo3.png')); ?>" alt="Image">
                     </div>
                 </div>
             </div>
@@ -65,12 +62,12 @@
             <div class="row align-items-center justify-content-center justify-content-lg-between gy-5 gy-lg-0">            
                 <div class="col-12 col-sm-8 col-lg-6 col-xxl-5 order-1 order-lg-0">
                     <div class="how-works__thumbs previewShapeY unset-xxl-left me-4 me-xxl-0 wow fadeInDown" data-wow-duration="0.8s">
-                        <img src="{{ !empty($settings['home_why_choose_image']) ? asset('storage/' . $settings['home_why_choose_image']) : asset('main/assets/images/choose_us2.png') }}" alt="image">
+                        <img src="<?php echo e(!empty($settings['home_why_choose_image']) ? asset('storage/' . $settings['home_why_choose_image']) : asset('main/assets/images/choose_us2.png')); ?>" alt="image">
                     </div>
                 </div>
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">Why Choose Us</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">Why Choose Us</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Empowering Your Business Growth with Trusted Financial Support</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">We are committed to improving livelihoods by enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs. Our ethical business support and sustainability-focused approach makes us your trusted partner.</p>
                         <div class="section__content-inner">
@@ -166,7 +163,7 @@
             <div class="row gy-5 gy-lg-0 align-items-center justify-content-between">
                 <div class="col-12 col-lg-5 col-xxl-5 ">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector"> Our Services</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector"> Our Services</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Financial Support for Your Business Growth</h2>
                         <p class="section__content-content wow fadeInDown" data-wow-duration="0.8s">We provide comprehensive financial support services tailored to meet the needs of small businesses, including mama mboga, boda boda riders, tuk-tuk operators, and small shops across the Western Region.</p>
                         <a href="#how-it-works" class="btn_theme mt_40 wow fadeInUp" data-wow-duration="0.8s">Learn More<i class="bi bi-arrow-up-right"></i><span></span></a>
@@ -225,7 +222,7 @@
                             <div class="card__content">
                                 <div class="card__content-text">
                                     <h4 class="card__title"><a href="#how-it-works">Weekly Repayment Plans</a></h4>
-                                    <p class="fs-small">Flexible weekly repayment support plans that fit your business cycle. Make repayments easily via Paybill number {{ $settings['paybill_number'] ?? '4189755' }}.</p>
+                                    <p class="fs-small">Flexible weekly repayment support plans that fit your business cycle. Make repayments easily via Paybill number <?php echo e($settings['paybill_number'] ?? '4189755'); ?>.</p>
                                 </div>
                                 <a href="#calculator" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
                             </div>
@@ -243,7 +240,7 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__header">
-                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">Our Loan Products</span>
+                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">Our Loan Products</span>
                         <h2 class="section__header-title wow fadeInUp" data-wow-duration="0.8s">Flexible Loan Solutions for Your Business Needs</h2>
                         <p class="section__header-content wow fadeInDown" data-wow-duration="0.8s">We offer quick and accessible loan solutions designed specifically for small businesses, entrepreneurs, and grassroots traders. Choose the option that best fits your needs.</p>
                     </div>
@@ -288,7 +285,7 @@
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
                                     <a href="#calculator" class="btn_theme btn_theme_active">Calculate Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
                                     <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
@@ -329,7 +326,7 @@
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
                                     <a href="#calculator" class="btn_theme btn_theme_active">Calculate Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
                                     <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
@@ -370,7 +367,7 @@
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
                                     <a href="#how-it-works" class="btn_theme btn_theme_active">Learn More<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
                                     <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
@@ -379,7 +376,7 @@
                 </div>
                 <div class="col-12">
                     <div class="section__cta">
-                        <a href="{{ route('loan-application.create') }}" class="btn_theme see_all wow fadeInDown" data-wow-duration="0.8s">Apply for Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme see_all wow fadeInDown" data-wow-duration="0.8s">Apply for Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
             </div>
@@ -393,12 +390,12 @@
             <div class="row align-items-center justify-content-center justify-content-lg-between gy-5 gy-lg-0">            
                 <div class="col-12 col-sm-8 col-lg-6 col-xxl-5 order-1 order-lg-0">
                     <div class="how-works__thumbs unset-xxl-left me-4 me-xxl-0 wow fadeInDown" data-wow-duration="0.8s">
-                        <img src="{{ !empty($settings['home_how_works_image']) ? asset('storage/' . $settings['home_how_works_image']) : asset('main/assets/images/how_works.png') }}" alt="image">
+                        <img src="<?php echo e(!empty($settings['home_how_works_image']) ? asset('storage/' . $settings['home_how_works_image']) : asset('main/assets/images/how_works.png')); ?>" alt="image">
                     </div>
                 </div>
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">How It Works</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">How It Works</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Simple Steps to Get Your Business Capital</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Our streamlined process makes it easy to access the financial support your business needs. Follow these simple steps to get started with NURU WILCHAR.</p>
                         <div class="section__content-inner mt_60">
@@ -476,7 +473,7 @@
                                 </div>
                                 <div class="card__content">
                                     <h4 class="card__title">Weekly Repayment via Paybill</h4>
-                                    <p class="fs-small">Client repays weekly using Paybill number {{ $settings['paybill_number'] ?? '4189755' }}. Consistent repayment improves trust and future support limits.</p>
+                                    <p class="fs-small">Client repays weekly using Paybill number <?php echo e($settings['paybill_number'] ?? '4189755'); ?>. Consistent repayment improves trust and future support limits.</p>
                                 </div>
                             </div>
                         </div>
@@ -574,7 +571,7 @@
             <div class="row gy-5 gy-lg-0 justify-content-between align-items-center">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content me-lg-5 me-xxl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector"> About Us</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector"> About Us</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">NURU WILCHAR SME CAPITAL LIMITED</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">NURU WILCHAR SME CAPITAL LIMITED is a supportive company focused on empowering small businesses in rural and peri-urban areas across Western Region. We are a registered company operating under other business support services, with business support as our core mandate. We are committed to improving livelihoods by enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs.</p>
                         <div class="mt_32 wow fadeInUp" data-wow-duration="0.8s">
@@ -620,7 +617,7 @@
                                 </div>
                                 <div class="card--small-content">
                                     <p class="card--small-title">Support us</p>
-                                    <a href="tel:{{ str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661') }}" class="card--small-call">{{ $settings['site_phone'] ?? '+254787666661 / 0793793362' }}</a>
+                                    <a href="tel:<?php echo e(str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661')); ?>" class="card--small-call"><?php echo e($settings['site_phone'] ?? '+254787666661 / 0793793362'); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -628,7 +625,7 @@
                 </div>
                 <div class="col-12 col-sm-8 col-md-8 col-lg-5 mx-auto mx-lg-0">
                     <div class="choose-us__thumb unset-xxl me-xl-4 me-xxl-0">
-                        <img src="{{ !empty($settings['home_about_image']) ? asset('storage/' . $settings['home_about_image']) : asset('main/assets/images/about_guideline.png') }}" alt="images">
+                        <img src="<?php echo e(!empty($settings['home_about_image']) ? asset('storage/' . $settings['home_about_image']) : asset('main/assets/images/about_guideline.png')); ?>" alt="images">
                     </div>
                 </div>
             </div>
@@ -689,10 +686,10 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="section__content ms-lg-4 ms-xxl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector"> Loan Calculators</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector"> Loan Calculators</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Empower Yourself with Accurate Loan Estimates</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">
-                            At {{ $settings['site_name'] ?? 'Nuru Wilchar' }}, we believe financial decisions should never be based on guesswork. 
+                            At <?php echo e($settings['site_name'] ?? 'Nuru Wilchar'); ?>, we believe financial decisions should never be based on guesswork. 
                             Our loan calculator gives you clear, reliable estimates tailored to your needs, helping you understand repayment amounts, interest costs, and timelines before you commit. 
                             With accurate insights at your fingertips, you can plan better, borrow smarter, and take control of your financial journey with confidence.
                         </p>
@@ -702,7 +699,7 @@
                             <li class="headingFive">Customized Estimates</li>
                             <li class="headingFive">Confidence in Decisions</li>
                         </ul>
-                        <a href="{{ route('loan-application.create') }}" class="btn_theme btn_theme_active mt_40 wow fadeInDown" data-wow-duration="0.8s">Apply for Loan <i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme btn_theme_active mt_40 wow fadeInDown" data-wow-duration="0.8s">Apply for Loan <i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
             </div>
@@ -716,19 +713,19 @@
             <div class="row gy-5 gy-xl-0 justify-content-center justify-content-xxl-between align-items-center">
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content ms-xl-4 ms-xl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector"> Get Started Today</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector"> Get Started Today</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Ready to Grow Your Business? Get Financial Support Now</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Contact us through our field officers or visit our office. We support mama mboga, boda boda riders, tuk-tuk operators, and small shops with quick cash advances and working capital.</p>
                         <div class="mt_32 wow fadeInUp" data-wow-duration="0.8s">
                             <div class="card card--small">
                                 <div class="card--small-content">
                                     <h5 class="card--small-title gap-6"><i class="bi bi-telephone"></i>Contact Us</h5>
-                                    <p class="card--small-text"><strong>Office Lines:</strong> {{ $settings['site_phone'] ?? '+254787666661' }}@if(!empty($settings['site_phone_alt'])) / {{ $settings['site_phone_alt'] }}@endif</p>
-                                    <p class="card--small-text"><strong>Email:</strong> {{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}</p>
-                                    <p class="card--small-text"><strong>Location:</strong> {{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)' }}</p>
-                                    @if(!empty($settings['paybill_number']))
-                                    <p class="card--small-text mt-2"><strong>Paybill Number:</strong> <span class="text-primary">{{ $settings['paybill_number'] }}</span></p>
-                                    @endif
+                                    <p class="card--small-text"><strong>Office Lines:</strong> <?php echo e($settings['site_phone'] ?? '+254787666661'); ?><?php if(!empty($settings['site_phone_alt'])): ?> / <?php echo e($settings['site_phone_alt']); ?><?php endif; ?></p>
+                                    <p class="card--small-text"><strong>Email:</strong> <?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?></p>
+                                    <p class="card--small-text"><strong>Location:</strong> <?php echo e($settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)'); ?></p>
+                                    <?php if(!empty($settings['paybill_number'])): ?>
+                                    <p class="card--small-text mt-2"><strong>Paybill Number:</strong> <span class="text-primary"><?php echo e($settings['paybill_number']); ?></span></p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -736,7 +733,7 @@
                 </div>
                 <div class="col-12 col-sm-8 col-md-6 col-xxl-5">
                     <div class="loan-solution__thumb unset-xxl wow fadeInDown" data-wow-duration="0.8s">
-                        <img src="{{ !empty($settings['home_loan_solution_image']) ? asset('storage/' . $settings['home_loan_solution_image']) : asset('main/assets/images/loan_solution.png') }}" alt="image">
+                        <img src="<?php echo e(!empty($settings['home_loan_solution_image']) ? asset('storage/' . $settings['home_loan_solution_image']) : asset('main/assets/images/loan_solution.png')); ?>" alt="image">
                     </div>
                 </div>
             </div>
@@ -750,7 +747,7 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-6 col-xxl-5">
                     <div class="section__header">
-                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">Client Testimonials</span>
+                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">Client Testimonials</span>
                         <h2 class="section__header-title wow fadeInUp" data-wow-duration="0.8s">Success Stories Shared by Our Customers</h2>
                         <p class="section__header-content wow fadeInDown" data-wow-duration="0.8s">Feel free to customize the text with actual client testimonials, ensuring you have their permission to use their names and occupations</p>
                     </div>
@@ -759,36 +756,36 @@
             <div class="row">            
                 <div class="col-12">
                     <div class="testimonials-secondary_slider wow fadeInDown" data-wow-duration="0.8s">
-                        @forelse($testimonials as $testimonial)
+                        <?php $__empty_1 = true; $__currentLoopData = $testimonials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $testimonial): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="card card--custom">
                                 <div class="testimonials__author-review">
                                     <div class="star_review mb-3">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= $testimonial->rating)
+                                        <?php for($i = 1; $i <= 5; $i++): ?>
+                                            <?php if($i <= $testimonial->rating): ?>
                                                 <i class="bi bi-star-fill star-active"></i>
-                                            @elseif($i - 0.5 <= $testimonial->rating)
+                                            <?php elseif($i - 0.5 <= $testimonial->rating): ?>
                                                 <i class="bi bi-star-half star-active"></i>
-                                            @else
+                                            <?php else: ?>
                                                 <i class="bi bi-star star-active"></i>
-                                            @endif
-                                        @endfor
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
                                     </div>
-                                    <p class="text-start">{{ $testimonial->content }}</p>
+                                    <p class="text-start"><?php echo e($testimonial->content); ?></p>
                                 </div>
                                 <div class="testimonials__author">
                                     <div class="author__thumg">
-                                        <img src="{{ $testimonial->image_url }}" alt="{{ $testimonial->name }}">
+                                        <img src="<?php echo e($testimonial->image_url); ?>" alt="<?php echo e($testimonial->name); ?>">
                                     </div>
                                     <div class="author__content">
-                                        <h5 class="author__title">{{ $testimonial->name }}</h5>
+                                        <h5 class="author__title"><?php echo e($testimonial->name); ?></h5>
                                         <p class="author__desi">
-                                            {{ $testimonial->position }}@if($testimonial->company), {{ $testimonial->company }}@endif
+                                            <?php echo e($testimonial->position); ?><?php if($testimonial->company): ?>, <?php echo e($testimonial->company); ?><?php endif; ?>
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            {{-- Fallback to default testimonials if none exist --}}
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            
                             <div class="card card--custom">
                                 <div class="testimonials__author-review">
                                     <div class="star_review mb-3">
@@ -802,7 +799,7 @@
                                 </div>
                                 <div class="testimonials__author">
                                     <div class="author__thumg">
-                                        <img src="{{asset('main/assets/images/testimonials.png')}}" alt="">
+                                        <img src="<?php echo e(asset('main/assets/images/testimonials.png')); ?>" alt="">
                                     </div>
                                     <div class="author__content">
                                         <h5 class="author__title">Client Name</h5>
@@ -810,7 +807,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-12">
@@ -846,23 +843,23 @@
                 </div>
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content ms-lg-4 ms-xl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">Payment & Contact</span>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">Payment & Contact</span>
                         <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Easy Payment Methods & Direct Contact</h2>
                         <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Make your loan repayments easily through M-Pesa Paybill or visit our office. Our team is ready to assist you with your financial needs.</p>
                         <ul class="section__content-list wow fadeInUp" data-wow-duration="0.8s">
-                            <li class="headingFive"><i class="bi bi-phone me-2"></i> Phone: {{ $settings['site_phone'] ?? '+254787666661' }}</li>
-                            <li class="headingFive"><i class="bi bi-envelope me-2"></i> Email: {{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}</li>
-                            <li class="headingFive"><i class="bi bi-geo-alt me-2"></i> Location: {{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318' }}</li>
-                            @if(!empty($settings['paybill_number']))
-                            <li class="headingFive"><i class="bi bi-credit-card me-2"></i> Paybill: <strong>{{ $settings['paybill_number'] }}</strong></li>
-                            @endif
+                            <li class="headingFive"><i class="bi bi-phone me-2"></i> Phone: <?php echo e($settings['site_phone'] ?? '+254787666661'); ?></li>
+                            <li class="headingFive"><i class="bi bi-envelope me-2"></i> Email: <?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?></li>
+                            <li class="headingFive"><i class="bi bi-geo-alt me-2"></i> Location: <?php echo e($settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318'); ?></li>
+                            <?php if(!empty($settings['paybill_number'])): ?>
+                            <li class="headingFive"><i class="bi bi-credit-card me-2"></i> Paybill: <strong><?php echo e($settings['paybill_number']); ?></strong></li>
+                            <?php endif; ?>
                         </ul>
                         <div class="btn-group mt_40 wow fadeInDown" data-wow-duration="0.8s">
-                            <a href="tel:{{ str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661') }}" class="btn_theme btn_theme_active">
+                            <a href="tel:<?php echo e(str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661')); ?>" class="btn_theme btn_theme_active">
                                 <i class="bi bi-telephone me-2"></i>Call Us
                                 <span></span>
                             </a>
-                            <a href="mailto:{{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}" class="btn_theme">
+                            <a href="mailto:<?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?>" class="btn_theme">
                                 <i class="bi bi-envelope me-2"></i>Email Us
                                 <span></span>
                             </a>
@@ -880,7 +877,7 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__header">
-                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{ !empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png') }}" alt="vector">Frequently Asked Questions</span>
+                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="<?php echo e(!empty($settings['home_title_vector']) ? asset('storage/' . $settings['home_title_vector']) : asset('main/assets/images/title_vector.png')); ?>" alt="vector">Frequently Asked Questions</span>
                         <h2 class="section__header-title wow fadeInUp" data-wow-duration="0.8s">Find Answers to Common Questions</h2>
                         <p class="section__header-content wow fadeInDown" data-wow-duration="0.8s">We've compiled a list of frequently asked questions to provide you with quick and helpful answers. If you have a question that is not addressed below</p>
                     </div>
@@ -965,4 +962,5 @@
         </div>
     </section>
     <!-- faq end -->
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('front.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\projects\wilchar\resources\views/front/index.blade.php ENDPATH**/ ?>
