@@ -189,6 +189,62 @@
     
     <!-- Custom Elegant Styling -->
     <style>
+        /* Fix header covering content on apply page and dark background */
+        body:has(section[style*="background: #1b1b18"]) {
+            background-color: #03211B !important;
+        }
+        
+        body:has(section[style*="background: #1b1b18"]) .header-section {
+            background-color: #03211B !important;
+        }
+        
+        section[style*="background: #1b1b18"] {
+            margin-top: 100px !important;
+        }
+        
+        @media (min-width: 992px) {
+            section[style*="background: #1b1b18"] {
+                margin-top: 120px !important;
+            }
+        }
+        
+        /* Desktop Header - Dark Background */
+        @media (min-width: 992px) {
+            .header-section .navbar {
+                background-color: #03211B !important;
+                backdrop-filter: blur(10px);
+            }
+            
+            .header-section .navbar .navbar-nav .nav-link {
+                color: #ffffff !important;
+                border-color: rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .header-section .navbar .navbar-nav .nav-link:hover,
+            .header-section .navbar .navbar-nav .nav-link:focus {
+                color: #FCB650 !important;
+                border-color: rgba(252, 182, 80, 0.4);
+                background: rgba(252, 182, 80, 0.15);
+            }
+            
+            .header-section .navbar .navbar-toggler {
+                color: #ffffff !important;
+            }
+            
+            .header-section .navbar .navbar-toggler i {
+                color: #ffffff !important;
+            }
+            
+            .header-section .navbar .nav-right__search-icon {
+                color: #ffffff !important;
+            }
+            
+            .header-section .navbar .btn_theme {
+                color: #ffffff !important;
+            }
+        }
+        
         /* Enhanced Menu Styling */
         .navbar {
             backdrop-filter: blur(10px);
@@ -502,6 +558,11 @@
                 display: block;
             }
             
+            /* Hide header section on mobile */
+            .header-section {
+                display: none !important;
+            }
+            
             /* Add padding to body to prevent content from being hidden behind bottom nav */
             body {
                 padding-bottom: 75px;
@@ -545,6 +606,28 @@
         @media (max-width: 991.98px) {
             .navbar-brand img {
                 max-height: 40px;
+            }
+            
+            /* Hide hero section image on mobile */
+            .hero--secondary__thumb {
+                display: none !important;
+            }
+            
+            /* Remove top padding for hero section subtitle on mobile */
+            .hero .section__content-sub-title {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+            
+            /* Remove top padding for hero section content on mobile */
+            .hero .section__content {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+            
+            /* Remove top padding from hero section itself on mobile */
+            .hero.hero--secondary {
+                padding-top: 2rem !important;
             }
             
             .navbar-nav .nav-link {
@@ -600,7 +683,7 @@
                 <div class="col-12">
                     <nav class="navbar navbar-expand-xl nav-shadow" id="#navbar">
                         <a class="navbar-brand" href="{{ route('home') }}">
-                            <img width="100" src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png') }}" class="logo" alt="{{ $settings['site_name'] ?? 'Nuru Wilchar' }} Logo">
+                            <img style="border-radius:10px;" width="100" src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png') }}" class="logo" alt="{{ $settings['site_name'] ?? 'Nuru Wilchar' }} Logo">
                         </a>
                         <a class="navbar-toggler d-xl-block d-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                             <i class="bi bi-list"></i>

@@ -620,7 +620,7 @@
                                 </div>
                                 <div class="card--small-content">
                                     <p class="card--small-title">Support us</p>
-                                    <a href="tel:{{ str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+1234567891') }}" class="card--small-call">{{ $settings['site_phone'] ?? '(123) 456-7891' }}</a>
+                                    <a href="tel:{{ str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661') }}" class="card--small-call">{{ $settings['site_phone'] ?? '+254787666661 / 0793793362' }}</a>
                                 </div>
                             </div>
                         </div>

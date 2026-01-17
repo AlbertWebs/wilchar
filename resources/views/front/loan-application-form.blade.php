@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Dark Header Section Start -->
-<section class="py-5" style="background: #1b1b18; color: #fff;">
+<section class="py-5" style="background: #1b1b18; color: #fff; margin-top: 100px;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xxl-9">
@@ -213,32 +213,75 @@
                     </div>
 
                     <!-- Documents Section -->
-                    <div class="card mb-4 wow fadeInUp" data-wow-duration="0.8s">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up me-2"></i>Supporting Documents</h5>
+                    <div class="card mb-4 wow fadeInUp" data-wow-duration="0.8s" style="border: none; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                        <div class="card-header" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: #fff; border: none; padding: 1.25rem 1.5rem;">
+                            <h5 class="mb-0" style="font-weight: 600; font-size: 1.1rem;">
+                                <i class="bi bi-file-earmark-arrow-up me-2" style="font-size: 1.2rem;"></i>Supporting Documents
+                            </h5>
+                            <p class="mb-0 mt-2" style="font-size: 0.85rem; opacity: 0.95;">Upload all required documents to complete your loan application</p>
                         </div>
-                        <div class="card-body">
-                            <div class="row g-3">
+                        <div class="card-body" style="padding: 2rem;">
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <label class="form-label">Loan Form(s)</label>
-                                    <input type="file" name="loan_form[]" class="form-control" multiple accept=".pdf,image/*">
-                                    <small class="text-muted">PDF, JPG or PNG (up to 5MB each)</small>
+                                    <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
+                                        <i class="bi bi-file-text me-2 text-primary"></i>Loan Form(s)
+                                    </label>
+                                    <div class="file-input-wrapper" style="position: relative;">
+                                        <input type="file" name="loan_form[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
+                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
+                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
+                                        <i class="bi bi-info-circle me-1"></i>PDF, JPG or PNG (up to 5MB each)
+                                    </small>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">M-Pesa Statement(s)</label>
-                                    <input type="file" name="mpesa_statement[]" class="form-control" multiple accept=".pdf,image/*">
-                                    <small class="text-muted">PDF, JPG or PNG (up to 5MB each)</small>
+                                    <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
+                                        <i class="bi bi-phone me-2 text-success"></i>M-Pesa Statement(s)
+                                    </label>
+                                    <div class="file-input-wrapper" style="position: relative;">
+                                        <input type="file" name="mpesa_statement[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
+                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
+                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
+                                        <i class="bi bi-info-circle me-1"></i>PDF, JPG or PNG (up to 5MB each)
+                                    </small>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Business Photo(s)</label>
-                                    <input type="file" name="business_photo[]" class="form-control" multiple accept="image/*">
-                                    <small class="text-muted">JPG or PNG (up to 5MB each)</small>
+                                    <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
+                                        <i class="bi bi-camera me-2 text-warning"></i>Business Photo(s)
+                                    </label>
+                                    <div class="file-input-wrapper" style="position: relative;">
+                                        <input type="file" name="business_photo[]" class="form-control file-input-enhanced" multiple accept="image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
+                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
+                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
+                                        <i class="bi bi-info-circle me-1"></i>JPG or PNG (up to 5MB each)
+                                    </small>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Other Supporting Documents</label>
-                                    <input type="file" name="documents[]" class="form-control" multiple accept=".pdf,image/*">
-                                    <small class="text-muted">PDF, JPG or PNG (up to 5MB each)</small>
+                                    <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
+                                        <i class="bi bi-folder me-2 text-info"></i>Other Supporting Documents
+                                    </label>
+                                    <div class="file-input-wrapper" style="position: relative;">
+                                        <input type="file" name="documents[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
+                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
+                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
+                                        <i class="bi bi-info-circle me-1"></i>PDF, JPG or PNG (up to 5MB each)
+                                    </small>
                                 </div>
+                            </div>
+                            <div class="alert alert-info mt-4 mb-0" style="background: #f0f9ff; border-left: 4px solid #0ea5e9; border-radius: 6px; padding: 1rem;">
+                                <i class="bi bi-lightbulb me-2"></i>
+                                <strong>Tip:</strong> Ensure all documents are clear and legible. You can upload multiple files for each category.
                             </div>
                         </div>
                     </div>
@@ -297,6 +340,55 @@ function calculateTotals() {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     applyFrequency();
+    
+    // Enhanced file input styling
+    const fileInputs = document.querySelectorAll('.file-input-enhanced');
+    fileInputs.forEach(input => {
+        const wrapper = input.closest('.file-input-wrapper');
+        const overlay = wrapper.querySelector('.file-input-overlay');
+        
+        input.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                input.style.borderColor = '#10b981';
+                input.style.backgroundColor = '#f0fdf4';
+                overlay.style.display = 'none';
+            } else {
+                input.style.borderColor = '#cbd5e1';
+                input.style.backgroundColor = 'transparent';
+                overlay.style.display = 'flex';
+            }
+        });
+        
+        input.addEventListener('focus', function() {
+            this.style.borderColor = '#0ea5e9';
+            this.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.boxShadow = 'none';
+            if (this.files.length === 0) {
+                this.style.borderColor = '#cbd5e1';
+            }
+        });
+    });
 });
 </script>
+<style>
+.file-input-enhanced {
+    cursor: pointer;
+}
+
+.file-input-enhanced::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.file-input-wrapper:hover .file-input-enhanced {
+    border-color: #0ea5e9 !important;
+    background-color: #f8fafc !important;
+}
+
+.file-input-wrapper:hover .file-input-overlay {
+    color: #0ea5e9 !important;
+}
+</style>
 @endsection
