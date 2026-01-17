@@ -49,6 +49,7 @@ class SiteSettingController extends Controller
             'youtube_url' => 'nullable|url|max:255',
             'whatsapp_number' => 'nullable|string|max:255',
             'telegram_url' => 'nullable|url|max:255',
+            'paybill_number' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
@@ -66,6 +67,7 @@ class SiteSettingController extends Controller
         $this->updateSetting('footer_description', $request->footer_description, 'general', 'Footer Description');
         $this->updateSetting('footer_text', $request->footer_text, 'general', 'Footer Copyright Text');
         $this->updateSetting('footer_powered_by', $request->footer_powered_by, 'general', 'Footer Powered By Text');
+        $this->updateSetting('paybill_number', $request->paybill_number, 'general', 'M-Pesa Paybill Number');
 
         // Branding (Images)
         if ($request->hasFile('logo')) {
@@ -141,6 +143,7 @@ class SiteSettingController extends Controller
                 'footer_description' => SiteSetting::getValue('footer_description', ''),
                 'footer_text' => SiteSetting::getValue('footer_text', ''),
                 'footer_powered_by' => SiteSetting::getValue('footer_powered_by', ''),
+                'paybill_number' => SiteSetting::getValue('paybill_number', ''),
             ],
             'branding' => [
                 'logo' => SiteSetting::getValue('logo', ''),

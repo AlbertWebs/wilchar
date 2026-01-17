@@ -200,6 +200,28 @@
                             <span>Pages</span>
                         </a>
                     </li>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.view')): ?>
+                    <li>
+                        <a href="<?php echo e(route('admin.products.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.products.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                            <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            <span>Products & Solutions</span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('testimonials.view')): ?>
+                    <li>
+                        <a href="<?php echo e(route('admin.testimonials.index')); ?>"
+                           class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.testimonials.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                            <svg class="h-5 w-5 shrink-0 text-yellow-400 group-hover:text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <span>Testimonials</span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Financial</p>

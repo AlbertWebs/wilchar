@@ -10,31 +10,51 @@ class LoanCalculatorController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric|min:1',
-            'year' => 'nullable|numeric|min:1',
-            'interest' => 'nullable|numeric|min:0',
+            'duration' => 'required|numeric|in:1,2,3,4',
+            'loan_cycle' => 'required|in:first,repeat',
         ]);
 
-        $amount = $request->amount;
-        $months = $request->year ?? 12; // default 12 months if not entered
-        $interestRate = $request->interest ?? 0;
+        $loanAmount = $request->amount;
+        $duration = (int) $request->duration; // 1-4 weeks
+        $loanCycle = $request->loan_cycle; // first or repeat
 
-        // Convert annual interest rate (%) to monthly rate
-        $monthlyRate = ($interestRate / 100) / 12;
+        // Application Fee Logic
+        $applicationFee = $loanCycle === 'first' ? 500 : 350;
+        $disbursedAmount = $loanAmount - $applicationFee;
 
-        if ($monthlyRate > 0) {
-            // Loan EMI formula: [P * r(1+r)^n] / [(1+r)^n – 1]
-            $monthlyPayment = ($amount * $monthlyRate * pow(1 + $monthlyRate, $months)) 
-                              / (pow(1 + $monthlyRate, $months) - 1);
+        // Interest Calculation
+        if ($duration == 1) {
+            // 1 Week: 10% flat
+            $interest = $loanAmount * 0.10;
+            $interestRate = 10;
         } else {
-            // No interest case
-            $monthlyPayment = $amount / $months;
+            // 2-4 Weeks: 7.8% per week
+            $interest = $loanAmount * 0.078 * $duration;
+            $interestRate = 7.8;
         }
 
+        // Total Payable (based on FULL loan amount, not reduced amount)
+        $totalPayable = $loanAmount + $interest;
+
+        // Weekly Installment
+        $weeklyInstallment = $totalPayable / $duration;
+
+        // Format currency
+        $formatCurrency = function($amount) {
+            return number_format($amount, 2);
+        };
+
         return response()->json([
-            'monthly_payment' => round($monthlyPayment, 2),
-            'amount' => $amount,
-            'months' => $months,
-            'interest_rate' => $interestRate
+            'loan_amount' => $formatCurrency($loanAmount),
+            'application_fee' => $formatCurrency($applicationFee),
+            'disbursed_amount' => $formatCurrency($disbursedAmount),
+            'interest' => $formatCurrency($interest),
+            'interest_rate' => $interestRate,
+            'total_payable' => $formatCurrency($totalPayable),
+            'weekly_installment' => $formatCurrency($weeklyInstallment),
+            'duration' => $duration,
+            'loan_cycle' => $loanCycle,
+            'loan_cycle_label' => $loanCycle === 'first' ? 'First Loan' : 'Repeat Loan',
         ]);
     }
 }

@@ -34,15 +34,28 @@ use App\Http\Controllers\Admin\FinanceDisbursementController;
 use App\Http\Controllers\Admin\PaymentDashboardController;
 use App\Http\Controllers\Admin\SandboxController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileSettingsController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanCalculatorController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PublicLoanApplicationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Public page routes
 Route::get('/page/{slug}', [\App\Http\Controllers\PageController::class, 'show'])->name('page.show');
 
+// Products routes
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
+
 Route::post('/calculate-loan', [LoanCalculatorController::class, 'calculate'])->name('loan.calculate');
+
+// Public Loan Application Routes
+Route::get('/apply', [PublicLoanApplicationController::class, 'create'])->name('loan-application.create');
+Route::post('/apply', [PublicLoanApplicationController::class, 'store'])->name('loan-application.store');
+Route::get('/apply/thank-you', [PublicLoanApplicationController::class, 'thankYou'])->name('loan-application.thank-you');
 
 // Common Dashboard Route (fallback if role not handled)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -326,6 +339,24 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('loan-products/{loanProduct}/edit', [LoanProductController::class, 'edit'])->middleware('permission:loan-products.edit')->name('loan-products.edit');
     Route::patch('loan-products/{loanProduct}', [LoanProductController::class, 'update'])->middleware('permission:loan-products.edit')->name('loan-products.update');
     Route::delete('loan-products/{loanProduct}', [LoanProductController::class, 'destroy'])->middleware('permission:loan-products.delete')->name('loan-products.destroy');
+
+    // Testimonials - Permission-based
+    Route::get('testimonials', [TestimonialController::class, 'index'])->middleware('permission:testimonials.view')->name('admin.testimonials.index');
+    Route::get('testimonials/create', [TestimonialController::class, 'create'])->middleware('permission:testimonials.create')->name('admin.testimonials.create');
+    Route::post('testimonials', [TestimonialController::class, 'store'])->middleware('permission:testimonials.create')->name('admin.testimonials.store');
+    Route::get('testimonials/{testimonial}', [TestimonialController::class, 'show'])->middleware('permission:testimonials.view')->name('admin.testimonials.show');
+    Route::get('testimonials/{testimonial}/edit', [TestimonialController::class, 'edit'])->middleware('permission:testimonials.edit')->name('admin.testimonials.edit');
+    Route::patch('testimonials/{testimonial}', [TestimonialController::class, 'update'])->middleware('permission:testimonials.edit')->name('admin.testimonials.update');
+    Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->middleware('permission:testimonials.delete')->name('admin.testimonials.destroy');
+
+    // Products - Permission-based
+    Route::get('products', [AdminProductController::class, 'index'])->middleware('permission:products.view')->name('admin.products.index');
+    Route::get('products/create', [AdminProductController::class, 'create'])->middleware('permission:products.create')->name('admin.products.create');
+    Route::post('products', [AdminProductController::class, 'store'])->middleware('permission:products.create')->name('admin.products.store');
+    Route::get('products/{product}', [AdminProductController::class, 'show'])->middleware('permission:products.view')->name('admin.products.show');
+    Route::get('products/{product}/edit', [AdminProductController::class, 'edit'])->middleware('permission:products.edit')->name('admin.products.edit');
+    Route::patch('products/{product}', [AdminProductController::class, 'update'])->middleware('permission:products.edit')->name('admin.products.update');
+    Route::delete('products/{product}', [AdminProductController::class, 'destroy'])->middleware('permission:products.delete')->name('admin.products.destroy');
 
     // Notifications - Permission-based
     Route::get('notifications', [NotificationController::class, 'index'])->middleware('permission:notifications.view')->name('notifications.index');

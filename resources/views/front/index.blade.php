@@ -8,12 +8,12 @@
             <div class="row gy-5 gy-lg-0 align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Simplify Your Loan Search and Save Time</span>
-                        <h1 class="section__content-title display-3 wow fadeInUp" data-wow-duration="1s">Explore Your Loan Options with Ease</h1>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">We understand that finding the right loan can be overwhelming. That's why we're here to help simplify the process</p>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Empowering Small Businesses Across Western Region</span>
+                        <h1 class="section__content-title display-4 wow fadeInUp" data-wow-duration="1s" style="font-size: 2.5rem; line-height: 1.2;">NURU WILCHAR<br>SME CAPITAL LIMITED</h1>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">A supportive company focused on empowering small businesses in rural and peri-urban areas. We provide financial support through cash advances to meet your business needs, enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs.</p>
                         <div class="btn-group mt_40 wow fadeInUp" data-wow-duration="0.8s">
                             <a href="#calculator" class="btn_theme btn_theme_active">Loan Calculator<i class="bi bi-arrow-up-right"></i><span></span></a>
-                            <a href="about.html" class="btn_theme">About us<i class="bi bi-arrow-up-right"></i><span></span></a>
+                            <a href="#how-it-works" class="btn_theme">How It Works<i class="bi bi-arrow-up-right"></i><span></span></a>
                         </div>
                     </div>
                 </div>
@@ -71,8 +71,8 @@
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content">
                         <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">Why Choose Us</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Unlocking Opportunities for Your Success Loan Solutions</h2>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Our dedicated team of experts conducts thorough research and analysis to provide you with comprehensive and unbiased reviews of various loan options.</p>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Empowering Your Business Growth with Trusted Financial Support</h2>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">We are committed to improving livelihoods by enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs. Our ethical business support and sustainability-focused approach makes us your trusted partner.</p>
                         <div class="section__content-inner">
                             <div class="card wow fadeInDown" data-wow-duration="0.8s">
                                 <div class="card__icon">
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="loan-reviews.html" class="btn_theme btn_theme_active d-inline-flex mt_40 wow fadeInDown" data-wow-duration="0.8s">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <a href="#how-it-works" class="btn_theme btn_theme_active d-inline-flex mt_40 wow fadeInDown" data-wow-duration="0.8s">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
             </div>
@@ -166,10 +166,10 @@
             <div class="row gy-5 gy-lg-0 align-items-center justify-content-between">
                 <div class="col-12 col-lg-5 col-xxl-5 ">
                     <div class="section__content">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Featured Services</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Tailored Reviews for Your Financial Needs</h2>
-                        <p class="section__content-content wow fadeInDown" data-wow-duration="0.8s">We offer flexible personal loan options to help you meet your individual financial goals. Whether you're planning a dream vacation, consolidating debt, or funding a major purchase, our personal loans provide</p>
-                        <a href="service.html" class="btn_theme mt_40 wow fadeInUp" data-wow-duration="0.8s">See All Services<i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Our Services</span>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Financial Support for Your Business Growth</h2>
+                        <p class="section__content-content wow fadeInDown" data-wow-duration="0.8s">We provide comprehensive financial support services tailored to meet the needs of small businesses, including mama mboga, boda boda riders, tuk-tuk operators, and small shops across the Western Region.</p>
+                        <a href="#how-it-works" class="btn_theme mt_40 wow fadeInUp" data-wow-duration="0.8s">Learn More<i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
                 <div class="col-12 col-lg-7 col-xxl-5">
@@ -186,10 +186,10 @@
                             </div>
                             <div class="card__content">
                                 <div class="card__content-text">
-                                    <h4 class="card__title"><a href="service-details.html">Loan Reviews</a></h4>
-                                    <p class="fs-small"> Provide comprehensive and unbiased reviews of various types of loans, including personal loans</p>
+                                    <h4 class="card__title"><a href="#how-it-works">Cash Advance Support</a></h4>
+                                    <p class="fs-small">Get quick cash advance support for your small business needs. Designed specifically for mama mboga, boda boda riders, tuk-tuk operators, and small shops.</p>
                                 </div>
-                                <a href="service-details.html" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
+                                <a href="#calculator" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
                             </div>
                         </div>
                         <div class="card card--custom">
@@ -208,10 +208,10 @@
                             </div>
                             <div class="card__content">
                                 <div class="card__content-text">
-                                    <h4 class="card__title"><a href="service-details.html">Loan Comparison</a></h4>
-                                    <p class="fs-small"> Develop interactive tools or tables that allow users to compare different loan options side by side</p>
+                                    <h4 class="card__title"><a href="#how-it-works">Working Capital Support</a></h4>
+                                    <p class="fs-small">Access working capital support for your SME to ensure business continuity and growth. Flexible repayment plans to suit your cash flow.</p>
                                 </div>
-                                <a href="service-details.html" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
+                                <a href="#calculator" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
                             </div>
                         </div>
                         <div class="card card--custom">
@@ -224,10 +224,10 @@
                             </div>
                             <div class="card__content">
                                 <div class="card__content-text">
-                                    <h4 class="card__title"><a href="service-details.html">Educational Resources</a></h4>
-                                    <p class="fs-small">Provide informative articles, guides, and resources to educate users about different types of loans</p>
+                                    <h4 class="card__title"><a href="#how-it-works">Weekly Repayment Plans</a></h4>
+                                    <p class="fs-small">Flexible weekly repayment support plans that fit your business cycle. Make repayments easily via Paybill number {{ $settings['paybill_number'] ?? '4189755' }}.</p>
                                 </div>
-                                <a href="service-details.html" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
+                                <a href="#calculator" class="btn_theme social_box"><i class="bi bi-arrow-up-right"></i><span></span></a>
                             </div>
                         </div>
                     </div>
@@ -237,15 +237,15 @@
     </section>
     <!-- feature end -->
 
-    <!-- loan-reviews start -->
+    <!-- Our Loan Products start -->
     <section class="loan-reviews section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__header">
-                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">Loan Reviews</span>
-                        <h2 class="section__header-title wow fadeInUp" data-wow-duration="0.8s">In-depth Analysis for Informed Borrowing Decisions</h2>
-                        <p class="section__header-content wow fadeInDown" data-wow-duration="0.8s">Welcome to our comprehensive loan reviews section, where we provide you with detailed and unbiased analyses of various loan options.</p>
+                        <span class="section__header-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">Our Loan Products</span>
+                        <h2 class="section__header-title wow fadeInUp" data-wow-duration="0.8s">Flexible Loan Solutions for Your Business Needs</h2>
+                        <p class="section__header-content wow fadeInDown" data-wow-duration="0.8s">We offer quick and accessible loan solutions designed specifically for small businesses, entrepreneurs, and grassroots traders. Choose the option that best fits your needs.</p>
                     </div>
                 </div>
             </div>
@@ -255,164 +255,123 @@
                         <div class="loan-reviews_card card wow fadeInUp" data-wow-duration="0.8s">
                             <div class="loan-reviews__part-one">
                                 <div class="loan-reviews__thumb">
-                                    <img src="{{asset('main/assets/images/loan_reviews_logo.png')}}" alt="image">
+                                    <i class="bi bi-clock-history" style="font-size: 48px; color: #0ea5e9;"></i>
                                 </div>
                                 <div class="loan-reviews__review">
-                                    <p class="rating"> 4.9</p>
+                                    <p class="rating">10%</p>
                                     <div class="d-flex gap-2 flex-column">
                                         <div class="star_review">
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-half star-active"></i>
+                                            <i class="bi bi-star-fill star-active"></i>
                                         </div>
-                                        <p class="fs-small">Average Review</p>
+                                        <p class="fs-small">1 Week Loan</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-two">
                                 <div class="reviews-heading">
-                                    <h4 class="reviews-heading__title">Home Loans Mortgages</h4>
-                                    <p class="reviews-heading__content">America’s Largest online mortgage lender</p>
+                                    <h4 class="reviews-heading__title">Quick Cash Advance</h4>
+                                    <p class="reviews-heading__content">Perfect for urgent business needs - Get funds in 1 week</p>
                                 </div>
                                 <div class="reviews-inner">
                                     <ul>
-                                        <li><i class="bi bi-check2-circle"></i> Certified pre-approval Process</li>
-                                        <li><i class="bi bi-check2-circle"></i> Online Application Available 24/7</li>
-                                        <li><i class="bi bi-check2-circle"></i>Find a Quote Easily</li>
-                                        <li><i class="bi bi-check2-circle"></i>100% Online Refinance</li>
+                                        <li><i class="bi bi-check2-circle"></i> 10% Flat Interest Rate</li>
+                                        <li><i class="bi bi-check2-circle"></i> Fast Approval Process</li>
+                                        <li><i class="bi bi-check2-circle"></i> Weekly Repayment Plan</li>
+                                        <li><i class="bi bi-check2-circle"></i> Ideal for Emergency Needs</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
-                                    <a href="#" class="btn_theme btn_theme_active">Visit Site<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="loan-reviews-details.html" class="btn_theme">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="faq.html" class="conditions_apply"> Terms & Conditions Apply</a>
+                                    <a href="#calculator" class="btn_theme btn_theme_active">Calculate Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
                         </div>
                         <div class="loan-reviews_card card wow fadeInUp" data-wow-duration="0.8s">
                             <div class="loan-reviews__part-one">
                                 <div class="loan-reviews__thumb">
-                                    <img src="{{asset('main/assets/images/loan_reviews_logo2.png')}}" alt="image">
+                                    <i class="bi bi-calendar-week" style="font-size: 48px; color: #0ea5e9;"></i>
                                 </div>
                                 <div class="loan-reviews__review">
-                                    <p class="rating"> 4.9</p>
+                                    <p class="rating">7.8%</p>
                                     <div class="d-flex gap-2 flex-column">
                                         <div class="star_review">
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-half star-active"></i>
+                                            <i class="bi bi-star-fill star-active"></i>
                                         </div>
-                                        <p class="fs-small">Average Review</p>
+                                        <p class="fs-small">Per Week</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-two">
                                 <div class="reviews-heading">
-                                    <h4 class="reviews-heading__title">Student Loans</h4>
-                                    <p class="reviews-heading__content">Canada Largest online mortgage lender</p>
+                                    <h4 class="reviews-heading__title">Extended Business Loans</h4>
+                                    <p class="reviews-heading__content">2-4 Week flexible repayment plans for growing businesses</p>
                                 </div>
                                 <div class="reviews-inner">
                                     <ul>
-                                        <li><i class="bi bi-check2-circle"></i> Certified pre-approval Process</li>
-                                        <li><i class="bi bi-check2-circle"></i> Online Application Available 24/7</li>
-                                        <li><i class="bi bi-check2-circle"></i>Find a Quote Easily</li>
-                                        <li><i class="bi bi-check2-circle"></i>100% Online Refinance</li>
+                                        <li><i class="bi bi-check2-circle"></i> 7.8% Interest Per Week</li>
+                                        <li><i class="bi bi-check2-circle"></i> Choose 2, 3, or 4 Weeks</li>
+                                        <li><i class="bi bi-check2-circle"></i> Flexible Weekly Payments</li>
+                                        <li><i class="bi bi-check2-circle"></i> Working Capital Support</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
-                                    <a href="#" class="btn_theme btn_theme_active">Visit Site<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="loan-reviews-details.html" class="btn_theme">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="faq.html" class="conditions_apply"> Terms & Conditions Apply</a>
+                                    <a href="#calculator" class="btn_theme btn_theme_active">Calculate Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
                         </div>
                         <div class="loan-reviews_card card wow fadeInUp" data-wow-duration="0.8s">
                             <div class="loan-reviews__part-one">
                                 <div class="loan-reviews__thumb">
-                                    <img src="{{asset('main/assets/images/loan_reviews_logo3.png')}}" alt="image">
+                                    <i class="bi bi-people" style="font-size: 48px; color: #0ea5e9;"></i>
                                 </div>
                                 <div class="loan-reviews__review">
-                                    <p class="rating"> 4.9</p>
+                                    <p class="rating">KES</p>
                                     <div class="d-flex gap-2 flex-column">
                                         <div class="star_review">
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
                                             <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-half star-active"></i>
+                                            <i class="bi bi-star-fill star-active"></i>
                                         </div>
-                                        <p class="fs-small">Average Review</p>
+                                        <p class="fs-small">500/350</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-two">
                                 <div class="reviews-heading">
-                                    <h4 class="reviews-heading__title">Business Loans</h4>
-                                    <p class="reviews-heading__content">Japanes Largest online mortgage lender</p>
+                                    <h4 class="reviews-heading__title">Who We Support</h4>
+                                    <p class="reviews-heading__content">Tailored financial solutions for grassroots entrepreneurs</p>
                                 </div>
                                 <div class="reviews-inner">
                                     <ul>
-                                        <li><i class="bi bi-check2-circle"></i> Certified pre-approval Process</li>
-                                        <li><i class="bi bi-check2-circle"></i> Online Application Available 24/7</li>
-                                        <li><i class="bi bi-check2-circle"></i>Find a Quote Easily</li>
-                                        <li><i class="bi bi-check2-circle"></i>100% Online Refinance</li>
+                                        <li><i class="bi bi-check2-circle"></i> Mama Mboga (Market Traders)</li>
+                                        <li><i class="bi bi-check2-circle"></i> Boda Boda Riders</li>
+                                        <li><i class="bi bi-check2-circle"></i> Tuk-Tuk Operators</li>
+                                        <li><i class="bi bi-check2-circle"></i> Small Shop Owners</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="loan-reviews__part-three">
                                 <div class="btn-group">
-                                    <a href="#" class="btn_theme btn_theme_active">Visit Site<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="loan-reviews-details.html" class="btn_theme">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="faq.html" class="conditions_apply"> Terms & Conditions Apply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="loan-reviews_card card wow fadeInUp" data-wow-duration="0.8s">
-                            <div class="loan-reviews__part-one">
-                                <div class="loan-reviews__thumb">
-                                    <img src="{{asset('main/assets/images/loan_reviews_logo4.png')}}" alt="image">
-                                </div>
-                                <div class="loan-reviews__review">
-                                    <p class="rating"> 4.9</p>
-                                    <div class="d-flex gap-2 flex-column">
-                                        <div class="star_review">
-                                            <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-fill star-active"></i>
-                                            <i class="bi bi-star-half star-active"></i>
-                                        </div>
-                                        <p class="fs-small">Average Review</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="loan-reviews__part-two">
-                                <div class="reviews-heading">
-                                    <h4 class="reviews-heading__title">Construction Loans</h4>
-                                    <p class="reviews-heading__content">America’s Largest online mortgage lender</p>
-                                </div>
-                                <div class="reviews-inner">
-                                    <ul>
-                                        <li><i class="bi bi-check2-circle"></i> Certified pre-approval Process</li>
-                                        <li><i class="bi bi-check2-circle"></i> Online Application Available 24/7</li>
-                                        <li><i class="bi bi-check2-circle"></i>Find a Quote Easily</li>
-                                        <li><i class="bi bi-check2-circle"></i>100% Online Refinance</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="loan-reviews__part-three">
-                                <div class="btn-group">
-                                    <a href="#" class="btn_theme btn_theme_active">Visit Site<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="loan-reviews-details.html" class="btn_theme">Read More<i class="bi bi-arrow-up-right"></i><span></span></a>
-                                    <a href="faq.html" class="conditions_apply"> Terms & Conditions Apply</a>
+                                    <a href="#how-it-works" class="btn_theme btn_theme_active">Learn More<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="{{ route('loan-application.create') }}" class="btn_theme">Apply Now<i class="bi bi-arrow-up-right"></i><span></span></a>
+                                    <a href="#contact" class="conditions_apply"> Terms & Conditions Apply</a>
                                 </div>
                             </div>
                         </div>
@@ -420,16 +379,16 @@
                 </div>
                 <div class="col-12">
                     <div class="section__cta">
-                        <a href="loan-reviews.html" class="btn_theme see_all wow fadeInDown" data-wow-duration="0.8s">See All Review Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <a href="{{ route('loan-application.create') }}" class="btn_theme see_all wow fadeInDown" data-wow-duration="0.8s">Apply for Loan<i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- loan-reviews end -->
+    <!-- Our Loan Products end -->
 
     <!-- how it works start -->
-    <section class="how-works section section--space-top">
+    <section class="how-works section section--space-top" id="how-it-works">
         <div class="container">
             <div class="row align-items-center justify-content-center justify-content-lg-between gy-5 gy-lg-0">            
                 <div class="col-12 col-sm-8 col-lg-6 col-xxl-5 order-1 order-lg-0">
@@ -440,8 +399,8 @@
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content">
                         <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">How It Works</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Simple Steps to Get Started</h2>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">The goal is to provide a clear and concise overview of how your platform works and guide users through the loan application journey.</p>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Simple Steps to Get Your Business Capital</h2>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Our streamlined process makes it easy to access the financial support your business needs. Follow these simple steps to get started with NURU WILCHAR.</p>
                         <div class="section__content-inner mt_60">
                             <div class="card wow fadeInUp" data-wow-duration="0.8s">
                                 <div class="card__icon">
@@ -460,8 +419,8 @@
                                     <span class="number-bullet">01</span>                                               
                                 </div>
                                 <div class="card__content">
-                                    <h4 class="card__title">Search Your Loan Request</h4>
-                                    <p class="fs-small">Begin by filling out our simple loan request form. Provide us with some basic...</p>
+                                    <h4 class="card__title">Approach NURU</h4>
+                                    <p class="fs-small">Client approaches NURU through field officers or office visit at Zulmac Insurance Building, 4th Floor, Room 318.</p>
                                 </div>
                             </div>
                             <div class="card wow fadeInUp" data-wow-duration="0.8s">
@@ -480,8 +439,8 @@
                                     <span class="number-bullet">02</span>                                                                        
                                 </div>
                                 <div class="card__content">
-                                    <h4 class="card__title">Compare Loan Options</h4>
-                                    <p class="fs-small">Picking a product refers to the process of selecting a specific from a range...</p>
+                                    <h4 class="card__title">Assessment & Verification</h4>
+                                    <p class="fs-small">Simple assessment and verification is conducted to understand your business needs and repayment capacity.</p>
                                 </div>
                             </div>
                             <div class="card wow fadeInUp" data-wow-duration="0.8s">
@@ -502,8 +461,8 @@
                                     <span class="number-bullet">03</span>                                                                                                      
                                 </div>
                                 <div class="card__content">
-                                    <h4 class="card__title">Select Your Preferred Loan</h4>
-                                    <p class="fs-small">Product packaging refers to the materials and design used to protect...</p>
+                                    <h4 class="card__title">Cash Support Approved</h4>
+                                    <p class="fs-small">Cash support is approved and advanced to the client to meet their business needs and working capital requirements.</p>
                                 </div>
                             </div>
                             <div class="card wow fadeInUp" data-wow-duration="0.8s">
@@ -516,8 +475,8 @@
                                     <span class="number-bullet">04</span>                                                                           
                                 </div>
                                 <div class="card__content">
-                                    <h4 class="card__title">Complete the Application</h4>
-                                    <p class="fs-small">Follow the lender's instructions to complete the loan application. You may need...</p>
+                                    <h4 class="card__title">Weekly Repayment via Paybill</h4>
+                                    <p class="fs-small">Client repays weekly using Paybill number {{ $settings['paybill_number'] ?? '4189755' }}. Consistent repayment improves trust and future support limits.</p>
                                 </div>
                             </div>
                         </div>
@@ -616,8 +575,12 @@
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content me-lg-5 me-xxl-0">
                         <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> About Us</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Your Trusted Guideline to Finding the Perfect Loan</h2>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">At {{ $settings['site_name'] ?? 'FINVIEW' }}, we understand the significance of making informed financial decisions, especially when it comes to loans. Our mission is to provide you with a reliable platform</p>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">NURU WILCHAR SME CAPITAL LIMITED</h2>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">NURU WILCHAR SME CAPITAL LIMITED is a supportive company focused on empowering small businesses in rural and peri-urban areas across Western Region. We are a registered company operating under other business support services, with business support as our core mandate. We are committed to improving livelihoods by enabling consistent cash flow, business continuity, and growth for grassroots entrepreneurs.</p>
+                        <div class="mt_32 wow fadeInUp" data-wow-duration="0.8s">
+                            <p class="section__content-text"><strong>Company Registration Number:</strong> PVT-RQ1326QJ</p>
+                            <p class="section__content-text"><strong>Date of Registration:</strong> 27th May 2025</p>
+                        </div>
                         
                         <div class="progress-area mt_32 wow fadeInUp" data-wow-duration="0.8s">
                             <p class="progress-title headingFive">Marketing</p>
@@ -632,7 +595,7 @@
                                         <div class="card card--small">
                                             <div class="card--small-content">
                                                 <h5 class="card--small-title gap-6"><i class="bi bi-check2-circle"></i>Our Mission</h5>
-                                                <p class="card--small-text">To empower individuals and businesses with the knowledge and tools to make informed</p>
+                                                <p class="card--small-text">To empower small businesses in rural and peri-urban areas by providing financial support through cash advances, enabling consistent cash flow, business continuity, and sustainable growth.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -642,7 +605,7 @@
                                         <div class="card card--small">
                                             <div class="card--small-content">
                                                 <h5 class="card--small-title gap-6"><i class="bi bi-check2-circle"></i>Our Vision</h5>
-                                                <p class="card--small-text">To empower individuals and businesses with the knowledge and tools to make informed</p>
+                                                <p class="card--small-text">To be the leading financial support partner for grassroots entrepreneurs, fostering economic growth and improving livelihoods across the Western Region through ethical business support and sustainable practices.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -650,7 +613,7 @@
                             </div>
                         </div>
                         <div class="btn-group align-items-center wow fadeInRight" data-wow-duration="0.8s">
-                            <a href="loan-reviews.html" class="btn_theme btn_theme_active">Read More <i class="bi bi-arrow-up-right"></i><span></span></a>
+                            <a href="#calculator" class="btn_theme btn_theme_active">Calculate Loan <i class="bi bi-arrow-up-right"></i><span></span></a>
                             <div class="card card--small">
                                 <div class="card--small-icon">
                                     <i class="bi bi-headset"></i> 
@@ -686,25 +649,34 @@
                                     <form method="POST" autocomplete="off" id="frmCalculate" class="calculate__form">
                                         <div class="row gy-5 gy-md-0">
                                             <div class="col-12 col-md-12">
-                                                {{-- <h5 class="calculator__title">Loan 01</h5> --}}
                                                 <div class="calculate__form-part">
                                                     <div class="input-single">
-                                                        <label class="label" for="amount">Loan Amount <span>(required)</span></label>
-                                                        <input type="number" class="form-control" name="amount" id="amount" placeholder="ksh 0" required>
+                                                        <label class="label" for="amount">Loan Amount (KES) <span>(required)</span></label>
+                                                        <input type="number" class="form-control" name="amount" id="amount" placeholder="e.g. 10000" min="1" step="0.01" required>
                                                     </div>
                                                     <div class="input-single">
-                                                        <label class="label" for="year">Loan Term <span>(months)</span></label>
-                                                        <input type="number" class="form-control" name="year" id="year" placeholder="0 months" >
+                                                        <label class="label" for="loan_cycle">Loan Cycle <span>(required)</span></label>
+                                                        <select class="form-control" name="loan_cycle" id="loan_cycle" required>
+                                                            <option value="">Select Loan Cycle</option>
+                                                            <option value="first">First Loan (KES 500 fee)</option>
+                                                            <option value="repeat">Repeat Loan (KES 350 fee)</option>
+                                                        </select>
                                                     </div>
                                                     <div class="input-single">
-                                                        <label class="label" for="interest">Interest Rate (%) <span>(required)</span></label>
-                                                        <input type="number" class="form-control" name="interest" id="interest" placeholder="0.00%" >
+                                                        <label class="label" for="duration">Loan Duration <span>(required)</span></label>
+                                                        <select class="form-control" name="duration" id="duration" required>
+                                                            <option value="">Select Duration</option>
+                                                            <option value="1">1 Week (10% interest)</option>
+                                                            <option value="2">2 Weeks (7.8% per week)</option>
+                                                            <option value="3">3 Weeks (7.8% per week)</option>
+                                                            <option value="4">4 Weeks (7.8% per week)</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             
                                         </div>
-                                        <span id="CalcMsg"></span> 
+                                        <div id="CalcMsg"></div>
                                         <button type="submit" class="btn_theme btn_theme_active mt_40" >Calculate Now 
                                             <i class="bi bi-arrow-up-right"></i>
                                             <span></span>
@@ -730,7 +702,7 @@
                             <li class="headingFive">Customized Estimates</li>
                             <li class="headingFive">Confidence in Decisions</li>
                         </ul>
-                        <a href="loan-reviews.html" class="btn_theme btn_theme_active mt_40 wow fadeInDown" data-wow-duration="0.8s">Browse Our Solutions <i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <a href="{{ route('loan-application.create') }}" class="btn_theme btn_theme_active mt_40 wow fadeInDown" data-wow-duration="0.8s">Apply for Loan <i class="bi bi-arrow-up-right"></i><span></span></a>
                     </div>
                 </div>
             </div>
@@ -744,9 +716,22 @@
             <div class="row gy-5 gy-xl-0 justify-content-center justify-content-xxl-between align-items-center">
                 <div class="col-12 col-lg-6 col-xxl-6">
                     <div class="section__content ms-xl-4 ms-xl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Start Your Loan Search Today</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Find the Perfect Loan Solution for Your Financial Needs</h2>
-                        <a href="contact.html" class="btn_theme btn_theme_active mt-3 wow fadeInDown" data-wow-duration="0.8s">Contact Us <i class="bi bi-arrow-up-right"></i><span></span></a>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector"> Get Started Today</span>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Ready to Grow Your Business? Get Financial Support Now</h2>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Contact us through our field officers or visit our office. We support mama mboga, boda boda riders, tuk-tuk operators, and small shops with quick cash advances and working capital.</p>
+                        <div class="mt_32 wow fadeInUp" data-wow-duration="0.8s">
+                            <div class="card card--small">
+                                <div class="card--small-content">
+                                    <h5 class="card--small-title gap-6"><i class="bi bi-telephone"></i>Contact Us</h5>
+                                    <p class="card--small-text"><strong>Office Lines:</strong> {{ $settings['site_phone'] ?? '+254787666661' }}@if(!empty($settings['site_phone_alt'])) / {{ $settings['site_phone_alt'] }}@endif</p>
+                                    <p class="card--small-text"><strong>Email:</strong> {{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}</p>
+                                    <p class="card--small-text"><strong>Location:</strong> {{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)' }}</p>
+                                    @if(!empty($settings['paybill_number']))
+                                    <p class="card--small-text mt-2"><strong>Paybill Number:</strong> <span class="text-primary">{{ $settings['paybill_number'] }}</span></p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-8 col-md-6 col-xxl-5">
@@ -774,90 +759,58 @@
             <div class="row">            
                 <div class="col-12">
                     <div class="testimonials-secondary_slider wow fadeInDown" data-wow-duration="0.8s">
-                        <div class="card card--custom">
-                            <div class="testimonials__author-review">
-                                <div class="star_review mb-3">
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-half star-active"></i>
+                        @forelse($testimonials as $testimonial)
+                            <div class="card card--custom">
+                                <div class="testimonials__author-review">
+                                    <div class="star_review mb-3">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $testimonial->rating)
+                                                <i class="bi bi-star-fill star-active"></i>
+                                            @elseif($i - 0.5 <= $testimonial->rating)
+                                                <i class="bi bi-star-half star-active"></i>
+                                            @else
+                                                <i class="bi bi-star star-active"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <p class="text-start">{{ $testimonial->content }}</p>
                                 </div>
-                                <p class="text-start">Our satisfied clients have experienced success with our services and loan recommendations. </p>
-                            </div>
-                            <div class="testimonials__author">
-                                <div class="author__thumg">
-                                    <img src="{{asset('main/assets/images/testimonials.png')}}" alt="">
-                                </div>
-                                <div class="author__content">
-                                    <h5 class="author__title">Balogh Imre</h5>
-                                    <p class="author__desi">Account Executive</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card card--custom">
-                            <div class="testimonials__author-review">
-                                <div class="star_review mb-3">
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-half star-active"></i>
-                                </div>
-                                <p class="text-start">Our satisfied clients have experienced success with our services and loan recommendations. </p>
-                            </div>
-                            <div class="testimonials__author">
-                                <div class="author__thumg">
-                                    <img src="{{asset('main/assets/images/testimonials2.png')}}" alt="">
-                                </div>
-                                <div class="author__content">
-                                    <h5 class="author__title">Kende Attila</h5>
-                                    <p class="author__desi">President of Sales</p>
+                                <div class="testimonials__author">
+                                    <div class="author__thumg">
+                                        <img src="{{ $testimonial->image_url }}" alt="{{ $testimonial->name }}">
+                                    </div>
+                                    <div class="author__content">
+                                        <h5 class="author__title">{{ $testimonial->name }}</h5>
+                                        <p class="author__desi">
+                                            {{ $testimonial->position }}@if($testimonial->company), {{ $testimonial->company }}@endif
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card card--custom">
-                            <div class="testimonials__author-review">
-                                <div class="star_review mb-3">
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-half star-active"></i>
+                        @empty
+                            {{-- Fallback to default testimonials if none exist --}}
+                            <div class="card card--custom">
+                                <div class="testimonials__author-review">
+                                    <div class="star_review mb-3">
+                                        <i class="bi bi-star-fill star-active"></i>
+                                        <i class="bi bi-star-fill star-active"></i>
+                                        <i class="bi bi-star-fill star-active"></i>
+                                        <i class="bi bi-star-fill star-active"></i>
+                                        <i class="bi bi-star-half star-active"></i>
+                                    </div>
+                                    <p class="text-start">Our satisfied clients have experienced success with our services and loan recommendations.</p>
                                 </div>
-                                <p class="text-start">Our satisfied clients have experienced success with our services and loan recommendations. </p>
-                            </div>
-                            <div class="testimonials__author">
-                                <div class="author__thumg">
-                                    <img src="{{asset('main/assets/images/testimonials3.png')}}" alt="">
-                                </div>
-                                <div class="author__content">
-                                    <h5 class="author__title">Eleanor Pena</h5>
-                                    <p class="author__desi">Medical Assistant</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card card--custom">
-                            <div class="testimonials__author-review">
-                                <div class="star_review mb-3">
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-fill star-active"></i>
-                                    <i class="bi bi-star-half star-active"></i>
-                                </div>
-                                <p class="text-start">Our satisfied clients have experienced success with our services and loan recommendations. </p>
-                            </div>
-                            <div class="testimonials__author">
-                                <div class="author__thumg">
-                                    <img src="{{asset('main/assets/images/testimonials2.png')}}" alt="">
-                                </div>
-                                <div class="author__content">
-                                    <h5 class="author__title">Eleanor Pena</h5>
-                                    <p class="author__desi">President of Sales</p>
+                                <div class="testimonials__author">
+                                    <div class="author__thumg">
+                                        <img src="{{asset('main/assets/images/testimonials.png')}}" alt="">
+                                    </div>
+                                    <div class="author__content">
+                                        <h5 class="author__title">Client Name</h5>
+                                        <p class="author__desi">Business Owner</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
                 <div class="col-12">
@@ -876,64 +829,41 @@
     </section>
     <!-- Client Testimonials end -->
 
-    <!-- download-app start -->
-    <section class="download-app section">
+    <!-- Payment & Contact start -->
+    <section class="download-app section" id="contact">
         <div class="container">
             <div class="row justify-content-center justify-content-lg-between align-items-center gy-5 gy-lg-0">
                 <div class="col-12 col-md-8 col-lg-5 order-1 order-lg-0">
                     <div class="download-app__thumb me-lg-5 me-xxl-0 wow fadeInDown" data-wow-duration="0.8s">
-                        <img src="{{asset('main/assets/images/download_app.png')}}" alt="images">
+                        <div class="card card--custom" style="padding: 2rem; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 20px;">
+                            <div class="text-center text-white">
+                                <i class="bi bi-telephone-fill" style="font-size: 64px; margin-bottom: 1rem;"></i>
+                                <h3 class="text-white mb-3">Get in Touch</h3>
+                                <p class="text-white-50">We're here to help you grow your business</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-lg-7 col-xxl-6">
                     <div class="section__content ms-lg-4 ms-xl-0">
-                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">Download Our Apps</span>
-                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Get Our Apps for Easy Financial Management</h2>
-                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Take advantage of our convenient mobile apps to access our services anytime, anywhere. Download our apps today and experience the ease of managing your finances</p>
+                        <span class="section__content-sub-title headingFour wow fadeInDown" data-wow-duration="0.8s"><img src="{{asset('main/assets/images/title_vector.png')}}" alt="vector">Payment & Contact</span>
+                        <h2 class="section__content-title wow fadeInUp" data-wow-duration="0.8s">Easy Payment Methods & Direct Contact</h2>
+                        <p class="section__content-text wow fadeInDown" data-wow-duration="0.8s">Make your loan repayments easily through M-Pesa Paybill or visit our office. Our team is ready to assist you with your financial needs.</p>
                         <ul class="section__content-list wow fadeInUp" data-wow-duration="0.8s">
-                            <li class="headingFive">Quick Loan Application</li>
-                            <li class="headingFive">Secure and Private</li>
-                            <li class="headingFive">User-Friendly Interface</li>
-                            <li class="headingFive">Stay Connected</li>
+                            <li class="headingFive"><i class="bi bi-phone me-2"></i> Phone: {{ $settings['site_phone'] ?? '+254787666661' }}</li>
+                            <li class="headingFive"><i class="bi bi-envelope me-2"></i> Email: {{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}</li>
+                            <li class="headingFive"><i class="bi bi-geo-alt me-2"></i> Location: {{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318' }}</li>
+                            @if(!empty($settings['paybill_number']))
+                            <li class="headingFive"><i class="bi bi-credit-card me-2"></i> Paybill: <strong>{{ $settings['paybill_number'] }}</strong></li>
+                            @endif
                         </ul>
                         <div class="btn-group mt_40 wow fadeInDown" data-wow-duration="0.8s">
-                            <a href="#" class="btn_theme">
-                                <svg width="135" height="33" viewBox="0 0 135 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M43.1134 4.25806C43.1134 5.29032 42.8763 6.19355 42.2835 6.83871C41.5722 7.6129 40.7423 8 39.6753 8C38.6082 8 37.7783 7.6129 37.067 6.83871C36.3557 6.06452 36 5.16129 36 4C36 2.83871 36.3557 1.93548 37.067 1.16129C37.7783 0.387097 38.6082 0 39.6753 0C40.1495 0 40.6237 0.129032 41.0979 0.387096C41.5722 0.645161 41.9278 0.903226 42.1649 1.29032L41.5722 1.93548C41.0979 1.29032 40.5052 1.03226 39.6753 1.03226C38.9639 1.03226 38.2526 1.29032 37.7784 1.93548C37.1856 2.45161 36.9485 3.22581 36.9485 4.12903C36.9485 5.03226 37.1856 5.80645 37.7784 6.32258C38.3711 6.83871 38.9639 7.22581 39.6753 7.22581C40.5052 7.22581 41.0979 6.96774 41.6907 6.32258C42.0464 5.93548 42.2835 5.41935 42.2835 4.77419H39.6753V3.74194H43.1134V4.25806ZM48.567 1.03226H45.366V3.48387H48.3299V4.3871H45.366V6.83871H48.567V7.87097H44.4175V0.129032H48.567V1.03226ZM52.4794 7.87097H51.5309V1.03226H49.5155V0.129032H54.4948V1.03226H52.4794V7.87097ZM57.933 7.87097V0.129032H58.8814V7.87097H57.933ZM62.9124 7.87097H61.9639V1.03226H59.9485V0.129032H64.8093V1.03226H62.7938V7.87097H62.9124ZM74.1753 6.83871C73.4639 7.6129 72.634 8 71.567 8C70.5 8 69.6701 7.6129 68.9588 6.83871C68.2474 6.06452 67.8918 5.16129 67.8918 4C67.8918 2.83871 68.2474 1.93548 68.9588 1.16129C69.6701 0.387097 70.5 0 71.567 0C72.634 0 73.4639 0.387097 74.1753 1.16129C74.8866 1.93548 75.2423 2.83871 75.2423 4C75.2423 5.16129 74.8866 6.06452 74.1753 6.83871ZM69.6701 6.19355C70.1443 6.70968 70.8557 7.09677 71.567 7.09677C72.2784 7.09677 72.9897 6.83871 73.4639 6.19355C73.9381 5.67742 74.2938 4.90322 74.2938 4C74.2938 3.09677 74.0567 2.32258 73.4639 1.80645C72.9897 1.29032 72.2784 0.903225 71.567 0.903225C70.8557 0.903225 70.1443 1.16129 69.6701 1.80645C69.1959 2.32258 68.8402 3.09677 68.8402 4C68.8402 4.90322 69.0773 5.67742 69.6701 6.19355ZM76.5464 7.87097V0.129032H77.6134L81.0516 6.19355V0.129032H82V7.87097H81.0516L77.3763 1.54839V7.87097H76.5464Z" fill="#074C3E"/>
-                                    <path d="M67.5957 17.8402C64.7872 17.8402 62.5638 20.0769 62.5638 23.1834C62.5638 26.1657 64.7872 28.5266 67.5957 28.5266C70.4043 28.5266 72.6277 26.2899 72.6277 23.1834C72.6277 19.9527 70.4043 17.8402 67.5957 17.8402ZM67.5957 26.2899C66.0745 26.2899 64.7872 24.9231 64.7872 23.0592C64.7872 21.1953 66.0745 19.8284 67.5957 19.8284C69.117 19.8284 70.4043 21.071 70.4043 23.0592C70.4043 24.9231 69.117 26.2899 67.5957 26.2899ZM56.7128 17.8402C53.9043 17.8402 51.6809 20.0769 51.6809 23.1834C51.6809 26.1657 53.9043 28.5266 56.7128 28.5266C59.5213 28.5266 61.7447 26.2899 61.7447 23.1834C61.7447 19.9527 59.5213 17.8402 56.7128 17.8402ZM56.7128 26.2899C55.1915 26.2899 53.9043 24.9231 53.9043 23.0592C53.9043 21.1953 55.1915 19.8284 56.7128 19.8284C58.234 19.8284 59.5213 21.071 59.5213 23.0592C59.5213 24.9231 58.234 26.2899 56.7128 26.2899ZM43.7234 19.4556V21.6923H48.7553C48.6383 22.9349 48.1702 23.929 47.5851 24.5503C46.883 25.2959 45.7128 26.1657 43.7234 26.1657C40.5638 26.1657 38.2234 23.5562 38.2234 20.2012C38.2234 16.8462 40.6809 14.2367 43.7234 14.2367C45.3617 14.2367 46.6489 14.9822 47.5851 15.8521L49.1064 14.2367C47.8191 12.9941 46.1809 12 43.8404 12C39.6277 12 36 15.7278 36 20.2012C36 24.6746 39.6277 28.4024 43.8404 28.4024C46.1809 28.4024 47.8192 27.6568 49.2234 26.0414C50.6277 24.5503 51.0957 22.4379 51.0957 20.8225C51.0957 20.3254 51.0957 19.8284 50.9787 19.4556H43.7234V19.4556ZM96.8511 21.1953C96.383 19.9527 95.2128 17.8402 92.6383 17.8402C90.0638 17.8402 87.9574 19.9527 87.9574 23.1834C87.9574 26.1657 90.0638 28.5266 92.8723 28.5266C95.0957 28.5266 96.5 27.0355 96.9681 26.1657L95.3298 24.9231C94.7447 25.7929 94.0426 26.4142 92.8723 26.4142C91.7021 26.4142 91 25.9172 90.4149 24.7988L97.0851 21.8166L96.8511 21.1953V21.1953ZM90.0638 22.9349C90.0638 20.9467 91.5851 19.8284 92.6383 19.8284C93.4574 19.8284 94.2766 20.3254 94.5106 20.9467L90.0638 22.9349ZM84.5638 28.0296H86.7872V12.497H84.5638V28.0296ZM81.0532 18.9586C80.4681 18.3373 79.5319 17.716 78.3617 17.716C75.9043 17.716 73.5638 20.0769 73.5638 23.0592C73.5638 26.0414 75.7872 28.2781 78.3617 28.2781C79.5319 28.2781 80.4681 27.6568 80.9362 27.0355H81.0532V27.7811C81.0532 29.7692 80 30.8876 78.3617 30.8876C77.0745 30.8876 76.1383 29.8935 75.9043 29.0237L74.0319 29.8935C74.617 31.2604 76.0213 33 78.4787 33C81.0532 33 83.1596 31.3846 83.1596 27.5325V18.0888H81.0532V18.9586V18.9586ZM78.4787 26.2899C76.9574 26.2899 75.6702 24.9231 75.6702 23.0592C75.6702 21.1953 76.9574 19.8284 78.4787 19.8284C80 19.8284 81.1702 21.1953 81.1702 23.0592C81.1702 24.9231 80 26.2899 78.4787 26.2899ZM107.032 12.497H101.766V28.0296H103.989V22.1893H107.032C109.489 22.1893 111.83 20.3254 111.83 17.3432C111.83 14.3609 109.489 12.497 107.032 12.497V12.497ZM107.149 19.9527H103.989V14.6095H107.149C108.787 14.6095 109.723 16.1006 109.723 17.2189C109.606 18.5858 108.67 19.9527 107.149 19.9527ZM120.606 17.716C118.968 17.716 117.33 18.4615 116.745 20.0769L118.734 20.9467C119.202 20.0769 119.904 19.8284 120.723 19.8284C121.894 19.8284 122.947 20.574 123.064 21.8166V21.9408C122.713 21.6923 121.777 21.3195 120.84 21.3195C118.734 21.3195 116.628 22.5621 116.628 24.7988C116.628 26.9112 118.383 28.2781 120.255 28.2781C121.777 28.2781 122.479 27.5325 123.064 26.787H123.181V28.0296H125.287V22.0651C125.053 19.3314 123.064 17.716 120.606 17.716V17.716ZM120.372 26.2899C119.67 26.2899 118.617 25.9172 118.617 24.9231C118.617 23.6805 119.904 23.3077 120.957 23.3077C121.894 23.3077 122.362 23.5562 122.947 23.8047C122.713 25.2959 121.543 26.2899 120.372 26.2899V26.2899ZM132.66 18.0888L130.202 24.7988H130.085L127.511 18.0888H125.17L129.032 27.5325L126.809 32.7515H129.032L135 18.0888H132.66V18.0888ZM113 28.0296H115.223V12.497H113V28.0296Z" fill="#074C3E"/>
-                                    <path d="M20 19.9878L16.7887 17L5 28L20 19.9878Z" fill="#074C3E"/>
-                                    <path d="M20 12.0122L5 4L16.7887 15L20 12.0122Z" fill="#074C3E"/>
-                                    <path d="M24.3284 18.1481C25.2337 17.3727 25.2337 15.625 24.2682 14.8495L21.3056 13L18 16.5L21.3056 20L24.3284 18.1481Z" fill="#074C3E"/>
-                                    <path d="M2.09105 29L15 15.9978L2.09105 3.00108V3C1.4379 3.34558 1 3.975 1 4.79292V27.2071C1 28.025 1.4379 28.6544 2.09105 29V29Z" fill="#074C3E"/>
-                                </svg>
+                            <a href="tel:{{ str_replace([' ', '(', ')', '-'], '', $settings['site_phone'] ?? '+254787666661') }}" class="btn_theme btn_theme_active">
+                                <i class="bi bi-telephone me-2"></i>Call Us
                                 <span></span>
                             </a>
-                            <a href="#" class="btn_theme">
-                                <svg width="136" height="35" viewBox="0 0 136 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21.716 16.4857C21.6796 12.5694 25.0217 10.664 25.1745 10.5753C23.2818 7.89837 20.3481 7.53262 19.3171 7.50346C16.8532 7.25192 14.4631 8.93367 13.208 8.93367C11.9278 8.93367 9.99497 7.52776 7.91182 7.56907C5.23116 7.60917 2.72337 9.11472 1.34796 11.4526C-1.49053 16.2196 0.626442 23.2249 3.34593 27.0781C4.7063 28.9652 6.29591 31.0722 8.37655 30.9981C10.4121 30.9167 11.1725 29.7392 13.6289 29.7392C16.0628 29.7392 16.7768 30.9981 18.8988 30.9507C21.0834 30.9167 22.4588 29.0551 23.7715 27.151C25.3436 24.988 25.9749 22.8579 26 22.7485C25.9486 22.7315 21.7573 21.1798 21.716 16.4857Z" fill="#074C3E"/>
-                                    <path d="M17.7075 4.96869C18.8023 3.64054 19.5514 1.83364 19.3434 0C17.7589 0.0680475 15.7772 1.06324 14.636 2.36222C13.6264 3.50688 12.7245 5.38305 12.9575 7.14742C14.7375 7.27623 16.5651 6.27617 17.7075 4.96869Z" fill="#074C3E"/>
-                                    <path d="M50.9476 30.2845H48.1283L46.5839 25.5703H41.2159L39.7448 30.2845H37L42.3183 14.2351H45.6032L50.9476 30.2845ZM46.1184 23.5925L44.7218 19.4016C44.574 18.9735 44.2972 17.9653 43.8888 16.3782H43.8391C43.6765 17.0608 43.4145 18.069 43.0545 19.4016L41.6827 23.5925H46.1184Z" fill="#074C3E"/>
-                                    <path d="M64.6246 24.3559C64.6246 26.3241 64.0771 27.8798 62.9821 29.0219C62.0014 30.0385 60.7835 30.5463 59.3298 30.5463C57.7606 30.5463 56.6334 29.9987 55.9469 28.9037H55.8972V35H53.2505V22.5216C53.2505 21.2842 53.2169 20.0143 53.1524 18.7118H55.4801L55.6278 20.5461H55.6775C56.5601 19.1641 57.8997 18.4742 59.6973 18.4742C61.1026 18.4742 62.2757 19.0133 63.2143 20.0927C64.1553 21.1733 64.6246 22.5939 64.6246 24.3559ZM61.9281 24.45C61.9281 23.3236 61.6674 22.3949 61.1436 21.6641C60.5712 20.9019 59.8028 20.5208 58.8394 20.5208C58.1864 20.5208 57.593 20.7331 57.0629 21.1516C56.5316 21.5737 56.184 22.1248 56.0214 22.8074C55.9394 23.1258 55.8985 23.3863 55.8985 23.5913V25.5209C55.8985 26.3627 56.1641 27.073 56.6955 27.6531C57.2268 28.2332 57.917 28.5226 58.7662 28.5226C59.7631 28.5226 60.539 28.1487 61.0939 27.4034C61.6501 26.6569 61.9281 25.6728 61.9281 24.45Z" fill="#074C3E"/>
-                                    <path d="M78.3264 24.3559C78.3264 26.3241 77.7789 27.8798 76.6827 29.0219C75.7032 30.0385 74.4853 30.5463 73.0316 30.5463C71.4624 30.5463 70.3352 29.9987 69.6499 28.9037H69.6003V35H66.9535V22.5216C66.9535 21.2842 66.92 20.0143 66.8554 18.7118H69.1831L69.3309 20.5461H69.3805C70.262 19.1641 71.6015 18.4742 73.4003 18.4742C74.8044 18.4742 75.9776 19.0133 76.9186 20.0927C77.8559 21.1733 78.3264 22.5939 78.3264 24.3559ZM75.63 24.45C75.63 23.3236 75.368 22.3949 74.8441 21.6641C74.2718 20.9019 73.5058 20.5208 72.5412 20.5208C71.887 20.5208 71.2948 20.7331 70.7635 21.1516C70.2322 21.5737 69.8858 22.1248 69.7232 22.8074C69.6425 23.1258 69.6003 23.3863 69.6003 23.5913V25.5209C69.6003 26.3627 69.8659 27.073 70.3948 27.6531C70.9261 28.232 71.6164 28.5226 72.468 28.5226C73.4649 28.5226 74.2408 28.1487 74.7957 27.4034C75.3519 26.6569 75.63 25.6728 75.63 24.45Z" fill="#074C3E"/>
-                                    <path d="M93.6457 25.7838C93.6457 27.149 93.1579 28.2597 92.1784 29.1171C91.102 30.0542 89.6036 30.5221 87.6781 30.5221C85.9004 30.5221 84.4752 30.1893 83.3964 29.5224L84.0097 27.3793C85.1717 28.0619 86.4466 28.4044 87.8358 28.4044C88.8327 28.4044 89.6086 28.1849 90.166 27.7483C90.7209 27.3118 90.9977 26.7257 90.9977 25.9948C90.9977 25.3436 90.7693 24.7949 90.3112 24.3499C89.8556 23.9048 89.0946 23.4912 88.0319 23.1089C85.1394 22.0609 83.6944 20.5256 83.6944 18.5068C83.6944 17.1874 84.2009 16.1057 85.2151 15.2639C86.2257 14.4209 87.5739 14 89.2597 14C90.7631 14 92.012 14.2545 93.0089 14.7622L92.3472 16.8582C91.4161 16.3662 90.3634 16.1201 89.1852 16.1201C88.2542 16.1201 87.5267 16.3432 87.0053 16.7871C86.5646 17.1838 86.3436 17.6674 86.3436 18.2403C86.3436 18.8746 86.5956 19.3992 87.1021 19.8117C87.5428 20.1928 88.3436 20.6052 89.5055 21.0502C90.927 21.6062 91.971 22.2562 92.6427 23.0015C93.3118 23.7444 93.6457 24.6743 93.6457 25.7838Z" fill="#074C3E"/>
-                                    <path d="M102.397 20.6414H99.4793V26.2601C99.4793 27.6892 99.9932 28.4032 101.024 28.4032C101.497 28.4032 101.889 28.3634 102.199 28.2838L102.273 30.2363C101.751 30.4256 101.065 30.5209 100.214 30.5209C99.1689 30.5209 98.3521 30.211 97.7624 29.5923C97.1752 28.9724 96.8797 27.9328 96.8797 26.4724V20.639H95.1417V18.7094H96.8797V16.5905L99.4793 15.8283V18.7094H102.397V20.6414Z" fill="#074C3E"/>
-                                    <path d="M115.56 24.4029C115.56 26.1817 115.036 27.6422 113.99 28.7843C112.894 29.9601 111.439 30.5462 109.626 30.5462C107.878 30.5462 106.486 29.983 105.448 28.8566C104.41 27.7302 103.891 26.3084 103.891 24.5947C103.891 22.8013 104.425 21.3324 105.497 20.1904C106.565 19.0471 108.008 18.4754 109.822 18.4754C111.57 18.4754 112.976 19.0386 114.038 20.1662C115.053 21.2601 115.56 22.6723 115.56 24.4029ZM112.814 24.4861C112.814 23.4188 112.579 22.5035 112.103 21.7401C111.549 20.8163 110.755 20.3556 109.727 20.3556C108.663 20.3556 107.855 20.8175 107.3 21.7401C106.825 22.5047 106.59 23.4345 106.59 24.5344C106.59 25.6017 106.825 26.517 107.3 27.2792C107.873 28.203 108.672 28.6637 109.704 28.6637C110.714 28.6637 111.508 28.1934 112.08 27.2551C112.568 26.4772 112.814 25.5522 112.814 24.4861Z" fill="#074C3E"/>
-                                    <path d="M124.163 20.9731C123.901 20.926 123.622 20.9019 123.329 20.9019C122.398 20.9019 121.678 21.2432 121.171 21.927C120.73 22.53 120.509 23.2922 120.509 24.2124V30.2846H117.864L117.889 22.3563C117.889 21.0225 117.855 19.8081 117.789 18.713H120.095L120.191 20.9272H120.265C120.544 20.1663 120.985 19.5536 121.588 19.0941C122.178 18.6805 122.815 18.4742 123.501 18.4742C123.746 18.4742 123.967 18.4911 124.163 18.5213V20.9731Z" fill="#074C3E"/>
-                                    <path d="M136 23.9507C136 24.4113 135.969 24.7997 135.903 25.1169H127.963C127.994 26.2601 128.378 27.1345 129.115 27.7375C129.784 28.2766 130.649 28.5467 131.712 28.5467C132.888 28.5467 133.96 28.3646 134.925 27.9992L135.34 29.7841C134.212 30.2616 132.882 30.4992 131.346 30.4992C129.499 30.4992 128.049 29.971 126.993 28.9157C125.941 27.8605 125.413 26.4434 125.413 24.6658C125.413 22.9207 125.903 21.4675 126.885 20.3086C127.913 19.0712 129.302 18.4525 131.05 18.4525C132.767 18.4525 134.067 19.0712 134.95 20.3086C135.649 21.2914 136 22.5071 136 23.9507ZM133.476 23.2837C133.494 22.5216 133.321 21.8631 132.962 21.3071C132.504 20.592 131.8 20.235 130.853 20.235C129.988 20.235 129.284 20.5835 128.746 21.283C128.306 21.839 128.044 22.5059 127.963 23.2825H133.476V23.2837Z" fill="#074C3E"/>
-                                    <path d="M44.6542 3.95533C44.6542 5.30356 44.2171 6.31845 43.3441 7C42.5356 7.62887 41.3865 7.94388 39.8982 7.94388C39.1602 7.94388 38.5287 7.91409 38 7.85453V0.487978C38.6897 0.384885 39.4326 0.332194 40.235 0.332194C41.6527 0.332194 42.7213 0.617417 43.442 1.18786C44.2493 1.83277 44.6542 2.75487 44.6542 3.95533ZM43.2859 3.98855C43.2859 3.11455 43.0358 2.44445 42.5356 1.9771C42.0353 1.51089 41.3048 1.27721 40.3427 1.27721C39.9341 1.27721 39.5862 1.30241 39.2977 1.3551V6.95533C39.4574 6.97824 39.7496 6.98855 40.1743 6.98855C41.1674 6.98855 41.9338 6.73311 42.4737 6.22223C43.0135 5.71134 43.2859 4.96679 43.2859 3.98855Z" fill="#074C3E"/>
-                                    <path d="M51.9089 5.13288C51.9089 5.96335 51.6526 6.64376 51.1399 7.17755C50.6026 7.72623 49.8906 8 49.0015 8C48.1447 8 47.4624 7.73769 46.9535 7.21077C46.4459 6.685 46.192 6.02176 46.192 5.22222C46.192 4.38603 46.4533 3.69989 46.9783 3.16724C47.5033 2.6346 48.2091 2.3677 49.0981 2.3677C49.955 2.3677 50.6434 2.63001 51.1647 3.15579C51.66 3.66667 51.9089 4.32646 51.9089 5.13288ZM50.5629 5.17182C50.5629 4.67354 50.4465 4.24628 50.215 3.89004C49.9426 3.45934 49.555 3.24399 49.0511 3.24399C48.5298 3.24399 48.1336 3.45934 47.8611 3.89004C47.6284 4.24628 47.5132 4.68041 47.5132 5.19359C47.5132 5.69187 47.6296 6.11913 47.8611 6.47537C48.1422 6.90607 48.5335 7.12142 49.0387 7.12142C49.534 7.12142 49.9228 6.90264 50.2026 6.46392C50.4428 6.1008 50.5629 5.6701 50.5629 5.17182Z" fill="#074C3E"/>
-                                    <path d="M61.6363 2.47766L59.8099 7.87743H58.6212L57.8647 5.53265C57.6728 4.94731 57.5167 4.36541 57.3954 3.78809H57.3719C57.2592 4.38144 57.1032 4.9622 56.9026 5.53265L56.099 7.87743H54.8967L53.1793 2.47766H54.5128L55.1728 5.04467C55.3325 5.65178 55.4638 6.23024 55.569 6.77778H55.5926C55.6891 6.32646 55.8489 5.75143 56.0742 5.05613L56.9026 2.47881H57.96L58.7537 5.00115C58.9456 5.61627 59.1016 6.20848 59.2218 6.77892H59.2577C59.3456 6.22337 59.4781 5.63116 59.6539 5.00115L60.3622 2.47881H61.6363V2.47766Z" fill="#074C3E"/>
-                                    <path d="M68.3635 7.87744H67.0658V4.78466C67.0658 3.83162 66.6746 3.35511 65.8895 3.35511C65.5045 3.35511 65.1937 3.48569 64.9522 3.74801C64.7132 4.01032 64.5919 4.3196 64.5919 4.67355V7.8763H63.2942V4.02063C63.2942 3.5464 63.2782 3.03208 63.2472 2.47538H64.3876L64.4483 3.3196H64.4842C64.6352 3.05728 64.8606 2.84079 65.1565 2.66782C65.5082 2.46622 65.9019 2.36427 66.3328 2.36427C66.8776 2.36427 67.3308 2.52693 67.6911 2.85339C68.1394 3.25316 68.3635 3.84995 68.3635 4.64262V7.87744Z" fill="#074C3E"/>
-                                    <path d="M71.9419 7.87743H70.6455V0H71.9419V7.87743Z" fill="#074C3E"/>
-                                    <path d="M79.5817 5.13288C79.5817 5.96335 79.3254 6.64376 78.8128 7.17755C78.2754 7.72623 77.5622 8 76.6744 8C75.8163 8 75.1341 7.73769 74.6264 7.21077C74.1187 6.685 73.8649 6.02176 73.8649 5.22222C73.8649 4.38603 74.1262 3.69989 74.6512 3.16724C75.1762 2.6346 75.8819 2.3677 76.7697 2.3677C77.6278 2.3677 78.315 2.63001 78.8376 3.15579C79.3328 3.66667 79.5817 4.32646 79.5817 5.13288ZM78.2346 5.17182C78.2346 4.67354 78.1182 4.24628 77.8866 3.89004C77.6154 3.45934 77.2266 3.24399 76.7239 3.24399C76.2014 3.24399 75.8052 3.45934 75.534 3.89004C75.3012 4.24628 75.1861 4.68041 75.1861 5.19359C75.1861 5.69187 75.3025 6.11913 75.534 6.47537C75.8151 6.90607 76.2064 7.12142 76.7116 7.12142C77.2068 7.12142 77.5944 6.90264 77.8742 6.46392C78.1157 6.1008 78.2346 5.6701 78.2346 5.17182Z" fill="#074C3E"/>
-                                    <path d="M85.862 7.87743H84.6968L84.6002 7.25544H84.5643C84.1656 7.75143 83.5973 8 82.8593 8C82.3083 8 81.8625 7.8362 81.527 7.51088C81.2224 7.21535 81.0701 6.84765 81.0701 6.41123C81.0701 5.75143 81.3672 5.24857 81.9653 4.90035C82.5621 4.55212 83.4016 4.38144 84.4826 4.38946V4.28866C84.4826 3.57732 84.0789 3.22223 83.2704 3.22223C82.6946 3.22223 82.1869 3.35625 81.7486 3.622L81.4849 2.83391C82.0272 2.52348 82.6971 2.3677 83.4871 2.3677C85.0125 2.3677 85.7778 3.11226 85.7778 4.60138V6.58992C85.7778 7.12944 85.8062 7.55899 85.862 7.87743ZM84.5148 6.02176V5.18901C83.0834 5.1661 82.3677 5.52921 82.3677 6.27721C82.3677 6.55899 82.4494 6.76976 82.6166 6.91065C82.7838 7.05155 82.9967 7.12142 83.2506 7.12142C83.5353 7.12142 83.8016 7.0378 84.0443 6.87171C84.2882 6.70447 84.438 6.49256 84.4937 6.23253C84.5073 6.17411 84.5148 6.10309 84.5148 6.02176Z" fill="#074C3E"/>
-                                    <path d="M93.2355 7.87743H92.084L92.0233 7.01031H91.9874C91.6197 7.6701 90.9931 8 90.1127 8C89.4094 8 88.8238 7.74456 88.3594 7.23368C87.8951 6.72279 87.6636 6.05956 87.6636 5.24513C87.6636 4.37113 87.9149 3.66323 88.4201 3.12256C88.9092 2.61856 89.5085 2.36655 90.2217 2.36655C91.0055 2.36655 91.554 2.61054 91.8661 3.09966H91.8908V0H93.1897V6.42268C93.1897 6.94845 93.2046 7.43299 93.2355 7.87743ZM91.8908 5.60023V4.69988C91.8908 4.5441 91.8784 4.4181 91.8549 4.32188C91.7819 4.03322 91.6246 3.79038 91.3856 3.5945C91.1442 3.39862 90.8532 3.30011 90.5176 3.30011C90.0335 3.30011 89.6546 3.47766 89.376 3.8339C89.0999 4.19015 88.96 4.6449 88.96 5.20046C88.96 5.73425 89.0925 6.16724 89.3587 6.50057C89.6397 6.85567 90.0186 7.03322 90.4929 7.03322C90.9188 7.03322 91.2593 6.88545 91.5181 6.58877C91.7682 6.315 91.8908 5.98511 91.8908 5.60023Z" fill="#074C3E"/>
-                                    <path d="M104.334 5.13288C104.334 5.96335 104.077 6.64376 103.565 7.17755C103.027 7.72623 102.317 8 101.426 8C100.571 8 99.8885 7.73769 99.3783 7.21077C98.8706 6.685 98.6168 6.02176 98.6168 5.22222C98.6168 4.38603 98.8781 3.69989 99.4031 3.16724C99.9281 2.6346 100.634 2.3677 101.524 2.3677C102.38 2.3677 103.069 2.63001 103.589 3.15579C104.085 3.66667 104.334 4.32646 104.334 5.13288ZM102.989 5.17182C102.989 4.67354 102.873 4.24628 102.641 3.89004C102.367 3.45934 101.981 3.24399 101.476 3.24399C100.956 3.24399 100.56 3.45934 100.286 3.89004C100.053 4.24628 99.938 4.68041 99.938 5.19359C99.938 5.69187 100.054 6.11913 100.286 6.47537C100.567 6.90607 100.958 7.12142 101.463 7.12142C101.959 7.12142 102.349 6.90264 102.629 6.46392C102.868 6.1008 102.989 5.6701 102.989 5.17182Z" fill="#074C3E"/>
-                                    <path d="M111.311 7.87744H110.015V4.78466C110.015 3.83162 109.623 3.35511 108.837 3.35511C108.452 3.35511 108.141 3.48569 107.901 3.74801C107.661 4.01032 107.541 4.3196 107.541 4.67355V7.8763H106.242V4.02063C106.242 3.5464 106.227 3.03208 106.196 2.47538H107.335L107.396 3.3196H107.432C107.584 3.05728 107.809 2.84079 108.104 2.66782C108.457 2.46622 108.849 2.36427 109.282 2.36427C109.825 2.36427 110.278 2.52693 110.639 2.85339C111.088 3.25316 111.311 3.84995 111.311 4.64262V7.87744Z" fill="#074C3E"/>
-                                    <path d="M120.044 3.37687H118.615V6.00001C118.615 6.66667 118.869 7.00001 119.372 7.00001C119.605 7.00001 119.798 6.98168 119.95 6.94388L119.983 7.85453C119.727 7.94388 119.39 7.98855 118.976 7.98855C118.463 7.98855 118.064 7.84422 117.776 7.55556C117.486 7.2669 117.342 6.78122 117.342 6.09966V3.37687H116.489V2.47767H117.342V1.48798L118.614 1.13288V2.47653H120.043V3.37687H120.044Z" fill="#074C3E"/>
-                                    <path d="M126.914 7.87743H125.615V4.80756C125.615 3.83963 125.224 3.3551 124.44 3.3551C123.838 3.3551 123.427 3.63574 123.202 4.19702C123.163 4.315 123.141 4.45933 123.141 4.62886V7.87629H121.844V0H123.141V3.25429H123.166C123.574 2.66208 124.16 2.36655 124.919 2.36655C125.456 2.36655 125.901 2.52921 126.254 2.85567C126.693 3.26231 126.914 3.86712 126.914 4.66667V7.87743Z" fill="#074C3E"/>
-                                    <path d="M134 4.9221C134 5.13745 133.983 5.31844 133.952 5.4662H130.06C130.077 5.99999 130.263 6.40664 130.623 6.68843C130.953 6.94043 131.377 7.06643 131.898 7.06643C132.473 7.06643 132.998 6.98167 133.471 6.81099L133.674 7.6449C133.121 7.86712 132.47 7.97823 131.715 7.97823C130.812 7.97823 130.1 7.73195 129.585 7.2394C129.067 6.74684 128.811 6.08591 128.811 5.25658C128.811 4.44215 129.05 3.76403 129.531 3.22336C130.034 2.64604 130.714 2.35739 131.572 2.35739C132.411 2.35739 133.049 2.64604 133.48 3.22336C133.828 3.68155 134 4.24856 134 4.9221ZM132.762 4.61168C132.772 4.25544 132.686 3.94845 132.51 3.68957C132.285 3.35624 131.942 3.189 131.478 3.189C131.054 3.189 130.709 3.35166 130.445 3.67812C130.23 3.93814 130.102 4.24856 130.06 4.61168H132.762Z" fill="#074C3E"/>
-                                </svg>
+                            <a href="mailto:{{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}" class="btn_theme">
+                                <i class="bi bi-envelope me-2"></i>Email Us
                                 <span></span>
                             </a>
                         </div>
@@ -942,7 +872,7 @@
             </div>
         </div>
     </section>
-    <!-- download-app end -->
+    <!-- Payment & Contact end -->
 
     <!-- faq start -->
     <section class="section faq-section" id="faqa">

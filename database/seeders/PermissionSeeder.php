@@ -100,6 +100,12 @@ class PermissionSeeder extends Seeder
             'loan-products.edit',
             'loan-products.delete',
 
+            // Products & Solutions
+            'products.view',
+            'products.create',
+            'products.edit',
+            'products.delete',
+
             // Notifications
             'notifications.view',
             'notifications.create',
