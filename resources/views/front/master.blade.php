@@ -116,6 +116,8 @@
                 @foreach($socialLinks as $index => $link)
                     "{{ $link }}"@if($index < count($socialLinks) - 1),@endif
                 @endforeach
+            @else
+                null
             @endif
         ],
         "priceRange": "KES 1,000 - KES 100,000",
