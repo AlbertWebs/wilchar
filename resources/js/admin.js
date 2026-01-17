@@ -8,13 +8,9 @@ window.Swal = Swal;
 window.ChartJS = Chart;
 window.ApexCharts = ApexCharts;
 
-const registerAdminDirectives = () => {
+// Register Alpine stores & directives during Alpine's init phase
+document.addEventListener('alpine:init', () => {
     const Alpine = window.Alpine;
-
-    if (!Alpine) {
-        document.addEventListener('alpine:init', registerAdminDirectives, { once: true });
-        return;
-    }
 
     Alpine.store('modal', {
         open: false,
@@ -118,9 +114,7 @@ const registerAdminDirectives = () => {
             }
         });
     });
-};
-
-registerAdminDirectives();
+});
 
 window.Admin = {
     async showModal({ title = 'Modal', url = null, method = 'get', size = 'md', body = null }) {

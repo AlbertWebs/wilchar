@@ -1,16 +1,14 @@
-@extends('layouts.admin', ['title' => 'Loan Applications'])
-
-@section('header')
+<?php $__env->startSection('header'); ?>
     Loan Applications
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div
         x-data="{
             filters: {
-                status: '{{ request('status') }}',
-                stage: '{{ request('stage') }}',
-                team_id: '{{ request('team_id') }}',
+                status: '<?php echo e(request('status')); ?>',
+                stage: '<?php echo e(request('stage')); ?>',
+                team_id: '<?php echo e(request('team_id')); ?>',
             },
             init() {
                 window.addEventListener('loan-applications:refresh', () => {
@@ -18,7 +16,7 @@
                 });
             },
             openEditModal(id) {
-                const urlTemplate = '{{ route('loan-applications.edit', ['loan_application' => '__ID__']) }}';
+                const urlTemplate = '<?php echo e(route('loan-applications.edit', ['loan_application' => '__ID__'])); ?>';
                 const url = urlTemplate.replace('__ID__', id);
                 Admin.showModal({ title: 'Edit Loan Application', url, method: 'get', size: 'xl' });
             },
@@ -40,29 +38,29 @@
             <div class="flex items-center gap-3 text-sm text-slate-600">
                 <div class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
                     <span class="text-xs uppercase tracking-wide text-slate-500">Total</span>
-                    <span class="font-semibold text-slate-900">{{ number_format($applications->total()) }}</span>
+                    <span class="font-semibold text-slate-900"><?php echo e(number_format($applications->total())); ?></span>
                 </div>
                 <div class="hidden md:block h-6 w-px bg-slate-200"></div>
                 <div class="flex flex-wrap gap-2">
-                    <select class="rounded-xl border-slate-200 text-sm" x-model="filters.stage" @change="window.location = '{{ route('loan-applications.index') }}?stage=' + filters.stage">
+                    <select class="rounded-xl border-slate-200 text-sm" x-model="filters.stage" @change="window.location = '<?php echo e(route('loan-applications.index')); ?>?stage=' + filters.stage">
                         <option value="">Stage: All</option>
-                        <option value="loan_officer" @selected(request('stage') === 'loan_officer')>Loan Officer</option>
-                        <option value="credit_officer" @selected(request('stage') === 'credit_officer')>Credit Officer</option>
-                        <option value="finance_officer" @selected(request('stage') === 'finance_officer')>Finance Officer</option>
-                        <option value="director" @selected(request('stage') === 'director')>Director</option>
-                        <option value="completed" @selected(request('stage') === 'completed')>Completed</option>
+                        <option value="loan_officer" <?php if(request('stage') === 'loan_officer'): echo 'selected'; endif; ?>>Loan Officer</option>
+                        <option value="credit_officer" <?php if(request('stage') === 'credit_officer'): echo 'selected'; endif; ?>>Credit Officer</option>
+                        <option value="finance_officer" <?php if(request('stage') === 'finance_officer'): echo 'selected'; endif; ?>>Finance Officer</option>
+                        <option value="director" <?php if(request('stage') === 'director'): echo 'selected'; endif; ?>>Director</option>
+                        <option value="completed" <?php if(request('stage') === 'completed'): echo 'selected'; endif; ?>>Completed</option>
                     </select>
-                    <select class="rounded-xl border-slate-200 text-sm" x-model="filters.status" @change="window.location = '{{ route('loan-applications.index') }}?status=' + filters.status">
+                    <select class="rounded-xl border-slate-200 text-sm" x-model="filters.status" @change="window.location = '<?php echo e(route('loan-applications.index')); ?>?status=' + filters.status">
                         <option value="">Status: All</option>
-                        <option value="submitted" @selected(request('status') === 'submitted')>Submitted</option>
-                        <option value="under_review" @selected(request('status') === 'under_review')>Under Review</option>
-                        <option value="approved" @selected(request('status') === 'approved')>Approved</option>
-                        <option value="rejected" @selected(request('status') === 'rejected')>Rejected</option>
+                        <option value="submitted" <?php if(request('status') === 'submitted'): echo 'selected'; endif; ?>>Submitted</option>
+                        <option value="under_review" <?php if(request('status') === 'under_review'): echo 'selected'; endif; ?>>Under Review</option>
+                        <option value="approved" <?php if(request('status') === 'approved'): echo 'selected'; endif; ?>>Approved</option>
+                        <option value="rejected" <?php if(request('status') === 'rejected'): echo 'selected'; endif; ?>>Rejected</option>
                     </select>
                 </div>
             </div>
             <a
-                href="{{ route('loan-applications.create') }}"
+                href="<?php echo e(route('loan-applications.create')); ?>"
                 class="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-400"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,96 +82,103 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm">
-                    @forelse($applications as $application)
+                    <?php $__empty_1 = true; $__currentLoopData = $applications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $application): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-slate-50/80">
                             <td class="px-4 py-4">
-                                <div class="font-semibold text-slate-900">{{ $application->application_number }}</div>
+                                <div class="font-semibold text-slate-900"><?php echo e($application->application_number); ?></div>
                                 <div class="text-xs text-slate-500">
-                                    {{ $application->client->full_name }} · {{ $application->client->phone }}
+                                    <?php echo e($application->client->full_name); ?> · <?php echo e($application->client->phone); ?>
+
                                 </div>
                                 <div class="mt-1 text-xs text-slate-400">
-                                    Submitted {{ $application->created_at->diffForHumans() }}
+                                    Submitted <?php echo e($application->created_at->diffForHumans()); ?>
+
                                 </div>
                             </td>
                             <td class="px-4 py-4 text-slate-600">
-                                <p class="font-medium">{{ $application->team->name ?? '—' }}</p>
+                                <p class="font-medium"><?php echo e($application->team->name ?? '—'); ?></p>
                                 <p class="text-xs text-slate-500">
-                                    Loan Officer: {{ $application->loanOfficer->name ?? 'Pending' }}
+                                    Loan Officer: <?php echo e($application->loanOfficer->name ?? 'Pending'); ?>
+
                                 </p>
                                 <p class="text-xs text-slate-500">
-                                    Credit Officer: {{ $application->creditOfficer->name ?? 'Pending' }}
+                                    Credit Officer: <?php echo e($application->creditOfficer->name ?? 'Pending'); ?>
+
                                 </p>
                                 <p class="text-xs text-slate-500">
-                                    Collections: {{ $application->collectionOfficer->name ?? 'Pending' }}
+                                    Collections: <?php echo e($application->collectionOfficer->name ?? 'Pending'); ?>
+
                                 </p>
                             </td>
                             <td class="px-4 py-4">
-                                <p class="font-semibold text-slate-900">KES {{ number_format($application->amount, 2) }}</p>
-                                <p class="text-xs text-slate-500">Interest {{ number_format($application->interest_rate, 2) }}%</p>
-                                <p class="text-xs text-slate-500">Total {{ number_format($application->total_repayment_amount ?? 0, 2) }}</p>
+                                <p class="font-semibold text-slate-900">KES <?php echo e(number_format($application->amount, 2)); ?></p>
+                                <p class="text-xs text-slate-500">Interest <?php echo e(number_format($application->interest_rate, 2)); ?>%</p>
+                                <p class="text-xs text-slate-500">Total <?php echo e(number_format($application->total_repayment_amount ?? 0, 2)); ?></p>
                             </td>
                             <td class="px-4 py-4">
                                 <span
                                     class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"
                                     title="Current approval stage"
                                 >
-                                    {{ ucfirst(str_replace('_', ' ', $application->approval_stage)) }}
+                                    <?php echo e(ucfirst(str_replace('_', ' ', $application->approval_stage))); ?>
+
                                 </span>
                                 <span
                                     class="ml-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold
-                                        {{ $application->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($application->status === 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700') }}"
+                                        <?php echo e($application->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($application->status === 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700')); ?>"
                                     title="Application status"
                                 >
-                                    {{ ucfirst(str_replace('_', ' ', $application->status)) }}
+                                    <?php echo e(ucfirst(str_replace('_', ' ', $application->status))); ?>
+
                                 </span>
-                                @if($application->status === 'approved' && $application->approval_stage === 'completed')
-                                    @php
+                                <?php if($application->status === 'approved' && $application->approval_stage === 'completed'): ?>
+                                    <?php
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
-                                    @endphp
-                                    @if($disbursement)
-                                        @php
+                                    ?>
+                                    <?php if($disbursement): ?>
+                                        <?php
                                             $desc = strtolower($disbursement->mpesa_response_description ?? '');
                                             $wasAborted = str_contains($desc, 'aborted by user');
-                                        @endphp
+                                        ?>
                                         <span
                                             class="mt-1 block inline-flex rounded-full px-3 py-1 text-xs font-semibold
-                                                {{ $disbursement->status === 'success'
+                                                <?php echo e($disbursement->status === 'success'
                                                     ? 'bg-emerald-100 text-emerald-700'
                                                     : ($wasAborted
                                                         ? 'bg-rose-100 text-rose-600'
                                                         : ($disbursement->status === 'failed'
                                                             ? 'bg-rose-100 text-rose-600'
-                                                            : 'bg-amber-100 text-amber-700')) }}"
+                                                            : 'bg-amber-100 text-amber-700'))); ?>"
                                             title="Disbursement status"
                                         >
-                                            @if($disbursement->status === 'success')
+                                            <?php if($disbursement->status === 'success'): ?>
                                                 ✓ Disbursed
-                                            @elseif($wasAborted)
+                                            <?php elseif($wasAborted): ?>
                                                 ✗ Disbursement Cancelled
-                                            @elseif($disbursement->status === 'failed')
+                                            <?php elseif($disbursement->status === 'failed'): ?>
                                                 ✗ Disbursement Failed
-                                            @else
+                                            <?php else: ?>
                                                 ⏳ Pending Disbursement
-                                            @endif
+                                            <?php endif; ?>
                                         </span>
-                                    @else
+                                    <?php else: ?>
                                         <span class="mt-1 block inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                                             Not Disbursed
                                         </span>
-                                    @endif
-                                @endif
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                             <td class="px-4 py-4 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('loan-applications.show', $application) }}" class="rounded-lg border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                                    <a href="<?php echo e(route('loan-applications.show', $application)); ?>" class="rounded-lg border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
                                         View
                                     </a>
-                                    @if($application->approval_stage === 'loan_officer' && $application->status === 'submitted')
-                                        <button @click="openEditModal({{ $application->id }})" class="rounded-lg border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                                    <?php if($application->approval_stage === 'loan_officer' && $application->status === 'submitted'): ?>
+                                        <button @click="openEditModal(<?php echo e($application->id); ?>)" class="rounded-lg border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50">
                                             Edit
                                         </button>
-                                    @endif
-                                    @php
+                                    <?php endif; ?>
+                                    <?php
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
                                         $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
                                         $desc = strtolower($disbursement->mpesa_response_description ?? '');
@@ -199,56 +204,55 @@
                                                 $disburseCtaTitle = 'Retry sending this disbursement';
                                             }
                                         }
-                                    @endphp
-                                    {{-- Debug: Uncomment to see why button isn't showing
-                                    @if($application->status === 'approved' && $application->approval_stage === 'completed')
-                                        <!-- Debug: Disbursement exists: {{ $disbursement ? 'Yes' : 'No' }}, Status: {{ $disbursement?->status }}, Has Role: {{ $hasRole ? 'Yes' : 'No' }} -->
-                                    @endif
-                                    --}}
-                                    @if($canInlineDisburse)
+                                    ?>
+                                    
+                                    <?php if($canInlineDisburse): ?>
                                         <button
                                             type="button"
-                                            title="{{ $disburseCtaTitle }}"
-                                            onclick="window.openDisbursementModalHandler({{ $disbursement->id }})"
+                                            title="<?php echo e($disburseCtaTitle); ?>"
+                                            onclick="window.openDisbursementModalHandler(<?php echo e($disbursement->id); ?>)"
                                             class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
                                         >
-                                            {{ $disburseCtaLabel }}
+                                            <?php echo e($disburseCtaLabel); ?>
+
                                         </button>
-                                    @elseif($canCreateDisbursement)
+                                    <?php elseif($canCreateDisbursement): ?>
                                         <a
-                                            href="{{ route('disbursements.create', $application) }}"
+                                            href="<?php echo e(route('disbursements.create', $application)); ?>"
                                             class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
-                                            title="{{ $disburseCtaTitle }}"
+                                            title="<?php echo e($disburseCtaTitle); ?>"
                                         >
-                                            {{ $disburseCtaLabel }}
+                                            <?php echo e($disburseCtaLabel); ?>
+
                                         </a>
-                                    @endif
-                                    @if($showApprove && !$canInlineDisburse && !$canCreateDisbursement)
-                                        <a href="{{ route('approvals.show', $application) }}" class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
+                                    <?php endif; ?>
+                                    <?php if($showApprove && !$canInlineDisburse && !$canCreateDisbursement): ?>
+                                        <a href="<?php echo e(route('approvals.show', $application)); ?>" class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
                                             Approve
                                         </a>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="5" class="px-4 py-10 text-center text-sm text-slate-500">
                                 No applications found. Start by creating a new loan application.
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
 
             <div class="border-t border-slate-200 bg-slate-50 px-4 py-3">
-                {{ $applications->withQueryString()->links() }}
+                <?php echo e($applications->withQueryString()->links()); ?>
+
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 window.openDisbursementModalHandler = function(disbursementId) {
     console.log('=== openDisbursementModalHandler START ===');
@@ -283,7 +287,7 @@ window.openDisbursementModalHandler = function(disbursementId) {
     }
     
     console.log('Fetching disbursement status for ID:', disbursementId);
-        const url = `{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', disbursementId);
+        const url = `<?php echo e(route('disbursements.status', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', disbursementId);
         fetch(url, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -525,7 +529,7 @@ function disbursementFlow(disbursementId, initialData) {
             this.error = null;
             
             try {
-                const response = await fetch(`{{ route('disbursements.generate-otp', ['disbursement' => '__ID__']) }}`.replace('__ID__', this.disbursementId), {
+                const response = await fetch(`<?php echo e(route('disbursements.generate-otp', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', this.disbursementId), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -553,7 +557,7 @@ function disbursementFlow(disbursementId, initialData) {
             this.error = null;
 
             try {
-                const response = await fetch(`{{ route('disbursements.abort', ['disbursement' => '__ID__']) }}`.replace('__ID__', this.disbursementId), {
+                const response = await fetch(`<?php echo e(route('disbursements.abort', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', this.disbursementId), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -590,7 +594,7 @@ function disbursementFlow(disbursementId, initialData) {
             this.error = null;
             
             try {
-                const response = await fetch(`{{ route('disbursements.verify-otp', ['disbursement' => '__ID__']) }}`.replace('__ID__', this.disbursementId), {
+                const response = await fetch(`<?php echo e(route('disbursements.verify-otp', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', this.disbursementId), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -627,7 +631,7 @@ function disbursementFlow(disbursementId, initialData) {
         
         async refreshStatus() {
             try {
-                const response = await fetch(`{{ route('disbursements.status', ['disbursement' => '__ID__']) }}`.replace('__ID__', this.disbursementId));
+                const response = await fetch(`<?php echo e(route('disbursements.status', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', this.disbursementId));
                 const data = await response.json();
                 
                 if (data.success) {
@@ -640,5 +644,7 @@ function disbursementFlow(disbursementId, initialData) {
     };
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
+
+<?php echo $__env->make('layouts.admin', ['title' => 'Loan Applications'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\wilchar\resources\views/admin/loan-applications/index.blade.php ENDPATH**/ ?>

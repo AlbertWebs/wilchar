@@ -116,6 +116,32 @@
                             @endforeach
                         </ol>
                     </div>
+
+                    @php
+                        $disbursement = $loanApplication->loan?->disbursements->first() ?? $loanApplication->disbursements->first() ?? null;
+                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
+                        $hasSuccessfulDisbursement = $disbursement && $disbursement->status === 'success';
+                    @endphp
+
+                    @if($loanApplication->isApproved() && $hasRole && !$hasSuccessfulDisbursement)
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            @if($disbursement && in_array($disbursement->status, ['pending', 'processing']))
+                                <a
+                                    href="{{ route('disbursements.show', $disbursement) }}"
+                                    class="inline-flex items-center rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
+                                >
+                                    View Disbursement
+                                </a>
+                            @elseif(!$disbursement)
+                                <a
+                                    href="{{ route('disbursements.create', $loanApplication) }}"
+                                    class="inline-flex items-center rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
+                                >
+                                    Disburse Now
+                                </a>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </x-admin.section>
         </div>

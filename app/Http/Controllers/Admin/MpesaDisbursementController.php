@@ -264,6 +264,19 @@ class MpesaDisbursementController extends Controller
     }
 
     /**
+     * M-Pesa B2C timeout endpoint
+     */
+    public function timeout(Request $request)
+    {
+        Log::info('M-Pesa B2C Timeout:', $request->all());
+
+        return response()->json([
+            'ResultCode' => 0,
+            'ResultDesc' => 'Accepted',
+        ]);
+    }
+
+    /**
      * Retry failed disbursement
      */
     public function retry(Disbursement $disbursement)
