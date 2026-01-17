@@ -42,6 +42,10 @@ class PermissionSeeder extends Seeder
             'approvals.view',
             'approvals.approve',
             'approvals.reject',
+            'approvals.approve-loan-officer',
+            'approvals.approve-credit-officer',
+            'approvals.approve-finance-officer',
+            'approvals.approve-director',
 
             // Disbursements Module
             'disbursements.view',

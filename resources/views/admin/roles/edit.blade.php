@@ -9,7 +9,7 @@
         <x-admin.section title="Update Role" description="Adjust the role name, description or tweak the permissions to match your current policies.">
             <form action="{{ route('admin.roles.update', $role) }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 @include('admin.roles.partials.form', [
                     'role' => $role,
                     'permissions' => $permissions,

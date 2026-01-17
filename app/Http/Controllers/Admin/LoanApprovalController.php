@@ -43,21 +43,35 @@ class LoanApprovalController extends Controller
             'team',
         ])->whereIn('status', ['submitted', 'under_review']);
 
+        // Admin and users with approvals.view can see all applications
         if ($user->hasRole('Admin') || $user->can('approvals.view')) {
             if ($request->filled('stage')) {
                 $query->where('approval_stage', $request->stage);
             }
-        } elseif ($user->hasRole('Loan Officer') || $user->hasRole('Marketer')) {
-            $query->where('approval_stage', 'loan_officer');
-        } elseif ($user->hasRole('Credit Officer')) {
-            $query->where('approval_stage', 'credit_officer');
-        } elseif ($user->hasRole('Finance')) {
-            $query->where('approval_stage', 'finance_officer');
-        } elseif ($user->hasRole('Director')) {
-            $query->whereIn('approval_stage', ['finance_officer', 'director']);
         } else {
-            // fallback: restrict to none by forcing impossible where
-            $query->whereRaw('1 = 0');
+            // Filter applications based on stages the user can approve
+            $stages = [];
+            
+            // Check permissions first (more granular), then fall back to roles for backward compatibility
+            if ($user->can('approvals.approve-loan-officer') || $user->hasRole('Loan Officer') || $user->hasRole('Marketer')) {
+                $stages[] = 'loan_officer';
+            }
+            if ($user->can('approvals.approve-credit-officer') || $user->hasRole('Credit Officer')) {
+                $stages[] = 'credit_officer';
+            }
+            if ($user->can('approvals.approve-finance-officer') || $user->hasRole('Finance') || $user->hasRole('Director')) {
+                $stages[] = 'finance_officer';
+            }
+            if ($user->can('approvals.approve-director') || $user->hasRole('Director')) {
+                $stages[] = 'director';
+            }
+            
+            if (empty($stages)) {
+                // No permissions or roles for any stage - restrict to none
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('approval_stage', $stages);
+            }
         }
 
         if ($request->filled('team_id')) {
@@ -199,7 +213,13 @@ class LoanApprovalController extends Controller
         return User::role($roles)
             ->get()
             ->filter(function ($user) use ($loanApplication) {
-                return $user->hasRole('Admin') || $user->can('approvals.view') || $this->canApproveAtStage($user, $loanApplication);
+                // Include users who:
+                // 1. Are Admin (can approve all stages)
+                // 2. Have approvals.view permission (can view all)
+                // 3. Can approve at this specific stage (via permission or role)
+                return $user->hasRole('Admin') 
+                    || $user->can('approvals.view') 
+                    || $this->canApproveAtStage($user, $loanApplication);
             })
             ->filter(function ($user) {
                 return !empty($user->email);
@@ -663,12 +683,17 @@ class LoanApprovalController extends Controller
             return;
         }
 
-        // Get users with the required roles who also have permission to view approvals
+        // Get users with the required roles who also have permission to view/approve at this stage
         $recipients = User::role($roles)
             ->get()
             ->filter(function ($user) use ($loanApplication) {
-                // Check if user has Admin role, approvals.view permission, or can approve at this stage
-                return $user->hasRole('Admin') || $user->can('approvals.view') || $this->canApproveAtStage($user, $loanApplication);
+                // Include users who:
+                // 1. Are Admin (can approve all stages)
+                // 2. Have approvals.view permission (can view all)
+                // 3. Can approve at this specific stage (via permission or role)
+                return $user->hasRole('Admin') 
+                    || $user->can('approvals.view') 
+                    || $this->canApproveAtStage($user, $loanApplication);
             });
 
         if ($recipients->isEmpty()) {
@@ -742,16 +767,21 @@ class LoanApprovalController extends Controller
 
     private function canApproveAtStage($user, LoanApplication $loanApplication): bool
     {
-        // Admin has all rights and permissions to approve at any stage
-        if ($user->hasRole('Admin')) {
+        // Admin and Super Admin have all rights and permissions to approve at any stage
+        if ($user->hasRole('Admin') || $user->hasRole('Super Admin')) {
             return true;
         }
 
+        // Check permissions first (more granular), then fall back to roles for backward compatibility
         return match ($loanApplication->approval_stage) {
-            'loan_officer' => $user->hasRole('Loan Officer') || $user->hasRole('Marketer'),
-            'credit_officer' => $user->hasRole('Credit Officer'),
-            'finance_officer' => $user->hasRole('Finance') || $user->hasRole('Director'),
-            'director' => $user->hasRole('Director'),
+            'loan_officer' => $user->can('approvals.approve-loan-officer') 
+                || ($user->hasRole('Loan Officer') || $user->hasRole('Marketer')),
+            'credit_officer' => $user->can('approvals.approve-credit-officer')
+                || $user->hasRole('Credit Officer'),
+            'finance_officer' => $user->can('approvals.approve-finance-officer')
+                || ($user->hasRole('Finance') || $user->hasRole('Director')),
+            'director' => $user->can('approvals.approve-director')
+                || $user->hasRole('Director'),
             default => false,
         };
     }

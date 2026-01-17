@@ -132,10 +132,18 @@
 <?php unset($__componentOriginal48bdbafd2a1d96966a35067215fb52b4); ?>
 <?php endif; ?>
         <?php
+            $requiredPermissionLabels = [
+                'loan_officer' => 'approvals.approve-loan-officer',
+                'credit_officer' => 'approvals.approve-credit-officer',
+                'finance_officer' => 'approvals.approve-finance-officer',
+                'director' => 'approvals.approve-director',
+            ];
+            $requiredPermission = $requiredPermissionLabels[$loanApplication->approval_stage] ?? 'approvals.approve';
+            
             $requiredRoleLabels = [
-                'loan_officer' => 'Loan Officer or Marketer',
+                'loan_officer' => 'Loan Officer, Marketer',
                 'credit_officer' => 'Credit Officer',
-                'finance_officer' => 'Finance Officer or Director',
+                'finance_officer' => 'Finance Officer, Director',
                 'director' => 'Director',
             ];
             $requiredRole = $requiredRoleLabels[$loanApplication->approval_stage] ?? 'authorized user';
@@ -154,7 +162,7 @@
                 <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
                     <p class="font-semibold">Action locked</p>
                     <p class="mt-1 text-xs text-amber-600">
-                        Only a <?php echo e($requiredRole); ?> or Admin can take action at this stage. You can still view the details, but approval buttons are disabled.
+                        Only users with the <strong><?php echo e(str_replace('approvals.approve-', '', str_replace('_', ' ', $requiredPermission))); ?></strong> permission, <?php echo e($requiredRole); ?> role, or Admin can take action at this stage. You can still view the details, but approval buttons are disabled.
                     </p>
                 </div>
             <?php endif; ?>

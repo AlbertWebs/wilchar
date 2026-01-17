@@ -18,7 +18,7 @@
                 });
             },
             openEditModal(id) {
-                const urlTemplate = '{{ route('loan-applications.edit', ['loan_application' => '__ID__']) }}';
+                const urlTemplate = '{{ route('loan-applications.edit', ['loanApplication' => '__ID__']) }}';
                 const url = urlTemplate.replace('__ID__', id);
                 Admin.showModal({ title: 'Edit Loan Application', url, method: 'get', size: 'xl' });
             },

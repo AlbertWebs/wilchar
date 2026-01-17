@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('header'); ?>
     Loan Portfolio
 <?php $__env->stopSection(); ?>
@@ -180,4 +182,4 @@
 <?php $__env->stopSection(); ?>
 
 
-<?php echo $__env->make('layouts.admin', ['title' => 'Loan Portfolio'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\wilchar\resources\views/admin/loans/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.admin', ['title' => 'Loan Portfolio'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\projects\wilchar\resources\views/admin/loans/index.blade.php ENDPATH**/ ?>

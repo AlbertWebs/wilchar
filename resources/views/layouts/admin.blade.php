@@ -73,6 +73,7 @@
             <nav class="flex-1 px-4 pb-6">
                 <p class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Overview</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    @can('dashboard.view')
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -82,6 +83,8 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('clients.view')
                     <li>
                         <a href="{{ route('admin.clients.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.clients.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -91,6 +94,8 @@
                             <span>Client Management</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('loan-applications.view')
                     <li>
                         <a href="{{ route('loan-applications.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loan-applications.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -100,6 +105,8 @@
                             <span>Loan Applications</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('loans.view')
                     <li>
                         <a href="{{ route('loans.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loans.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -109,6 +116,8 @@
                             <span>Loans Portfolio</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('disbursements.view')
                     <li>
                         <a href="{{ route('disbursements.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -118,6 +127,8 @@
                             <span>Disbursements</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('collections.view')
                     <li>
                         <a href="{{ route('collections.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('collections.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -127,10 +138,12 @@
                             <span>Collections & Recovery</span>
                         </a>
                     </li>
+                    @endcan
                 </ul>
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Organization</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    @can('roles.view')
                     <li>
                         <a href="{{ route('admin.roles.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.roles.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -140,6 +153,8 @@
                             <span>Roles & Permissions</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('users.view')
                     <li>
                         <a href="{{ route('users.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('users.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -149,6 +164,8 @@
                             <span>Team Management</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('reports.view')
                     <li>
                         <a href="{{ route('reports.dashboard') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('reports.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -158,6 +175,8 @@
                             <span>Reports</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('site-settings.view')
                     <li>
                         <a href="{{ route('admin.site-settings.edit') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('admin.site-settings.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -167,6 +186,7 @@
                             <span>System Settings</span>
                         </a>
                     </li>
+                    @endcan
                 </ul>
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Website</p>
@@ -184,6 +204,7 @@
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Financial</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    @can('loan-products.view')
                     <li>
                         <a href="{{ route('loan-products.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('loan-products.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -193,7 +214,9 @@
                             <span>Loan Products</span>
                         </a>
                     </li>
-                    @if(auth()->user()->hasAnyRole(['Finance', 'Director']))
+                    @endcan
+                    @can('disbursements.view')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director']))
                         <li>
                             <a href="{{ route('finance-disbursements.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('finance-disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -204,7 +227,9 @@
                             </a>
                         </li>
                     @endif
-                    @if(auth()->user()->hasAnyRole(['Finance', 'Director', 'Collection Officer', 'Admin']))
+                    @endcan
+                    @can('collections.view')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director', 'Collection Officer']))
                         <li>
                             <a href="{{ route('payments.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('payments.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -214,6 +239,9 @@
                                 <span>Client Payments</span>
                             </a>
                         </li>
+                    @endif
+                    @endcan
+                    @can('mpesa.view')
                         <li>
                             <a href="{{ route('mpesa.dashboard') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -223,6 +251,7 @@
                                 <span>M-Pesa Overview</span>
                             </a>
                         </li>
+                        @can('mpesa.stk-push')
                         <li>
                             <a href="{{ route('mpesa.stk-push.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.stk-push.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -232,6 +261,8 @@
                                 <span>STK Push</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('mpesa.c2b')
                         <li>
                             <a href="{{ route('mpesa.c2b.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.c2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -241,6 +272,8 @@
                                 <span>C2B Collections</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('mpesa.b2b')
                         <li>
                             <a href="{{ route('mpesa.b2b.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.b2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -250,6 +283,8 @@
                                 <span>B2B Payments</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('mpesa.b2c')
                         <li>
                             <a href="{{ route('mpesa.b2c.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.b2c.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -259,6 +294,8 @@
                                 <span>B2C Disbursements</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('mpesa.account-balance')
                         <li>
                             <a href="{{ route('mpesa.account-balance.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.account-balance.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -268,6 +305,8 @@
                                 <span>Account Balance</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('mpesa.transaction-status')
                         <li>
                             <a href="{{ route('mpesa.transaction-status.index') }}"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 {{ request()->routeIs('mpesa.transaction-status.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -277,7 +316,8 @@
                                 <span>Transaction Status</span>
                             </a>
                         </li>
-                    @endif
+                        @endcan
+                    @endcan
                     
                     @if(config('app.sandbox_mode') || app()->environment('local'))
                         <li>
@@ -291,6 +331,7 @@
                         </li>
                     @endif
                     
+                    @can('teams.view')
                     <li>
                         <a href="{{ route('teams.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('teams.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -300,6 +341,8 @@
                             <span>Teams</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('expenses.view')
                     <li>
                         <a href="{{ route('expenses.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('expenses.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -309,6 +352,8 @@
                             <span>Expense Management</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('assets.view')
                     <li>
                         <a href="{{ route('assets.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('assets.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -318,6 +363,8 @@
                             <span>Assets</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('liabilities.view')
                     <li>
                         <a href="{{ route('liabilities.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('liabilities.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -327,6 +374,8 @@
                             <span>Liabilities</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('shareholders.view')
                     <li>
                         <a href="{{ route('shareholders.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('shareholders.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -336,6 +385,8 @@
                             <span>Shareholders</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('trial-balances.view')
                     <li>
                         <a href="{{ route('trial-balances.index') }}"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 {{ request()->routeIs('trial-balances.*') ? 'bg-slate-800 text-white' : 'text-slate-300' }}">
@@ -345,6 +396,7 @@
                             <span>Trial Balance</span>
                         </a>
                     </li>
+                    @endcan
                 </ul>
             </nav>
 

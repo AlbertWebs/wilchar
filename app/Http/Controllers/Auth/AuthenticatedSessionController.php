@@ -39,7 +39,16 @@ class AuthenticatedSessionController extends Controller
             $user->save();
 
             // Send two-factor code via email
-            $user->notify(new \App\Notifications\TwoFactorCodeNotification($code));
+            try {
+                $user->notify(new \App\Notifications\TwoFactorCodeNotification($code));
+            } catch (\Exception $e) {
+                // Log email error but don't block login - OTP is still saved in database
+                \Illuminate\Support\Facades\Log::error('Failed to send 2FA email to ' . $user->email . ': ' . $e->getMessage());
+                // In development/local, log the OTP so it can be retrieved
+                if (app()->environment(['local', 'testing'])) {
+                    \Illuminate\Support\Facades\Log::info('2FA Code for ' . $user->email . ': ' . $code);
+                }
+            }
 
             // Store user ID and remember preference before logout
             $userId = $user->id;

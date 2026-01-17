@@ -93,11 +93,20 @@ class RoleController extends Controller
 
         $role->update($roleData);
 
-        // Sync permissions
-        if (isset($validated['permissions']) && is_array($validated['permissions']) && count($validated['permissions']) > 0) {
-            $permissions = Permission::whereIn('id', $validated['permissions'])->get();
-            $role->syncPermissions($permissions);
+        // Sync permissions - handle all cases
+        // If permissions array is provided (even if empty), sync it
+        // If permissions is not in the request, it means no checkboxes were checked, so clear all permissions
+        if (isset($validated['permissions']) && is_array($validated['permissions'])) {
+            $permissionIds = array_filter(array_map('intval', $validated['permissions']));
+            if (count($permissionIds) > 0) {
+                $permissions = Permission::whereIn('id', $permissionIds)->get();
+                $role->syncPermissions($permissions);
+            } else {
+                // Empty array - clear all permissions
+                $role->syncPermissions([]);
+            }
         } else {
+            // No permissions field in request - clear all permissions
             $role->syncPermissions([]);
         }
 

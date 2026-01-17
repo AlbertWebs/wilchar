@@ -73,6 +73,7 @@
             <nav class="flex-1 px-4 pb-6">
                 <p class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Overview</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dashboard.view')): ?>
                     <li>
                         <a href="<?php echo e(route('admin.dashboard')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -82,6 +83,8 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('clients.view')): ?>
                     <li>
                         <a href="<?php echo e(route('admin.clients.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.clients.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -91,6 +94,8 @@
                             <span>Client Management</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('loan-applications.view')): ?>
                     <li>
                         <a href="<?php echo e(route('loan-applications.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loan-applications.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -100,6 +105,8 @@
                             <span>Loan Applications</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('loans.view')): ?>
                     <li>
                         <a href="<?php echo e(route('loans.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loans.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -109,6 +116,8 @@
                             <span>Loans Portfolio</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('disbursements.view')): ?>
                     <li>
                         <a href="<?php echo e(route('disbursements.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -118,6 +127,8 @@
                             <span>Disbursements</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('collections.view')): ?>
                     <li>
                         <a href="<?php echo e(route('collections.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('collections.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -127,10 +138,12 @@
                             <span>Collections & Recovery</span>
                         </a>
                     </li>
+                    <?php endif; ?>
                 </ul>
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Organization</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('roles.view')): ?>
                     <li>
                         <a href="<?php echo e(route('admin.roles.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.roles.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -140,6 +153,8 @@
                             <span>Roles & Permissions</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('users.view')): ?>
                     <li>
                         <a href="<?php echo e(route('users.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('users.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -149,6 +164,8 @@
                             <span>Team Management</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('reports.view')): ?>
                     <li>
                         <a href="<?php echo e(route('reports.dashboard')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('reports.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -158,6 +175,8 @@
                             <span>Reports</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('site-settings.view')): ?>
                     <li>
                         <a href="<?php echo e(route('admin.site-settings.edit')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('admin.site-settings.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -167,6 +186,7 @@
                             <span>System Settings</span>
                         </a>
                     </li>
+                    <?php endif; ?>
                 </ul>
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Website</p>
@@ -184,6 +204,7 @@
 
                 <p class="px-2 pt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">Financial</p>
                 <ul class="mt-3 space-y-1 text-sm">
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('loan-products.view')): ?>
                     <li>
                         <a href="<?php echo e(route('loan-products.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('loan-products.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -193,7 +214,9 @@
                             <span>Loan Products</span>
                         </a>
                     </li>
-                    <?php if(auth()->user()->hasAnyRole(['Finance', 'Director'])): ?>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('disbursements.view')): ?>
+                    <?php if(auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director'])): ?>
                         <li>
                             <a href="<?php echo e(route('finance-disbursements.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('finance-disbursements.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -204,7 +227,9 @@
                             </a>
                         </li>
                     <?php endif; ?>
-                    <?php if(auth()->user()->hasAnyRole(['Finance', 'Director', 'Collection Officer', 'Admin'])): ?>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('collections.view')): ?>
+                    <?php if(auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director', 'Collection Officer'])): ?>
                         <li>
                             <a href="<?php echo e(route('payments.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('payments.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -214,6 +239,9 @@
                                 <span>Client Payments</span>
                             </a>
                         </li>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.view')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.dashboard')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -223,6 +251,7 @@
                                 <span>M-Pesa Overview</span>
                             </a>
                         </li>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.stk-push')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.stk-push.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.stk-push.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -232,6 +261,8 @@
                                 <span>STK Push</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.c2b')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.c2b.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.c2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -241,6 +272,8 @@
                                 <span>C2B Collections</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.b2b')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.b2b.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.b2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -250,6 +283,8 @@
                                 <span>B2B Payments</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.b2c')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.b2c.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.b2c.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -259,6 +294,8 @@
                                 <span>B2C Disbursements</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.account-balance')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.account-balance.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.account-balance.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -268,6 +305,8 @@
                                 <span>Account Balance</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.transaction-status')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.transaction-status.index')); ?>"
                                class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.transaction-status.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -277,6 +316,7 @@
                                 <span>Transaction Status</span>
                             </a>
                         </li>
+                        <?php endif; ?>
                     <?php endif; ?>
                     
                     <?php if(config('app.sandbox_mode') || app()->environment('local')): ?>
@@ -291,6 +331,7 @@
                         </li>
                     <?php endif; ?>
                     
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('teams.view')): ?>
                     <li>
                         <a href="<?php echo e(route('teams.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('teams.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -300,6 +341,8 @@
                             <span>Teams</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('expenses.view')): ?>
                     <li>
                         <a href="<?php echo e(route('expenses.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('expenses.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -309,6 +352,8 @@
                             <span>Expense Management</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('assets.view')): ?>
                     <li>
                         <a href="<?php echo e(route('assets.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('assets.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -318,6 +363,8 @@
                             <span>Assets</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('liabilities.view')): ?>
                     <li>
                         <a href="<?php echo e(route('liabilities.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('liabilities.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -327,6 +374,8 @@
                             <span>Liabilities</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('shareholders.view')): ?>
                     <li>
                         <a href="<?php echo e(route('shareholders.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('shareholders.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -336,6 +385,8 @@
                             <span>Shareholders</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('trial-balances.view')): ?>
                     <li>
                         <a href="<?php echo e(route('trial-balances.index')); ?>"
                            class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('trial-balances.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
@@ -345,6 +396,7 @@
                             <span>Trial Balance</span>
                         </a>
                     </li>
+                    <?php endif; ?>
                 </ul>
             </nav>
 

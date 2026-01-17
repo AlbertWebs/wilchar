@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('header'); ?>
     Loan Applications
 <?php $__env->stopSection(); ?>
@@ -18,7 +16,7 @@
                 });
             },
             openEditModal(id) {
-                const urlTemplate = '<?php echo e(route('loan-applications.edit', ['loan_application' => '__ID__'])); ?>';
+                const urlTemplate = '<?php echo e(route('loan-applications.edit', ['loanApplication' => '__ID__'])); ?>';
                 const url = urlTemplate.replace('__ID__', id);
                 Admin.showModal({ title: 'Edit Loan Application', url, method: 'get', size: 'xl' });
             },
@@ -118,13 +116,17 @@
                                 <p class="text-xs text-slate-500">Total <?php echo e(number_format($application->total_repayment_amount ?? 0, 2)); ?></p>
                             </td>
                             <td class="px-4 py-4">
-                                <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                <span
+                                    class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"
+                                    title="Current approval stage"
+                                >
                                     <?php echo e(ucfirst(str_replace('_', ' ', $application->approval_stage))); ?>
 
                                 </span>
                                 <span
                                     class="ml-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold
                                         <?php echo e($application->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($application->status === 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700')); ?>"
+                                    title="Application status"
                                 >
                                     <?php echo e(ucfirst(str_replace('_', ' ', $application->status))); ?>
 
@@ -134,12 +136,30 @@
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
                                     ?>
                                     <?php if($disbursement): ?>
+                                        <?php
+                                            $desc = strtolower($disbursement->mpesa_response_description ?? '');
+                                            $wasAborted = str_contains($desc, 'aborted by user');
+                                        ?>
                                         <span
                                             class="mt-1 block inline-flex rounded-full px-3 py-1 text-xs font-semibold
-                                                <?php echo e($disbursement->status === 'success' ? 'bg-emerald-100 text-emerald-700' : ($disbursement->status === 'failed' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700')); ?>"
+                                                <?php echo e($disbursement->status === 'success'
+                                                    ? 'bg-emerald-100 text-emerald-700'
+                                                    : ($wasAborted
+                                                        ? 'bg-rose-100 text-rose-600'
+                                                        : ($disbursement->status === 'failed'
+                                                            ? 'bg-rose-100 text-rose-600'
+                                                            : 'bg-amber-100 text-amber-700'))); ?>"
+                                            title="Disbursement status"
                                         >
-                                            <?php echo e($disbursement->status === 'success' ? '✓ Disbursed' : ($disbursement->status === 'failed' ? '✗ Disbursement Failed' : '⏳ Pending Disbursement')); ?>
-
+                                            <?php if($disbursement->status === 'success'): ?>
+                                                ✓ Disbursed
+                                            <?php elseif($wasAborted): ?>
+                                                ✗ Disbursement Cancelled
+                                            <?php elseif($disbursement->status === 'failed'): ?>
+                                                ✗ Disbursement Failed
+                                            <?php else: ?>
+                                                ⏳ Pending Disbursement
+                                            <?php endif; ?>
                                         </span>
                                     <?php else: ?>
                                         <span class="mt-1 block inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
@@ -160,20 +180,53 @@
                                     <?php endif; ?>
                                     <?php
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
-                                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
-                                        $canDisburse = $disbursement && in_array($disbursement->status, ['pending', 'processing']) && $hasRole;
+                                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director']);
+                                        $desc = strtolower($disbursement->mpesa_response_description ?? '');
+                                        $wasAborted = $disbursement && str_contains($desc, 'aborted by user');
+                                        // Inline OTP-based disbursement is allowed when disbursement is pending, processing, or failed (incl. previously cancelled/failed)
+                                        $canInlineDisburse = $disbursement
+                                            && in_array($disbursement->status, ['pending', 'processing', 'failed'], true)
+                                            && $hasRole;
+                                        // If loan is approved & completed and there is NO disbursement yet, allow privileged user to create one via legacy form
+                                        $canCreateDisbursement = !$disbursement && $application->isApproved() && $hasRole;
                                         $showApprove = $application->status !== 'approved' || $application->approval_stage !== 'completed';
+
+                                        // Refine disbursement call-to-action labels based on current status
+                                        $disburseCtaLabel = 'Disburse Now';
+                                        $disburseCtaTitle = 'Initiate M-Pesa disbursement';
+
+                                        if ($disbursement) {
+                                            if (in_array($disbursement->status, ['pending', 'processing'], true)) {
+                                                $disburseCtaLabel = 'Resume Disbursement';
+                                                $disburseCtaTitle = 'Resume the in-progress disbursement';
+                                            } elseif ($disbursement->status === 'failed' || $wasAborted) {
+                                                $disburseCtaLabel = 'Retry Disbursement';
+                                                $disburseCtaTitle = 'Retry sending this disbursement';
+                                            }
+                                        }
                                     ?>
                                     
-                                    <?php if($canDisburse): ?>
-                                        <button 
-                                            @click="console.log('Button clicked!'); openDisbursementModal(<?php echo e($disbursement->id); ?>)" 
+                                    <?php if($canInlineDisburse): ?>
+                                        <button
+                                            type="button"
+                                            title="<?php echo e($disburseCtaTitle); ?>"
+                                            onclick="window.openDisbursementModalHandler(<?php echo e($disbursement->id); ?>)"
                                             class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
                                         >
-                                            Disburse Now
+                                            <?php echo e($disburseCtaLabel); ?>
+
                                         </button>
+                                    <?php elseif($canCreateDisbursement): ?>
+                                        <a
+                                            href="<?php echo e(route('disbursements.create', $application)); ?>"
+                                            class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
+                                            title="<?php echo e($disburseCtaTitle); ?>"
+                                        >
+                                            <?php echo e($disburseCtaLabel); ?>
+
+                                        </a>
                                     <?php endif; ?>
-                                    <?php if($showApprove && !$canDisburse): ?>
+                                    <?php if($showApprove && !$canInlineDisburse && !$canCreateDisbursement): ?>
                                         <a href="<?php echo e(route('approvals.show', $application)); ?>" class="rounded-lg bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
                                             Approve
                                         </a>
@@ -396,8 +449,8 @@ window.getDisbursementModalHtml = function(disbursementId, initialData) {
     html += '<p class="text-sm font-medium text-slate-900" x-text="step[1].label"></p>';
     html += '</div></div></template></div></div>';
     
-    html += '<div x-show="currentStep === \'otp_generation\' || (!steps.otp_generation || steps.otp_generation.status === \'pending\')" class="space-y-3">';
-    html += '<button @click="generateOtp()" :disabled="loading" class="w-full rounded-xl bg-blue-500 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-wait">';
+    html += '<div x-show="(disbursementStatus === \'pending\' || disbursementStatus === \'failed\') && !loading" class="space-y-3">';
+    html += '<button type="button" @click="generateOtp()" :disabled="loading" class="w-full cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" style="background-color:#22c55e;">';
     html += '<span x-show="!loading">Generate & Send OTP</span>';
     html += '<span x-show="loading" class="flex items-center justify-center gap-2">';
     html += '<svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">';
@@ -409,7 +462,7 @@ window.getDisbursementModalHtml = function(disbursementId, initialData) {
     html += '<div><label class="block text-sm font-medium text-slate-700">Enter OTP</label>';
     html += '<input type="text" x-model="otp" maxlength="6" pattern="[0-9]{6}" placeholder="000000" class="mt-1 w-full rounded-xl border-slate-200 text-center text-2xl tracking-widest" />';
     html += '<p class="mt-1 text-xs text-slate-500">Check your email for the 6-digit OTP code</p></div>';
-    html += '<button @click="verifyOtpAndDisburse()" :disabled="loading || !otp || otp.length !== 6" class="w-full rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-wait">';
+    html += '<button type="button" @click="verifyOtpAndDisburse()" :disabled="loading || !otp || otp.length !== 6" class="w-full cursor-pointer rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed">';
     html += '<span x-show="!loading">Verify OTP & Disburse</span>';
     html += '<span x-show="loading" class="flex items-center justify-center gap-2">';
     html += '<svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">';
@@ -422,6 +475,11 @@ window.getDisbursementModalHtml = function(disbursementId, initialData) {
     
     html += '<div x-show="error" class="rounded-xl border border-rose-200 bg-rose-50 p-4">';
     html += '<p class="text-sm font-semibold text-rose-900" x-text="error"></p></div>';
+
+    html += `<div class="mt-4 flex items-center justify-between border-t border-slate-200 pt-3">`;
+    html += `<button type="button" @click="abortProcess()" x-show="(disbursementStatus === 'pending' || disbursementStatus === 'processing' || disbursementStatus === 'failed') && !loading" class="text-xs font-semibold text-rose-600 hover:text-rose-700" title="Abort the current disbursement attempt">Abort Disbursement</button>`;
+    html += '<p class="ml-3 flex-1 text-right text-[11px] text-slate-400">You can request another OTP after 2 minutes from the last one.</p>';
+    html += '</div>';
     
     html += '</div></div>';
     
@@ -445,6 +503,7 @@ function disbursementFlow(disbursementId, initialData) {
         disbursementId: disbursementId,
         steps: initialData.steps || {},
         currentStep: initialData.current_step || 'otp_generation',
+        disbursementStatus: initialData.disbursement?.status || 'pending',
         otp: '',
         loading: false,
         error: null,
@@ -459,6 +518,9 @@ function disbursementFlow(disbursementId, initialData) {
             }
             if (data.current_step) {
                 this.currentStep = data.current_step;
+            }
+            if (data.disbursement && data.disbursement.status) {
+                this.disbursementStatus = data.disbursement.status;
             }
         },
         
@@ -484,6 +546,38 @@ function disbursementFlow(disbursementId, initialData) {
                 }
             } catch (e) {
                 this.error = 'An error occurred while generating OTP';
+                console.error(e);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async abortProcess() {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                const response = await fetch(`<?php echo e(route('disbursements.abort', ['disbursement' => '__ID__'])); ?>`.replace('__ID__', this.disbursementId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.disbursementStatus = 'cancelled';
+                    window.dispatchEvent(new CustomEvent('loan-applications:refresh'));
+                    if (window.Alpine?.store('modal')) {
+                        window.Alpine.store('modal').close();
+                    }
+                } else {
+                    this.error = data.message || 'Failed to abort disbursement';
+                }
+            } catch (e) {
+                this.error = 'An error occurred while aborting disbursement';
                 console.error(e);
             } finally {
                 this.loading = false;
