@@ -41,14 +41,19 @@ class AuthenticatedSessionController extends Controller
             // Send two-factor code via email
             $user->notify(new \App\Notifications\TwoFactorCodeNotification($code));
 
-            // Store user ID in session for verification
-            session(['login.id' => $user->id]);
-            session(['login.remember' => $request->boolean('remember')]);
+            // Store user ID and remember preference before logout
+            $userId = $user->id;
+            $remember = $request->boolean('remember');
 
             // Logout the user temporarily until 2FA is verified
             Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+
+            // Regenerate session (creates new session ID without invalidating)
+            $request->session()->regenerate();
+
+            // Store user ID in session for verification (after regenerate)
+            $request->session()->put('login.id', $userId);
+            $request->session()->put('login.remember', $remember);
 
             return redirect()->route('two-factor.show')
                 ->with('status', 'A verification code has been sent to your email address.');

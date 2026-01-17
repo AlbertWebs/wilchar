@@ -11,6 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // SQLite doesn't support MODIFY COLUMN, so skip for SQLite
+        if (DB::getDriverName() === 'sqlite') {
+            // SQLite doesn't support ENUM types, so we skip this migration
+            // The columns are likely already text columns in SQLite
+            return;
+        }
+
         // MySQL doesn't support directly modifying ENUM, so we need to use raw SQL
         if (Schema::hasColumn('loan_applications', 'approval_stage')) {
             DB::statement("ALTER TABLE `loan_applications` MODIFY COLUMN `approval_stage` ENUM('loan_officer', 'credit_officer', 'finance_officer', 'director', 'completed') NOT NULL DEFAULT 'loan_officer'");
@@ -22,6 +29,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // SQLite doesn't support MODIFY COLUMN, so skip for SQLite
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Remove finance_officer from enum (but keep existing data by converting to credit_officer first)
         if (Schema::hasColumn('loan_applications', 'approval_stage')) {
             // Convert any finance_officer values to credit_officer before removing from enum
