@@ -28,7 +28,7 @@
     <!--Hero Section End -->
 
     <!-- sponsor start -->
-    <div class="section sponsor-slider wow fadeInDown" data-wow-duration="0.8s">
+    <!-- <div class="section sponsor-slider wow fadeInDown" data-wow-duration="0.8s">
         <div class="container">
             <div class="row">
                 <div class="sponsor__company" id="sponsor__company">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- sponsor end -->
 
     <!-- why-choose start -->
