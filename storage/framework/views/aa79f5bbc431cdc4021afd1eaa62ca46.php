@@ -79,60 +79,50 @@
     <meta name="apple-mobile-web-app-title" content="<?php echo e($siteName); ?>">
     
     <!-- Structured Data (JSON-LD) -->
+    <?php
+        $socialLinks = array_filter([
+            $settings['facebook_url'] ?? null,
+            $settings['twitter_url'] ?? null,
+            $settings['instagram_url'] ?? null,
+            $settings['linkedin_url'] ?? null,
+            $settings['youtube_url'] ?? null,
+        ]);
+        
+        $structuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FinancialService',
+            'name' => $siteName,
+            'alternateName' => $siteTagline,
+            'url' => $siteUrl,
+            'logo' => $ogImage,
+            'description' => $metaDescription,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $settings['site_address'] ?? '',
+                'addressLocality' => $settings['site_location'] ?? 'Kenya',
+                'addressCountry' => 'KE'
+            ],
+            'contactPoint' => [
+                '@type' => 'ContactPoint',
+                'telephone' => $settings['site_phone'] ?? '',
+                'contactType' => 'Customer Service',
+                'email' => $settings['site_email'] ?? '',
+                'areaServed' => 'KE',
+                'availableLanguage' => ['en', 'sw']
+            ],
+            'sameAs' => array_values($socialLinks),
+            'priceRange' => 'KES 1,000 - KES 100,000',
+            'serviceType' => 'Business Loans, Cash Advances, SME Financing',
+            'areaServed' => [
+                '@type' => 'Country',
+                'name' => 'Kenya'
+            ]
+        ];
+        $jsonLd = json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    ?>
     <script type="application/ld+json">
-    {
-        "<?php $__contextArgs = [];
-if (context()->has($__contextArgs[0])) :
-if (isset($value)) { $__contextPrevious[] = $value; }
-$value = context()->get($__contextArgs[0]); ?>": "https://schema.org",
-        "@type": "FinancialService",
-        "name": "<?php echo e($siteName); ?>",
-        "alternateName": "<?php echo e($siteTagline); ?>",
-        "url": "<?php echo e($siteUrl); ?>",
-        "logo": "<?php echo e($ogImage); ?>",
-        "description": "<?php echo e($metaDescription); ?>",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "<?php echo e($settings['site_address'] ?? ''); ?>",
-            "addressLocality": "<?php echo e($settings['site_location'] ?? 'Kenya'); ?>",
-            "addressCountry": "KE"
-        },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "<?php echo e($settings['site_phone'] ?? ''); ?>",
-            "contactType": "Customer Service",
-            "email": "<?php echo e($settings['site_email'] ?? ''); ?>",
-            "areaServed": "KE",
-            "availableLanguage": ["en", "sw"]
-        },
-        "sameAs": [
-            <?php
-                $socialLinks = array_filter([
-                    $settings['facebook_url'] ?? null,
-                    $settings['twitter_url'] ?? null,
-                    $settings['instagram_url'] ?? null,
-                    $settings['linkedin_url'] ?? null,
-                    $settings['youtube_url'] ?? null,
-                ]);
-            ?>
-            <?php
-                $socialLinksArray = [];
-                foreach($socialLinks as $link) {
-                    $socialLinksArray[] = '"' . $link . '"';
-                }
-            ?>
-            <?php if(count($socialLinksArray) > 0): ?>
-                <?php echo implode(',', $socialLinksArray); ?>
+    <?php echo $jsonLd; ?>
 
-            <?php endif; ?>
-        ],
-        "priceRange": "KES 1,000 - KES 100,000",
-        "serviceType": "Business Loans, Cash Advances, SME Financing",
-        "areaServed": {
-            "@type": "Country",
-            "name": "Kenya"
-        }
-    }
     </script>
     
     <?php if(isset($product)): ?>

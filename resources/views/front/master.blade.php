@@ -79,56 +79,49 @@
     <meta name="apple-mobile-web-app-title" content="{{ $siteName }}">
     
     <!-- Structured Data (JSON-LD) -->
+    @php
+        $socialLinks = array_filter([
+            $settings['facebook_url'] ?? null,
+            $settings['twitter_url'] ?? null,
+            $settings['instagram_url'] ?? null,
+            $settings['linkedin_url'] ?? null,
+            $settings['youtube_url'] ?? null,
+        ]);
+        
+        $structuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FinancialService',
+            'name' => $siteName,
+            'alternateName' => $siteTagline,
+            'url' => $siteUrl,
+            'logo' => $ogImage,
+            'description' => $metaDescription,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $settings['site_address'] ?? '',
+                'addressLocality' => $settings['site_location'] ?? 'Kenya',
+                'addressCountry' => 'KE'
+            ],
+            'contactPoint' => [
+                '@type' => 'ContactPoint',
+                'telephone' => $settings['site_phone'] ?? '',
+                'contactType' => 'Customer Service',
+                'email' => $settings['site_email'] ?? '',
+                'areaServed' => 'KE',
+                'availableLanguage' => ['en', 'sw']
+            ],
+            'sameAs' => array_values($socialLinks),
+            'priceRange' => 'KES 1,000 - KES 100,000',
+            'serviceType' => 'Business Loans, Cash Advances, SME Financing',
+            'areaServed' => [
+                '@type' => 'Country',
+                'name' => 'Kenya'
+            ]
+        ];
+        $jsonLd = json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    @endphp
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FinancialService",
-        "name": "{{ $siteName }}",
-        "alternateName": "{{ $siteTagline }}",
-        "url": "{{ $siteUrl }}",
-        "logo": "{{ $ogImage }}",
-        "description": "{{ $metaDescription }}",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "{{ $settings['site_address'] ?? '' }}",
-            "addressLocality": "{{ $settings['site_location'] ?? 'Kenya' }}",
-            "addressCountry": "KE"
-        },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "{{ $settings['site_phone'] ?? '' }}",
-            "contactType": "Customer Service",
-            "email": "{{ $settings['site_email'] ?? '' }}",
-            "areaServed": "KE",
-            "availableLanguage": ["en", "sw"]
-        },
-        "sameAs": [
-            @php
-                $socialLinks = array_filter([
-                    $settings['facebook_url'] ?? null,
-                    $settings['twitter_url'] ?? null,
-                    $settings['instagram_url'] ?? null,
-                    $settings['linkedin_url'] ?? null,
-                    $settings['youtube_url'] ?? null,
-                ]);
-            @endphp
-            @php
-                $socialLinksArray = [];
-                foreach($socialLinks as $link) {
-                    $socialLinksArray[] = '"' . $link . '"';
-                }
-            @endphp
-            @if(count($socialLinksArray) > 0)
-                {!! implode(',', $socialLinksArray) !!}
-            @endif
-        ],
-        "priceRange": "KES 1,000 - KES 100,000",
-        "serviceType": "Business Loans, Cash Advances, SME Financing",
-        "areaServed": {
-            "@type": "Country",
-            "name": "Kenya"
-        }
-    }
+    {!! $jsonLd !!}
     </script>
     
     @if(isset($product))
