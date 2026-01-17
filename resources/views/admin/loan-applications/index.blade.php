@@ -175,7 +175,7 @@
                                     @endif
                                     @php
                                         $disbursement = $application->loan?->disbursements->first() ?? $application->disbursements->first() ?? null;
-                                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
+                                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director']);
                                         $desc = strtolower($disbursement->mpesa_response_description ?? '');
                                         $wasAborted = $disbursement && str_contains($desc, 'aborted by user');
                                         // Inline OTP-based disbursement is allowed when disbursement is pending, processing, or failed (incl. previously cancelled/failed)

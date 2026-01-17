@@ -26,8 +26,8 @@ class DisbursementInitiationController extends Controller
     private function authorizeAccess(): void
     {
         $user = auth()->user();
-        if (!$user || !$user->hasAnyRole(['Admin', 'Finance Officer', 'Director'])) {
-            abort(403, 'Unauthorized. Only Admin, Finance Officer, and Director can initiate disbursements.');
+        if (!$user || !$user->hasAnyRole(['Admin', 'Finance', 'Director'])) {
+            abort(403, 'Unauthorized. Only Admin, Finance, and Director can initiate disbursements.');
         }
     }
 

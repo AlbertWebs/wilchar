@@ -16,7 +16,7 @@ class TwoFactorController extends Controller
     /**
      * Show the two-factor authentication form.
      */
-    public function show(): View
+    public function show(): View|RedirectResponse
     {
         $userId = session('login.id');
         

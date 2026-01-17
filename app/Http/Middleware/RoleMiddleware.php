@@ -16,6 +16,20 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, ...$roles)
     {
+        // Normalize roles: split pipe-separated roles and flatten the array
+        // Routes like 'role:Admin|Finance Officer' pass as single string argument
+        $normalizedRoles = [];
+        foreach ($roles as $role) {
+            if (is_string($role) && str_contains($role, '|')) {
+                // Split pipe-separated roles and trim whitespace
+                $splitRoles = array_map('trim', explode('|', $role));
+                $normalizedRoles = array_merge($normalizedRoles, $splitRoles);
+            } else {
+                $normalizedRoles[] = is_string($role) ? trim($role) : $role;
+            }
+        }
+        $roles = array_unique($normalizedRoles); // Remove duplicates
+        
         if (!Auth::check()) {
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([

@@ -41,7 +41,7 @@ class RoleController extends Controller
         ]);
 
         $roleData = [
-            'name' => Str::slug($validated['name']),
+            'name' => $validated['name'], // Preserve role name as entered (not slug)
             'guard_name' => 'web',
         ];
 
@@ -84,7 +84,7 @@ class RoleController extends Controller
         ]);
 
         $roleData = [
-            'name' => Str::slug($validated['name']),
+            'name' => $validated['name'], // Preserve role name as entered (not slug)
         ];
 
         if (isset($validated['description'])) {

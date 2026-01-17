@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js', 'resources/js/admin.js']); ?>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/admin.js', 'resources/js/app.js']); ?>
 
     <script>
         window.csrfToken = '<?php echo e(csrf_token()); ?>';
@@ -42,11 +42,15 @@
     <?php echo $__env->yieldPushContent('head'); ?>
 </head>
 <body class="h-full font-sans antialiased text-slate-900">
-    <div x-data="{ sidebarOpen: window.innerWidth >= 1024 }" class="flex min-h-screen overflow-hidden bg-slate-100">
+    <div
+        x-data="{ sidebarOpen: window.innerWidth >= 1024 }"
+        class="flex h-screen overflow-hidden bg-slate-100"
+        style="height: 100vh;"
+    >
         <!-- Sidebar -->
         <aside
             x-bind:class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-            class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-slate-900 text-slate-100 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0"
+            class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-y-auto bg-slate-900 text-slate-100 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0"
             x-cloak
         >
             <div class="flex items-center gap-2 px-6 py-5">
@@ -66,7 +70,7 @@
                     </div>
                 </a>
             </div>
-            <nav class="flex-1 overflow-y-auto px-4 pb-6">
+            <nav class="flex-1 px-4 pb-6">
                 <p class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Overview</p>
                 <ul class="mt-3 space-y-1 text-sm">
                     <li>
@@ -208,6 +212,69 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a5 5 0 00-10 0v2M5 10h14l-1 11H6L5 10zm6 4v4m4-4v4" />
                                 </svg>
                                 <span>Client Payments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.dashboard')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-5 w-5 shrink-0 text-emerald-400 group-hover:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.886 0-3.628.93-4.748 2.401L3 12l4.252 1.599C8.372 15.07 10.114 16 12 16s3.628-.93 4.748-2.401L21 12l-4.252-1.599C15.628 8.93 13.886 8 12 8z" />
+                                </svg>
+                                <span>M-Pesa Overview</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.stk-push.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.stk-push.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-emerald-300 group-hover:text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                                </svg>
+                                <span>STK Push</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.c2b.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.c2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-sky-300 group-hover:text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h8m-8 5h16" />
+                                </svg>
+                                <span>C2B Collections</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.b2b.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.b2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-indigo-300 group-hover:text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h10m-8 4h6M5 6l2-3h10l2 3" />
+                                </svg>
+                                <span>B2B Payments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.b2c.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.b2c.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-amber-300 group-hover:text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v8m4-4H8" />
+                                </svg>
+                                <span>B2C Disbursements</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.account-balance.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.account-balance.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-slate-300 group-hover:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.5-1 3-1 4 0s1 3 0 4-2.5 1-4 2-2 3 0 4 3 1 4 0M12 3v18" />
+                                </svg>
+                                <span>Account Balance</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('mpesa.transaction-status.index')); ?>"
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.transaction-status.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                <svg class="h-4 w-4 shrink-0 text-rose-300 group-hover:text-rose-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>Transaction Status</span>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -394,6 +461,7 @@
 
     <!-- Modal -->
     <div
+        x-data
         x-cloak
         x-show="$store.modal && $store.modal.open"
         x-transition.opacity

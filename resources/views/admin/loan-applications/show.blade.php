@@ -119,7 +119,7 @@
 
                     @php
                         $disbursement = $loanApplication->loan?->disbursements->first() ?? $loanApplication->disbursements->first() ?? null;
-                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance Officer', 'Director']);
+                        $hasRole = auth()->user()->hasAnyRole(['Admin', 'Finance', 'Director']);
                         $hasSuccessfulDisbursement = $disbursement && $disbursement->status === 'success';
                     @endphp
 

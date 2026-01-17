@@ -237,9 +237,9 @@ Route::prefix('admin/payments')
         Route::post('/attach', [PaymentDashboardController::class, 'attach'])->name('attach');
     });
 
-// Disbursement Initiation (with OTP) - Accessible to Admin, Finance Officer, and Director
+// Disbursement Initiation (with OTP) - Accessible to Admin, Finance, and Director
 Route::prefix('admin/disbursements')
-    ->middleware(['auth', 'role:Admin|Finance Officer|Director'])
+    ->middleware(['auth', 'role:Admin|Finance|Director'])
     ->group(function () {
         Route::post('{disbursement}/generate-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'generateOtp'])->name('disbursements.generate-otp');
         Route::post('{disbursement}/verify-otp', [\App\Http\Controllers\Admin\DisbursementInitiationController::class, 'verifyOtpAndDisburse'])->name('disbursements.verify-otp');
