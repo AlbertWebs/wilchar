@@ -287,6 +287,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
         // C2B Transactions
         Route::get('c2b', [C2bTransactionController::class, 'index'])->middleware('permission:mpesa.c2b')->name('c2b.index');
+        Route::post('c2b/register-urls', [C2bTransactionController::class, 'registerUrls'])->middleware('permission:mpesa.c2b')->name('c2b.register-urls');
         Route::get('c2b/{c2bTransaction}', [C2bTransactionController::class, 'show'])->middleware('permission:mpesa.c2b')->name('c2b.show');
 
         // B2B Transactions

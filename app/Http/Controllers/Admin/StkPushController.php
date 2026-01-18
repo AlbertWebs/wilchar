@@ -94,7 +94,7 @@ class StkPushController extends Controller
                 'PartyA' => $validated['phone_number'],
                 'PartyB' => $shortcode,
                 'PhoneNumber' => $validated['phone_number'],
-                'CallBackURL' => route('mpesa.stk-callback'),
+                'CallBackURL' => config('mpesa.stk.callback_url', route('mpesa.stk-callback')),
                 'AccountReference' => $validated['account_reference'] ?? 'STK-' . time(),
                 'TransactionDesc' => $validated['transaction_desc'] ?? 'STK Push Payment',
             ];

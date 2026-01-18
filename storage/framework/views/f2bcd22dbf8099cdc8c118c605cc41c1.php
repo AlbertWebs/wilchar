@@ -311,12 +311,24 @@
                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.c2b')): ?>
                         <li>
                             <a href="<?php echo e(route('mpesa.c2b.index')); ?>"
-                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.c2b.*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                               class="group flex items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 <?php echo e(request()->routeIs('mpesa.c2b.*') && !request()->is('*c2b/register-urls*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
                                 <svg class="h-4 w-4 shrink-0 text-sky-300 group-hover:text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h8m-8 5h16" />
                                 </svg>
                                 <span>C2B Collections</span>
                             </a>
+                        </li>
+                        <li>
+                            <form action="<?php echo e(route('mpesa.c2b.register-urls')); ?>" method="POST" class="inline w-full">
+                                <?php echo csrf_field(); ?>
+                                <button type="submit"
+                                   class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 pl-10 transition hover:bg-slate-800/60 text-left <?php echo e(request()->is('*c2b/register-urls*') ? 'bg-slate-800 text-white' : 'text-slate-300'); ?>">
+                                    <svg class="h-4 w-4 shrink-0 text-blue-300 group-hover:text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                                    </svg>
+                                    <span>Register C2B URLs</span>
+                                </button>
+                            </form>
                         </li>
                         <?php endif; ?>
                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('mpesa.b2b')): ?>

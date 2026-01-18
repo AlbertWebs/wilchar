@@ -32,8 +32,8 @@ class B2cPaymentService
                 'PartyA' => $shortcode,
                 'PartyB' => $disbursement->recipient_phone,
                 'Remarks' => $remarks ?: "Loan disbursement for {$disbursement->loanApplication->application_number}",
-                'QueueTimeOutURL' => config('services.mpesa.queue_timeout_url', url('/api/mpesa/b2c/timeout')),
-                'ResultURL' => route('disbursements.callback'),
+                'QueueTimeOutURL' => config('mpesa.b2c.queue_timeout_url', config('mpesa.b2c.timeout_url', url('/api/mpesa/b2c/timeout'))),
+                'ResultURL' => config('mpesa.b2c.result_url', url('/api/mpesa/b2c/callback')),
                 'Occasion' => 'Loan Disbursement',
             ];
 

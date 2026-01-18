@@ -6,14 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\C2bTransaction;
 use App\Models\Loan;
 use App\Services\LoanPaymentService;
+use App\Services\MpesaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class C2bTransactionController extends Controller
 {
-    public function __construct(private LoanPaymentService $loanPaymentService)
-    {
+    public function __construct(
+        private LoanPaymentService $loanPaymentService,
+        private MpesaService $mpesaService
+    ) {
     }
 
     /**
@@ -135,6 +138,40 @@ class C2bTransactionController extends Controller
                 'ResultCode' => 1,
                 'ResultDesc' => 'Error processing confirmation'
             ], 500);
+        }
+    }
+
+    /**
+     * Register C2B URLs with Safaricom
+     */
+    public function registerUrls(Request $request)
+    {
+        try {
+            $result = $this->mpesaService->registerC2bUrls();
+            
+            if ($request->expectsJson()) {
+                return response()->json($result);
+            }
+
+            if ($result['success']) {
+                return redirect()->route('mpesa.c2b.index')
+                    ->with('success', $result['message']);
+            }
+
+            return redirect()->route('mpesa.c2b.index')
+                ->with('error', $result['message']);
+        } catch (\Exception $e) {
+            Log::error('C2B URL Registration Controller Error: ' . $e->getMessage());
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to register URLs: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('mpesa.c2b.index')
+                ->with('error', 'Failed to register URLs: ' . $e->getMessage());
         }
     }
 

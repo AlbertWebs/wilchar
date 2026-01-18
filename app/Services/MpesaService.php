@@ -84,5 +84,66 @@ class MpesaService
     {
         return $this->shortcode;
     }
+
+    /**
+     * Register C2B URLs with Safaricom
+     */
+    public function registerC2bUrls(): array
+    {
+        try {
+            $accessToken = $this->getAccessToken();
+            if (!$accessToken) {
+                return [
+                    'success' => false,
+                    'message' => 'Failed to get access token'
+                ];
+            }
+
+            $validationUrl = config('mpesa.c2b.validation_url', url('/admin/mpesa/c2b/validate'));
+            $confirmationUrl = config('mpesa.c2b.confirmation_url', url('/admin/mpesa/c2b/confirm'));
+
+            $url = "{$this->baseUrl}/mpesa/c2b/v1/registerurl";
+            
+            $payload = [
+                'ShortCode' => $this->shortcode,
+                'ResponseType' => 'Completed',
+                'ConfirmationURL' => $confirmationUrl,
+                'ValidationURL' => $validationUrl,
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ])->post($url, $payload);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                Log::info('C2B URL Registration Success:', $data);
+                return [
+                    'success' => true,
+                    'message' => 'C2B URLs registered successfully',
+                    'data' => $data
+                ];
+            }
+
+            $error = $response->json() ?? $response->body();
+            Log::error('C2B URL Registration Error:', [
+                'status' => $response->status(),
+                'error' => $error
+            ]);
+
+            return [
+                'success' => false,
+                'message' => $error['errorMessage'] ?? 'Failed to register C2B URLs',
+                'data' => $error
+            ];
+        } catch (\Exception $e) {
+            Log::error('C2B URL Registration Exception: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Exception: ' . $e->getMessage()
+            ];
+        }
+    }
 }
 
