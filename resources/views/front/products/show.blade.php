@@ -30,7 +30,7 @@
                         <div class="card__content" style="padding: 2rem;">
                             <h3 class="mb-4">About This Product</h3>
                             <div style="color: #475569; line-height: 1.8;">
-                                {!! nl2br(e($product->description ?? 'No description available.')) !!}
+                                {!! $product->description ?? '<p>No description available.</p>' !!}
                             </div>
                         </div>
                     </div>
