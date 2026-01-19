@@ -50,7 +50,7 @@ class FinanceDisbursementController extends Controller
 
     public function prepare(Request $request): RedirectResponse
     {
-        \App\Helpers\PermissionHelper::requireRole('Finance', 'Only Finance users can prepare disbursements.');
+        \App\Helpers\PermissionHelper::requireRole(['Admin', 'Finance'], 'Only Finance users can prepare disbursements.');
 
         $validated = $request->validate([
             'loan_application_id' => 'required|exists:loan_applications,id',
@@ -109,7 +109,7 @@ class FinanceDisbursementController extends Controller
 
     public function showConfirm(Disbursement $disbursement): View|RedirectResponse
     {
-        \App\Helpers\PermissionHelper::requireRole('Director', 'Only Directors can approve disbursements.');
+        \App\Helpers\PermissionHelper::requireRole(['Admin', 'Director'], 'Only Directors can approve disbursements.');
 
         if ($disbursement->status !== 'awaiting_director') {
             return redirect()->route('finance-disbursements.index')->with('error', 'This disbursement is not pending director approval.');
@@ -122,7 +122,7 @@ class FinanceDisbursementController extends Controller
 
     public function confirm(Request $request, Disbursement $disbursement): RedirectResponse
     {
-        \App\Helpers\PermissionHelper::requireRole('Director', 'Only Directors can approve disbursements.');
+        \App\Helpers\PermissionHelper::requireRole(['Admin', 'Director'], 'Only Directors can approve disbursements.');
 
         $request->validate([
             'otp' => 'required|string',

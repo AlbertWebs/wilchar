@@ -2,14 +2,21 @@
 
 @section('content')
     <!-- Product Detail Hero -->
-    <section class="hero-section hero--secondary" style="padding: 120px 0 80px;">
+    <section class="hero-section hero--secondary banner" style="padding: 120px 0 80px; background-color: #03211B; position: relative;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-lg-8 mx-auto text-center">
-                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s">{{ $product->name }}</h1>
+                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s" style="color: #ffffff;">{{ $product->name }}</h1>
                     @if($product->short_description)
-                        <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s">{{ $product->short_description }}</p>
+                        <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.9);">{{ $product->short_description }}</p>
                     @endif
+                    <nav aria-label="breadcrumb" class="mt-4 wow fadeInDown" data-wow-duration="0.8s">
+                        <ol class="breadcrumb justify-content-center" style="margin-bottom: 0;">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}" style="color: #ffffff;">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('products.index') }}" style="color: #ffffff;">Products</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" style="color: #FCB650;">{{ $product->name }}</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>

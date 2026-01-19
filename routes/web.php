@@ -403,7 +403,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 });
 
 Route::prefix('admin/finance-disbursements')
-    ->middleware(['auth', 'role:Finance|Director'])
+    ->middleware(['auth', 'role:Admin|Finance|Director'])
     ->name('finance-disbursements.')
     ->group(function () {
         Route::get('/', [FinanceDisbursementController::class, 'index'])->name('index');

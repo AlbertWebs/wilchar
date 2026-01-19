@@ -24,32 +24,32 @@
         .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
         
         .stat-card-gradient-1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             border: none;
         }
         
         .stat-card-gradient-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
             border: none;
         }
         
         .stat-card-gradient-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #0284c7 0%, #0891b2 100%);
             border: none;
         }
         
         .stat-card-gradient-4 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
             border: none;
         }
         
         .stat-card-gradient-5 {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
             border: none;
         }
         
         .stat-card-gradient-6 {
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
             border: none;
         }
         
@@ -131,9 +131,9 @@
     
     <div class="space-y-6">
         <!-- Welcome Header -->
-        <div class="rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 p-6 text-white shadow-lg mb-6">
-            <h1 class="text-2xl font-bold mb-2">Welcome Back, {{ auth()->user()->name }}! 👋</h1>
-            <p class="text-purple-100">Here's what's happening with your business today.</p>
+        <div class="rounded-2xl bg-white p-6 shadow-lg mb-6 border border-slate-200">
+            <h1 class="text-2xl font-bold mb-2 text-slate-900">Welcome Back, {{ auth()->user()->name }}! 👋</h1>
+            <p class="text-slate-600">Here's what's happening with your business today.</p>
         </div>
         
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -326,12 +326,12 @@
             <x-admin.section class="xl:col-span-2" title="Overdue Loans" description="Loans requiring collection & recovery">
                 <div class="overflow-hidden rounded-xl border-2 border-red-100 bg-gradient-to-br from-red-50 to-pink-50 shadow-lg">
                     <table class="min-w-full divide-y divide-red-100">
-                        <thead class="bg-gradient-to-r from-red-500 to-pink-500">
+                        <thead class="bg-white border-b-2 border-red-200">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-white">Client</th>
-                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-white">Loan</th>
-                                <th class="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-white">Outstanding</th>
-                                <th class="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-white">Days Overdue</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-900">Client</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-900">Loan</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-900">Outstanding</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-slate-900">Days Overdue</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-red-100 bg-white text-sm">
@@ -381,41 +381,41 @@
 
         <x-admin.section title="Financial Snapshot" description="Expense, assets, liabilities overview">
             <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <div class="financial-card rounded-2xl border-2 border-red-200 bg-gradient-to-br from-red-500 to-pink-500 p-6 text-white shadow-xl">
+                <div class="financial-card rounded-2xl border-2 border-red-200 bg-white p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold uppercase tracking-wide text-white/90">Monthly Expenses</p>
-                        <svg class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-600">Monthly Expenses</p>
+                        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
-                    <p class="mt-2 text-3xl font-bold">KES {{ number_format($financialSummary['expenses'], 2) }}</p>
+                    <p class="mt-2 text-3xl font-bold text-slate-900">KES {{ number_format($financialSummary['expenses'], 2) }}</p>
                 </div>
-                <div class="financial-card rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-500 to-teal-500 p-6 text-white shadow-xl">
+                <div class="financial-card rounded-2xl border-2 border-emerald-200 bg-white p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold uppercase tracking-wide text-white/90">Assets Value</p>
-                        <svg class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-600">Assets Value</p>
+                        <svg class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                     </div>
-                    <p class="mt-2 text-3xl font-bold">KES {{ number_format($financialSummary['assets'], 2) }}</p>
+                    <p class="mt-2 text-3xl font-bold text-slate-900">KES {{ number_format($financialSummary['assets'], 2) }}</p>
                 </div>
-                <div class="financial-card rounded-2xl border-2 border-amber-200 bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-xl">
+                <div class="financial-card rounded-2xl border-2 border-amber-200 bg-white p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold uppercase tracking-wide text-white/90">Liabilities</p>
-                        <svg class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-600">Liabilities</p>
+                        <svg class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <p class="mt-2 text-3xl font-bold">KES {{ number_format($financialSummary['liabilities'], 2) }}</p>
+                    <p class="mt-2 text-3xl font-bold text-slate-900">KES {{ number_format($financialSummary['liabilities'], 2) }}</p>
                 </div>
-                <div class="financial-card rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-500 to-indigo-500 p-6 text-white shadow-xl">
+                <div class="financial-card rounded-2xl border-2 border-purple-200 bg-white p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold uppercase tracking-wide text-white/90">Shareholder Contributions</p>
-                        <svg class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <p class="text-xs font-bold uppercase tracking-wide text-slate-600">Shareholder Contributions</p>
+                        <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
-                    <p class="mt-2 text-3xl font-bold">KES {{ number_format($financialSummary['shareholder_contributions'], 2) }}</p>
+                    <p class="mt-2 text-3xl font-bold text-slate-900">KES {{ number_format($financialSummary['shareholder_contributions'], 2) }}</p>
                 </div>
             </div>
         </x-admin.section>
