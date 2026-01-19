@@ -939,6 +939,42 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(237, 116, 27, 0.3);
         }
+        
+        /* Breadcrumb White Text Styling for Products Page */
+        .banner .breadcrumb,
+        .hero-section.banner .breadcrumb {
+            margin-top: 24px;
+        }
+        
+        .banner .breadcrumb .breadcrumb-item,
+        .hero-section.banner .breadcrumb .breadcrumb-item {
+            color: #ffffff !important;
+        }
+        
+        .banner .breadcrumb .breadcrumb-item a,
+        .hero-section.banner .breadcrumb .breadcrumb-item a {
+            color: #ffffff !important;
+            text-decoration: none;
+        }
+        
+        .banner .breadcrumb .breadcrumb-item a:hover,
+        .hero-section.banner .breadcrumb .breadcrumb-item a:hover {
+            color: #FCB650 !important;
+        }
+        
+        .banner .breadcrumb .breadcrumb-item + .breadcrumb-item::before,
+        .hero-section.banner .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+            content: "\f285";
+            font-family: "bootstrap-icons";
+            color: #ffffff !important;
+            font-size: 14px;
+            padding: 0 8px;
+        }
+        
+        .banner .breadcrumb .breadcrumb-item.active,
+        .hero-section.banner .breadcrumb .breadcrumb-item.active {
+            color: #FCB650 !important;
+        }
 
         /* Mobile Responsive */
         @media (max-width: 767.98px) {

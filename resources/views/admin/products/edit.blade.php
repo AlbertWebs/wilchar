@@ -9,7 +9,7 @@
         <x-admin.section title="Product Details" description="Update the product information.">
             <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 @if($errors->any())
                     <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                         <p class="font-semibold">We couldn't save the product yet.</p>

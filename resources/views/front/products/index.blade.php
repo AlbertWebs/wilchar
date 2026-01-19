@@ -2,12 +2,18 @@
 
 @section('content')
     <!-- Products Page Hero -->
-    <section class="hero-section hero--secondary" style="padding: 120px 0 80px;">
+    <section class="hero-section hero--secondary banner" style="padding: 120px 0 80px; background-color: #03211B; position: relative;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-lg-8 mx-auto text-center">
-                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s">Our Products & Solutions</h1>
-                    <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s">Discover our comprehensive range of loan products designed to meet your business needs</p>
+                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s" style="color: #ffffff;">Our Products & Solutions</h1>
+                    <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.9);">Discover our comprehensive range of loan products designed to meet your business needs</p>
+                    <nav aria-label="breadcrumb" class="mt-4 wow fadeInDown" data-wow-duration="0.8s">
+                        <ol class="breadcrumb justify-content-center" style="margin-bottom: 0;">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}" style="color: #ffffff;">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" style="color: #FCB650;">Products</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
