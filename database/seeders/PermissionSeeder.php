@@ -106,6 +106,12 @@ class PermissionSeeder extends Seeder
             'products.edit',
             'products.delete',
 
+            // Testimonials
+            'testimonials.view',
+            'testimonials.create',
+            'testimonials.edit',
+            'testimonials.delete',
+
             // Notifications
             'notifications.view',
             'notifications.create',
