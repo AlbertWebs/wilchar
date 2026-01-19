@@ -6,29 +6,35 @@
 @endphp
 
 @section('content')
-    <section class="section" style="padding-top: 120px; padding-bottom: 80px;">
+    <!-- Page Header - Full Width -->
+    <section class="hero-section hero--secondary banner" style="padding: 120px 0 80px; background-color: #03211B; position: relative; width: 100%;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-8 mx-auto text-center">
+                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s" style="color: #ffffff;">{{ $page->title }}</h1>
+                    @if($page->excerpt)
+                        <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.9);">{{ $page->excerpt }}</p>
+                    @endif
+                    @if($page->updated_at)
+                        <p class="mt-3 wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                            <i class="bi bi-clock me-1"></i>
+                            Last updated: {{ $page->updated_at->format('F d, Y') }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page Content -->
+    <section class="section" style="padding: 80px 0;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-10 col-xl-8">
                     <div class="page-content">
-                        <h1 class="page-title mb-4 wow fadeInUp" data-wow-duration="0.8s">{{ $page->title }}</h1>
-                        
-                        @if($page->excerpt)
-                        <p class="page-excerpt text-muted mb-4 wow fadeInDown" data-wow-duration="0.8s">{{ $page->excerpt }}</p>
-                        @endif
-
                         <div class="page-body wow fadeInUp" data-wow-duration="0.8s">
                             {!! $page->content !!}
                         </div>
-
-                        @if($page->updated_at)
-                        <div class="page-footer mt-5 pt-4 border-top">
-                            <p class="text-muted small mb-0">
-                                <i class="bi bi-clock me-1"></i>
-                                Last updated: {{ $page->updated_at->format('F d, Y') }}
-                            </p>
-                        </div>
-                        @endif
                     </div>
                 </div>
             </div>
