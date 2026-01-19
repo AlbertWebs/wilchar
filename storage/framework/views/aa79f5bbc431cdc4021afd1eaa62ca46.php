@@ -10,9 +10,9 @@
 
 
     <!-- #favicon -->
-    <link rel="shortcut icon" href="{{ !empty($settings['favicon']) ? asset('storage/' . $settings['favicon']) : asset('main/assets/images/favicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo e(!empty($settings['favicon']) ? asset('storage/' . $settings['favicon']) : asset('main/assets/images/favicon.png')); ?>" type="image/x-icon">
     
-    @php
+    <?php
         $siteName = $settings['site_name'] ?? 'Nuru Wilchar SME Capital Limited';
         $siteTagline = $settings['site_tagline'] ?? 'Empowering Small Businesses Across Western Region';
         $metaTitle = $metaTitle ?? ($settings['meta_title'] ?? $siteName . ' - ' . $siteTagline);
@@ -21,65 +21,65 @@
         $ogImage = $ogImage ?? (!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png'));
         $canonicalUrl = $canonicalUrl ?? url()->current();
         $siteUrl = config('app.url');
-    @endphp
+    ?>
 
     <!-- Primary Meta Tags -->
-    <title>{{ $metaTitle }}</title>
-    <meta name="title" content="{{ $metaTitle }}">
-    <meta name="description" content="{{ $metaDescription }}">
-    <meta name="keywords" content="{{ $metaKeywords }}">
-    <meta name="author" content="{{ $siteName }}">
+    <title><?php echo e($metaTitle); ?></title>
+    <meta name="title" content="<?php echo e($metaTitle); ?>">
+    <meta name="description" content="<?php echo e($metaDescription); ?>">
+    <meta name="keywords" content="<?php echo e($metaKeywords); ?>">
+    <meta name="author" content="<?php echo e($siteName); ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="language" content="English">
     <meta name="revisit-after" content="7 days">
     <meta name="theme-color" content="#0ea5e9">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="{{ $canonicalUrl }}">
+    <link rel="canonical" href="<?php echo e($canonicalUrl); ?>">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ $canonicalUrl }}">
-    <meta property="og:title" content="{{ $metaTitle }}">
-    <meta property="og:description" content="{{ $metaDescription }}">
-    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:url" content="<?php echo e($canonicalUrl); ?>">
+    <meta property="og:title" content="<?php echo e($metaTitle); ?>">
+    <meta property="og:description" content="<?php echo e($metaDescription); ?>">
+    <meta property="og:image" content="<?php echo e($ogImage); ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="{{ $siteName }}">
-    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:image:alt" content="<?php echo e($siteName); ?>">
+    <meta property="og:site_name" content="<?php echo e($siteName); ?>">
     <meta property="og:locale" content="en_US">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="{{ $canonicalUrl }}">
-    <meta name="twitter:title" content="{{ $metaTitle }}">
-    <meta name="twitter:description" content="{{ $metaDescription }}">
-    <meta name="twitter:image" content="{{ $ogImage }}">
-    <meta name="twitter:image:alt" content="{{ $siteName }}">
-    @if(!empty($settings['twitter_url']))
-        <meta name="twitter:site" content="{{ $settings['twitter_url'] }}">
-        <meta name="twitter:creator" content="{{ $settings['twitter_url'] }}">
-    @endif
+    <meta name="twitter:url" content="<?php echo e($canonicalUrl); ?>">
+    <meta name="twitter:title" content="<?php echo e($metaTitle); ?>">
+    <meta name="twitter:description" content="<?php echo e($metaDescription); ?>">
+    <meta name="twitter:image" content="<?php echo e($ogImage); ?>">
+    <meta name="twitter:image:alt" content="<?php echo e($siteName); ?>">
+    <?php if(!empty($settings['twitter_url'])): ?>
+        <meta name="twitter:site" content="<?php echo e($settings['twitter_url']); ?>">
+        <meta name="twitter:creator" content="<?php echo e($settings['twitter_url']); ?>">
+    <?php endif; ?>
     
     <!-- Additional SEO Meta Tags -->
     <meta name="geo.region" content="KE">
     <meta name="geo.placename" content="Kenya">
-    @if(!empty($settings['site_location']))
-        <meta name="geo.position" content="{{ $settings['site_location'] }}">
-    @endif
+    <?php if(!empty($settings['site_location'])): ?>
+        <meta name="geo.position" content="<?php echo e($settings['site_location']); ?>">
+    <?php endif; ?>
     
     <!-- Business/Organization Schema -->
-    <meta name="contact" content="{{ $settings['site_email'] ?? '' }}">
-    <meta name="copyright" content="{{ $siteName }}">
+    <meta name="contact" content="<?php echo e($settings['site_email'] ?? ''); ?>">
+    <meta name="copyright" content="<?php echo e($siteName); ?>">
     
     <!-- Mobile Web App -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="{{ $siteName }}">
+    <meta name="apple-mobile-web-app-title" content="<?php echo e($siteName); ?>">
     
     <!-- Structured Data (JSON-LD) -->
-    @php
+    <?php
         $socialLinks = array_filter([
             $settings['facebook_url'] ?? null,
             $settings['twitter_url'] ?? null,
@@ -119,14 +119,15 @@
             ]
         ];
         $jsonLd = json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    @endphp
+    ?>
     <script type="application/ld+json">
-    {!! $jsonLd !!}
+    <?php echo $jsonLd; ?>
+
     </script>
     
-    @if(isset($product))
+    <?php if(isset($product)): ?>
     <!-- Product Structured Data -->
-    @php
+    <?php
         $productData = [
             '@context' => 'https://schema.org',
             '@type' => 'FinancialProduct',
@@ -160,32 +161,33 @@
         if ($product->image) {
             $productData['image'] = asset('storage/' . $product->image);
         }
-    @endphp
+    ?>
     <script type="application/ld+json">
-    {!! json_encode($productData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    <?php echo json_encode($productData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
+
     </script>
-    @endif
+    <?php endif; ?>
 
     <!--  css dependencies start  -->
 
     <!-- bootstrap five css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/bootstrap/css/bootstrap.min.css')); ?>">
     <!-- bootstrap-icons css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- nice select css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/nice-select/css/nice-select.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/nice-select/css/nice-select.css')); ?>">
     <!-- magnific popup css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/magnific-popup/css/magnific-popup.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/magnific-popup/css/magnific-popup.css')); ?>">
     <!-- slick css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/slick/css/slick.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/slick/css/slick.css')); ?>">
     <!-- odometer css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/odometer/css/odometer.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/odometer/css/odometer.css')); ?>">
     <!-- animate css -->
-    <link rel="stylesheet" href="{{asset('main/assets/vendor/animate/animate.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/vendor/animate/animate.css')); ?>">
     <!--  / css dependencies end  -->
 
     <!-- main css -->
-    <link rel="stylesheet" href="{{asset('main/assets/css/style.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('main/assets/css/style.css')); ?>">
     
     <!-- Custom Elegant Styling -->
     <style>
@@ -984,8 +986,8 @@
             <div class="row">
                 <div class="col-12">
                     <nav class="navbar navbar-expand-xl nav-shadow" id="#navbar">
-                        <a class="navbar-brand" href="{{ route('home') }}">
-                            <img style="border-radius:10px;" width="100" src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png') }}" class="logo" alt="{{ $settings['site_name'] ?? 'Nuru Wilchar' }} Logo">
+                        <a class="navbar-brand" href="<?php echo e(route('home')); ?>">
+                            <img style="border-radius:10px;" width="100" src="<?php echo e(!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png')); ?>" class="logo" alt="<?php echo e($settings['site_name'] ?? 'Nuru Wilchar'); ?> Logo">
                         </a>
                         <a class="navbar-toggler d-xl-block d-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                             <i class="bi bi-list"></i>
@@ -995,28 +997,28 @@
                             <div class="main-menu">
                                 <ul class="navbar-nav mb-lg-0 mx-auto">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('home') }}">Home</a>
+                                        <a class="nav-link" href="<?php echo e(route('home')); ?>">Home</a>
                                     </li>
                                      <li class="nav-item">
                                         <a class="nav-link" href="#how-it-works">About Us</a>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="{{ route('products.index') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Products & Solutions</a>
+                                        <a class="nav-link dropdown-toggle" href="<?php echo e(route('products.index')); ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">Products & Solutions</a>
                                         <ul class="dropdown-menu">
-                                            @php
+                                            <?php
                                                 $menuProducts = \App\Models\Product::active()->ordered()->limit(6)->get();
-                                            @endphp
-                                            @forelse($menuProducts as $product)
-                                                <li><a class="dropdown-item" href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a></li>
-                                            @empty
+                                            ?>
+                                            <?php $__empty_1 = true; $__currentLoopData = $menuProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                                <li><a class="dropdown-item" href="<?php echo e(route('products.show', $product->slug)); ?>"><?php echo e($product->name); ?></a></li>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                 <li><a class="dropdown-item" href="#calculator">Business Loans</a></li>
                                                 <li><a class="dropdown-item" href="#calculator">Payslip Loans</a></li>
                                                 <li><a class="dropdown-item" href="#calculator">Logbook Loans</a></li>
-                                            @endforelse
-                                            @if($menuProducts->count() > 0)
+                                            <?php endif; ?>
+                                            <?php if($menuProducts->count() > 0): ?>
                                                 <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item" href="{{ route('products.index') }}"><strong>View All Products</strong></a></li>
-                                            @endif
+                                                <li><a class="dropdown-item" href="<?php echo e(route('products.index')); ?>"><strong>View All Products</strong></a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -1026,7 +1028,7 @@
                                 <div class="nav-right d-none d-xl-block">
                                     <div class="nav-right__search">
                                         <a href="javascript:void(0)" class="nav-right__search-icon btn_theme icon_box btn_bg_white"> <i class="bi bi-search"></i> <span></span> </a>    
-                                        <a href="{{ route('loan-application.create') }}" class="btn_theme btn_theme_active">Apply Now <i class="bi bi-arrow-up-right"></i><span></span></a>
+                                        <a href="<?php echo e(route('loan-application.create')); ?>" class="btn_theme btn_theme_active">Apply Now <i class="bi bi-arrow-up-right"></i><span></span></a>
                                     </div>
                                     <div class="nav-right__search-inner">
                                         <div class="nav-search-inner__form">
@@ -1056,28 +1058,28 @@
                         <button type="button" class="close-icon d-md-none ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x"></i></button>
                         <ul class="custom-nevbar__nav mb-lg-0">
                              <li class="menu_item">
-                                <a class="nav-link" href="{{ route('home') }}">Home</a>
+                                <a class="nav-link" href="<?php echo e(route('home')); ?>">Home</a>
                             </li>
                             <li class="menu_item">
                                 <a class="nav-link" href="#how-it-works">About Us</a>
                             </li>
                             <li class="menu_item dropdown">
-                                <a class="nav-link dropdown-toggle" href="{{ route('products.index') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Products & Solutions</a>
+                                <a class="nav-link dropdown-toggle" href="<?php echo e(route('products.index')); ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">Products & Solutions</a>
                                 <ul class="dropdown-menu">
-                                    @php
+                                    <?php
                                         $menuProducts = \App\Models\Product::active()->ordered()->limit(6)->get();
-                                    @endphp
-                                    @forelse($menuProducts as $product)
-                                        <li><a class="dropdown-item" href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a></li>
-                                    @empty
+                                    ?>
+                                    <?php $__empty_1 = true; $__currentLoopData = $menuProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                        <li><a class="dropdown-item" href="<?php echo e(route('products.show', $product->slug)); ?>"><?php echo e($product->name); ?></a></li>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                         <li><a class="dropdown-item" href="#calculator">Business Loans</a></li>
                                         <li><a class="dropdown-item" href="#calculator">Payslip Loans</a></li>
                                         <li><a class="dropdown-item" href="#calculator">Logbook Loans</a></li>
-                                    @endforelse
-                                    @if($menuProducts->count() > 0)
+                                    <?php endif; ?>
+                                    <?php if($menuProducts->count() > 0): ?>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ route('products.index') }}"><strong>View All Products</strong></a></li>
-                                    @endif
+                                        <li><a class="dropdown-item" href="<?php echo e(route('products.index')); ?>"><strong>View All Products</strong></a></li>
+                                    <?php endif; ?>
                                 </ul>
                             </li>
                             <li class="menu_item">
@@ -1093,28 +1095,28 @@
                         <div class="custom-nevbar__top d-none d-md-block">
                             <button type="button" class="close-icon ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x"></i></button>
                             <div class="custom-nevbar__right-thumb mb-auto">
-                                <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Nuru Wilchar' }} Logo">
+                                <img src="<?php echo e(!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png')); ?>" alt="<?php echo e($settings['site_name'] ?? 'Nuru Wilchar'); ?> Logo">
                             </div>
                         </div>
                         <ul class="custom-nevbar__right-location">
                             <li>
                                 <p class="mb-2">Phone: </p>
-                                <a href="tel:{{ str_replace(' ', '', $settings['site_phone'] ?? '+254787666661') }}" class="fs-4 contact">{{ $settings['site_phone'] ?? '+254787666661 / 0793793362' }}</a>
+                                <a href="tel:<?php echo e(str_replace(' ', '', $settings['site_phone'] ?? '+254787666661')); ?>" class="fs-4 contact"><?php echo e($settings['site_phone'] ?? '+254787666661 / 0793793362'); ?></a>
                             </li>
                             <li class="location">
                                 <p class="mb-2">Email: </p>
-                                <a href="mailto:{{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}" class="fs-4 contact">{{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}</a>
+                                <a href="mailto:<?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?>" class="fs-4 contact"><?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?></a>
                             </li>
                             <li class="location">
                                 <p class="mb-2">Location: </p>
-                                <p class="fs-4 contact">{{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)' }}</p>
+                                <p class="fs-4 contact"><?php echo e($settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)'); ?></p>
                             </li>
-                            @if(!empty($settings['paybill_number']))
+                            <?php if(!empty($settings['paybill_number'])): ?>
                             <li class="location">
                                 <p class="mb-2">Paybill: </p>
-                                <p class="fs-4 contact"><strong>{{ $settings['paybill_number'] }}</strong></p>
+                                <p class="fs-4 contact"><strong><?php echo e($settings['paybill_number']); ?></strong></p>
                             </li>
-                            @endif
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -1123,7 +1125,7 @@
     </div>
     <!-- header-section end -->
 
-    @yield('content')
+    <?php echo $__env->yieldContent('content'); ?>
 
     <!-- Footer Area Start -->
     <footer class="footer">
@@ -1132,27 +1134,27 @@
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="about-company wow fadeInLeft" data-wow-duration="0.8s">
                         <div class="footer__logo mb-4">
-                            <a href="{{ route('home') }}">
-                                <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png') }}" alt="{{ $settings['site_name'] ?? 'Nuru Wilchar' }} Logo">
+                            <a href="<?php echo e(route('home')); ?>">
+                                <img src="<?php echo e(!empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('main/assets/images/logo.png')); ?>" alt="<?php echo e($settings['site_name'] ?? 'Nuru Wilchar'); ?> Logo">
                             </a>
                         </div>
-                        <p>{{ $settings['footer_description'] ?? 'Welcome to Nuru SME Solutions, your trusted resource for financial support.' }}</p>
+                        <p><?php echo e($settings['footer_description'] ?? 'Welcome to Nuru SME Solutions, your trusted resource for financial support.'); ?></p>
                         <div class="social mt_32">
-                            @if(!empty($settings['facebook_url']))
-                                <a href="{{ $settings['facebook_url'] }}" target="_blank" class="btn_theme social_box"><i class="bi bi-facebook"></i><span></span></a>
-                            @endif
-                            @if(!empty($settings['twitter_url']))
-                                <a href="{{ $settings['twitter_url'] }}" target="_blank" class="btn_theme social_box"><i class="bi bi-twitter"></i><span></span></a>
-                            @endif
-                            @if(!empty($settings['instagram_url']))
-                                <a href="{{ $settings['instagram_url'] }}" target="_blank" class="btn_theme social_box"><i class="bi bi-instagram"></i><span></span></a>
-                            @endif
-                            @if(!empty($settings['whatsapp_number']))
-                                <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number']) }}" target="_blank" class="btn_theme social_box"><i class="bi bi-whatsapp"></i><span></span></a>
-                            @endif
-                            @if(!empty($settings['telegram_url']))
-                                <a href="{{ $settings['telegram_url'] }}" target="_blank" class="btn_theme social_box"><i class="bi bi-telegram"></i><span></span></a>
-                            @endif
+                            <?php if(!empty($settings['facebook_url'])): ?>
+                                <a href="<?php echo e($settings['facebook_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-facebook"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['twitter_url'])): ?>
+                                <a href="<?php echo e($settings['twitter_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-twitter"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['instagram_url'])): ?>
+                                <a href="<?php echo e($settings['instagram_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-instagram"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['whatsapp_number'])): ?>
+                                <a href="https://wa.me/<?php echo e(str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'])); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-whatsapp"></i><span></span></a>
+                            <?php endif; ?>
+                            <?php if(!empty($settings['telegram_url'])): ?>
+                                <a href="<?php echo e($settings['telegram_url']); ?>" target="_blank" class="btn_theme social_box"><i class="bi bi-telegram"></i><span></span></a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1160,12 +1162,12 @@
                     <div class="footer__contact ms-sm-4 ms-xl-0 wow fadeInUp" data-wow-duration="0.8s">
                         <h4 class="footer__title mb-4">Contact</h4>
                         <div class="footer__content">
-                            <a href="tel:{{ str_replace(' ', '', $settings['site_phone'] ?? '+254787666661') }}"> <span class="btn_theme social_box"> <i class="bi bi-telephone-plus"></i> </span> {{ $settings['site_phone'] ?? '+254787666661 / 0793793362' }} <span></span> </a> 
-                            <a href="mailto:{{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }}"> <span class="btn_theme social_box"> <i class="bi bi-envelope-open"></i> </span> {{ $settings['site_email'] ?? 'willingtonochieng92@gmail.com' }} <span></span> </a> 
-                            <a href="#"> <span class="btn_theme social_box"> <i class="bi bi-geo-alt"></i> </span> {{ $settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)' }} <span></span> </a>
-                            @if(!empty($settings['paybill_number']))
-                            <a href="#" class="mt-2"> <span class="btn_theme social_box"> <i class="bi bi-credit-card"></i> </span> <strong>Paybill: {{ $settings['paybill_number'] }}</strong> <span></span> </a>
-                            @endif
+                            <a href="tel:<?php echo e(str_replace(' ', '', $settings['site_phone'] ?? '+254787666661')); ?>"> <span class="btn_theme social_box"> <i class="bi bi-telephone-plus"></i> </span> <?php echo e($settings['site_phone'] ?? '+254787666661 / 0793793362'); ?> <span></span> </a> 
+                            <a href="mailto:<?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?>"> <span class="btn_theme social_box"> <i class="bi bi-envelope-open"></i> </span> <?php echo e($settings['site_email'] ?? 'willingtonochieng92@gmail.com'); ?> <span></span> </a> 
+                            <a href="#"> <span class="btn_theme social_box"> <i class="bi bi-geo-alt"></i> </span> <?php echo e($settings['site_address'] ?? 'Zulmac Insurance Building, 4th Floor, Room 318 (Next to Equity Bank)'); ?> <span></span> </a>
+                            <?php if(!empty($settings['paybill_number'])): ?>
+                            <a href="#" class="mt-2"> <span class="btn_theme social_box"> <i class="bi bi-credit-card"></i> </span> <strong>Paybill: <?php echo e($settings['paybill_number']); ?></strong> <span></span> </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1184,10 +1186,10 @@
                     <div class="quick-link ms-sm-4 ms-xl-0 wow fadeInRight" data-wow-duration="0.8s">
                         <h4 class="footer__title mb-4">Legal</h4>
                         <ul>
-                            <li><a href="{{ route('page.show', 'terms-and-conditions') }}">Terms and Conditions</a></li>
-                            <li><a href="{{ route('page.show', 'privacy-policy') }}">Privacy Policy</a></li>
-                            <li><a href="{{ route('page.show', 'copyright-statement') }}">Copyright Statement</a></li>
-                            <li><a href="{{ route('page.show', 'cbk-disclaimer') }}">CBK Disclaimer</a></li>
+                            <li><a href="<?php echo e(route('page.show', 'terms-and-conditions')); ?>">Terms and Conditions</a></li>
+                            <li><a href="<?php echo e(route('page.show', 'privacy-policy')); ?>">Privacy Policy</a></li>
+                            <li><a href="<?php echo e(route('page.show', 'copyright-statement')); ?>">Copyright Statement</a></li>
+                            <li><a href="<?php echo e(route('page.show', 'cbk-disclaimer')); ?>">CBK Disclaimer</a></li>
                         </ul>
                     </div>
                 </div>
@@ -1195,7 +1197,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="footer__copyright">
-                        <p class="copyright text-center">Copyright © <span id="copyYear"></span> <a href="#" class="secondary_color">{{ $settings['site_name'] ?? 'Nuru Wilchar SME Solutions' }}</a>@if(!empty($settings['footer_powered_by'])). Powered By <a href="#" class="secondary_color">{{ $settings['footer_powered_by'] }}</a>@endif</p>
+                        <p class="copyright text-center">Copyright © <span id="copyYear"></span> <a href="#" class="secondary_color"><?php echo e($settings['site_name'] ?? 'Nuru Wilchar SME Solutions'); ?></a><?php if(!empty($settings['footer_powered_by'])): ?>. Powered By <a href="#" class="secondary_color"><?php echo e($settings['footer_powered_by']); ?></a><?php endif; ?></p>
                         <ul class="footer__copyright-conditions">
                             <li><a href="#contact">Help & Support</a></li>
                             <li><a href="#contact">Sitemap</a></li>
@@ -1214,11 +1216,11 @@
     <!-- Elegant Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav">
         <div class="mobile-bottom-nav__container">
-            <a href="{{ route('home') }}" class="mobile-bottom-nav__item {{ request()->routeIs('home') ? 'active' : '' }}" title="Home">
+            <a href="<?php echo e(route('home')); ?>" class="mobile-bottom-nav__item <?php echo e(request()->routeIs('home') ? 'active' : ''); ?>" title="Home">
                 <i class="bi bi-house-door-fill"></i>
                 <span>Home</span>
             </a>
-            <a href="{{ route('products.index') }}" class="mobile-bottom-nav__item {{ request()->routeIs('products.*') ? 'active' : '' }}" title="Products">
+            <a href="<?php echo e(route('products.index')); ?>" class="mobile-bottom-nav__item <?php echo e(request()->routeIs('products.*') ? 'active' : ''); ?>" title="Products">
                 <i class="bi bi-grid-3x3-gap-fill"></i>
                 <span>Products</span>
             </a>
@@ -1226,7 +1228,7 @@
                 <i class="bi bi-calculator-fill"></i>
                 <span>Calculate</span>
             </a>
-            <a href="{{ route('loan-application.create') }}" class="mobile-bottom-nav__item {{ request()->routeIs('loan-application.*') ? 'active' : '' }}" title="Apply">
+            <a href="<?php echo e(route('loan-application.create')); ?>" class="mobile-bottom-nav__item <?php echo e(request()->routeIs('loan-application.*') ? 'active' : ''); ?>" title="Apply">
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <span>Apply</span>
             </a>
@@ -1241,35 +1243,35 @@
 
     <!-- jquery -->
     <script data-cfasync="false" src="https://pixner.net/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="{{asset('main/assets/vendor/jquery/jquery-3.6.3.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/jquery/jquery-3.6.3.min.js')); ?>"></script>
     <!-- bootstrap five js -->
-    <script src="{{asset('main/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
     <!-- nice select js -->
-    <script src="{{asset('main/assets/vendor/nice-select/js/jquery.nice-select.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/nice-select/js/jquery.nice-select.min.js')); ?>"></script>
     <!-- magnific popup js -->
-    <script src="{{asset('main/assets/vendor/magnific-popup/js/jquery.magnific-popup.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/magnific-popup/js/jquery.magnific-popup.min.js')); ?>"></script>
     <!-- circular-progress-bar -->
     <script
         src="https://cdn.jsdelivr.net/gh/tomik23/circular-progress-bar@latest/docs/circularProgressBar.min.js"></script>
     <!-- slick js -->
-    <script src="{{asset('main/assets/vendor/slick/js/slick.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/slick/js/slick.min.js')); ?>"></script>
     <!-- odometer js -->
-    <script src="{{asset('main/assets/vendor/odometer/js/odometer.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/odometer/js/odometer.min.js')); ?>"></script>
     <!-- viewport js -->
-    <script src="{{asset('main/assets/vendor/viewport/viewport.jquery.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/viewport/viewport.jquery.js')); ?>"></script>
     <!-- jquery ui js -->
-    <script src="{{asset('main/assets/vendor/jquery-ui/jquery-ui.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/jquery-ui/jquery-ui.min.js')); ?>"></script>
     <!-- wow js -->
-    <script src="{{asset('main/assets/vendor/wow/wow.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/wow/wow.min.js')); ?>"></script>
 
-    <script src="{{asset('main/assets/vendor/jquery-validate/jquery.validate.min.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/vendor/jquery-validate/jquery.validate.min.js')); ?>"></script>
 
     <!--  / js dependencies end  -->
     <!-- plugins js -->
-    <script src="{{asset('main/assets/js/plugins.js')}}"></script>
+    <script src="<?php echo e(asset('main/assets/js/plugins.js')); ?>"></script>
     <!-- main js -->
-    <script src="{{asset('main/assets/js/main.js')}}"></script>
-    {{--  --}}
+    <script src="<?php echo e(asset('main/assets/js/main.js')); ?>"></script>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     $(document).ready(function () {
@@ -1277,11 +1279,11 @@
             e.preventDefault(); // Prevent normal form submission
 
             $.ajax({
-                url: "{{ route('loan.calculate') }}", // Laravel route
+                url: "<?php echo e(route('loan.calculate')); ?>", // Laravel route
                 method: "POST",
                 data: $(this).serialize(),
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                 },
                 success: function (response) {
                     let resultHtml = `
@@ -1377,7 +1379,7 @@
             
             navItems.forEach(item => {
                 const href = item.getAttribute('href');
-                if (href === currentPath || (href === '{{ route('home') }}' && currentPath === '/')) {
+                if (href === currentPath || (href === '<?php echo e(route('home')); ?>' && currentPath === '/')) {
                     item.classList.add('active');
                 }
             });
@@ -1404,9 +1406,9 @@
     });
     </script>
 
-    {{--  --}}
+    
 
 </body>
 
 
-</html>
+</html><?php /**PATH C:\projects\wilchar\resources\views/front/master.blade.php ENDPATH**/ ?>

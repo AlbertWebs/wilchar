@@ -160,6 +160,12 @@ class PermissionSeeder extends Seeder
             'site-settings.view',
             'site-settings.edit',
 
+            // Pages & Website
+            'pages.view',
+            'pages.create',
+            'pages.edit',
+            'pages.delete',
+
             // Profile
             'profile.view',
             'profile.edit',

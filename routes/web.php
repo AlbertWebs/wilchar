@@ -390,6 +390,11 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::resource('pages', \App\Http\Controllers\Admin\WebsiteController::class);
     });
 
+    // Legal Pages
+    Route::get('legal-pages', [\App\Http\Controllers\Admin\LegalPageController::class, 'index'])->middleware('permission:pages.view')->name('admin.legal-pages.index');
+    Route::get('legal-pages/{type}/edit', [\App\Http\Controllers\Admin\LegalPageController::class, 'edit'])->middleware('permission:pages.edit')->name('admin.legal-pages.edit');
+    Route::patch('legal-pages/{type}', [\App\Http\Controllers\Admin\LegalPageController::class, 'update'])->middleware('permission:pages.edit')->name('admin.legal-pages.update');
+
     // Admin Profile
     Route::get('profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
     Route::patch('profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
