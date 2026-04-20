@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -112,8 +114,24 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, User $user): RedirectResponse
     {
-        //
+        if ($request->user()->id === $user->id) {
+            return redirect()->route('users.index')
+                ->with('error', 'You cannot delete your own account.');
+        }
+
+        try {
+            $user->syncRoles([]);
+            $user->delete();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->route('users.index')
+                ->with('error', 'Could not delete this user. They may still be linked to loans, disbursements, or other records.');
+        }
+
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

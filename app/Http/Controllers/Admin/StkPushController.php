@@ -7,6 +7,8 @@ use App\Models\Loan;
 use App\Models\StkPush;
 use App\Services\LoanPaymentService;
 use App\Services\MpesaService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -56,26 +58,65 @@ class StkPushController extends Controller
      */
     public function create()
     {
-        return view('admin.mpesa.stk-push.create');
+        $loans = Loan::query()
+            ->with(['client', 'application'])
+            ->whereIn('status', ['pending', 'approved', 'disbursed'])
+            ->orderByDesc('id')
+            ->limit(500)
+            ->get();
+
+        $loansPayload = $loans->map(function (Loan $loan) {
+            $phone = $loan->client?->phone ?? '';
+            if ($phone && ! str_starts_with($phone, '254')) {
+                $digits = preg_replace('/\D/', '', $phone);
+                if (str_starts_with($digits, '0') && strlen($digits) >= 9) {
+                    $phone = '254' . substr($digits, 1);
+                } elseif (strlen($digits) === 9) {
+                    $phone = '254' . $digits;
+                }
+            }
+
+            return [
+                'id' => $loan->id,
+                'label' => ($loan->application?->application_number ?? 'Loan #' . $loan->id) . ' · ' . ($loan->client?->full_name ?? '—'),
+                'phone' => $phone,
+                'application_number' => $loan->application?->application_number ?? (string) $loan->id,
+                'outstanding' => max(1, round((float) $loan->outstanding_balance, 2)),
+            ];
+        })->values();
+
+        $transactionDescriptions = [
+            'Loan repayment',
+            'Loan processing fee',
+            'Registration fee',
+            'STK Push Payment',
+        ];
+
+        return view('admin.mpesa.stk-push.create', compact('loans', 'loansPayload', 'transactionDescriptions'));
     }
 
     /**
      * Initiate STK Push (Lipa na M-Pesa Online)
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'phone_number' => 'required|string|regex:/^254[0-9]{9}$/',
             'amount' => 'required|numeric|min:1',
             'account_reference' => 'nullable|string|max:255',
-            'transaction_desc' => 'nullable|string|max:255',
+            'transaction_desc' => 'required|string|max:255',
+            'transaction_desc_custom' => 'nullable|required_if:transaction_desc,__custom__|string|max:255',
             'loan_id' => 'nullable|exists:loans,id',
         ]);
+
+        $transactionDescFinal = $validated['transaction_desc'] === '__custom__'
+            ? ($validated['transaction_desc_custom'] ?? 'STK Push Payment')
+            : $validated['transaction_desc'];
 
         try {
             $accessToken = $this->mpesaService->getAccessToken();
             if (!$accessToken) {
-                return back()->with('error', 'Failed to get M-Pesa access token.');
+                return $this->stkJsonOrBack($request, false, 'Failed to get M-Pesa access token.');
             }
 
             $timestamp = $this->mpesaService->getTimestamp();
@@ -96,7 +137,7 @@ class StkPushController extends Controller
                 'PhoneNumber' => $validated['phone_number'],
                 'CallBackURL' => config('mpesa.stk.callback_url', route('mpesa.stk-callback')),
                 'AccountReference' => $validated['account_reference'] ?? 'STK-' . time(),
-                'TransactionDesc' => $validated['transaction_desc'] ?? 'STK Push Payment',
+                'TransactionDesc' => $transactionDescFinal,
             ];
 
             $response = Http::withToken($accessToken)
@@ -110,7 +151,7 @@ class StkPushController extends Controller
                     'phone_number' => $validated['phone_number'],
                     'amount' => $validated['amount'],
                     'account_reference' => $validated['account_reference'] ?? 'STK-' . time(),
-                    'transaction_desc' => $validated['transaction_desc'] ?? 'STK Push Payment',
+                    'transaction_desc' => $transactionDescFinal,
                     'merchant_request_id' => $responseData['MerchantRequestID'] ?? null,
                     'checkout_request_id' => $responseData['CheckoutRequestID'] ?? null,
                     'result_code' => $responseData['ResponseCode'] ?? null,
@@ -123,20 +164,49 @@ class StkPushController extends Controller
                 DB::commit();
 
                 if (isset($responseData['ResponseCode']) && $responseData['ResponseCode'] == '0') {
-                    return redirect()->route('mpesa.stk-push.show', $stkPush)
-                        ->with('success', 'STK Push initiated successfully. Customer will receive a prompt on their phone.');
+                    $message = 'STK Push initiated successfully. Customer will receive a prompt on their phone.';
+
+                    return $this->stkJsonOrBack(
+                        $request,
+                        true,
+                        $message,
+                        route('mpesa.stk-push.show', $stkPush)
+                    );
                 } else {
-                    return back()->with('error', $responseData['ResponseDescription'] ?? 'Failed to initiate STK Push.');
+                    return $this->stkJsonOrBack(
+                        $request,
+                        false,
+                        $responseData['ResponseDescription'] ?? 'Failed to initiate STK Push.'
+                    );
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error('STK Push Save Error: ' . $e->getMessage());
-                return back()->with('error', 'Failed to save STK Push record.');
+
+                return $this->stkJsonOrBack($request, false, 'Failed to save STK Push record.');
             }
         } catch (\Exception $e) {
             Log::error('STK Push Error: ' . $e->getMessage());
-            return back()->with('error', 'Failed to initiate STK Push: ' . $e->getMessage());
+
+            return $this->stkJsonOrBack($request, false, 'Failed to initiate STK Push: ' . $e->getMessage());
         }
+    }
+
+    private function stkJsonOrBack(Request $request, bool $success, string $message, ?string $redirectUrl = null): RedirectResponse|JsonResponse
+    {
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => $success,
+                'message' => $message,
+                'redirect' => $success ? $redirectUrl : null,
+            ]);
+        }
+
+        if ($success && $redirectUrl) {
+            return redirect()->to($redirectUrl)->with('success', $message);
+        }
+
+        return back()->with('error', $message);
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LoanApplication extends Model
@@ -247,6 +248,77 @@ class LoanApplication extends Model
             'completed' => 'Approval Completed',
             default => 'Unknown'
         };
+    }
+
+    /**
+     * Public browser URL for a path on the public storage disk (storage/app/public).
+     *
+     * When handling an HTTP request, uses the current request root so links match the site
+     * the user is actually visiting (avoids wrong host when APP_URL is still localhost).
+     * Falls back to the public disk URL (APP_URL-based) for CLI, queues, etc.
+     */
+    public static function resolvePublicStorageUrl(?string $path): ?string
+    {
+        if ($path === null || trim($path) === '') {
+            return null;
+        }
+
+        $path = trim($path);
+
+        if (Str::startsWith($path, ['http://', 'https://', '//'])) {
+            return $path;
+        }
+
+        $path = str_replace('\\', '/', $path);
+        $path = ltrim($path, '/');
+
+        if (Str::startsWith($path, 'public/')) {
+            $path = (string) Str::after($path, 'public/');
+        }
+
+        if (app()->bound('request')) {
+            $request = request();
+            if ($request->getHttpHost()) {
+                return rtrim($request->root(), '/') . '/storage/' . $path;
+            }
+        }
+
+        return Storage::disk('public')->url($path);
+    }
+
+    public function publicStorageUrl(?string $path): ?string
+    {
+        return self::resolvePublicStorageUrl($path);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function supportingDocumentPathsList(): array
+    {
+        $raw = $this->supporting_documents;
+        if ($raw === null || $raw === '') {
+            return [];
+        }
+        if (is_array($raw)) {
+            return array_values(array_filter(array_map('strval', $raw)));
+        }
+
+        $decoded = json_decode((string) $raw, true);
+        if (is_array($decoded)) {
+            return array_values(array_filter(array_map('strval', $decoded)));
+        }
+
+        return [trim((string) $raw)];
+    }
+
+    public static function pathLooksLikeImage(?string $path): bool
+    {
+        if (!$path) {
+            return false;
+        }
+
+        return (bool) preg_match('/\.(jpe?g|png|gif|webp|bmp|svg)$/i', $path);
     }
 }
 

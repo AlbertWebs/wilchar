@@ -1,0 +1,125 @@
+
+
+<?php
+    $metaTitle = $page->meta_title ?? $page->title;
+    $metaDescription = $page->meta_description ?? $page->excerpt;
+?>
+
+<?php $__env->startSection('content'); ?>
+    <!-- Page Header - Full Width -->
+    <section class="hero-section hero--secondary banner" style="padding: 120px 0 80px; background-color: #03211B; position: relative; width: 100%;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-8 mx-auto text-center">
+                    <h1 class="hero--secondary__title wow fadeInUp" data-wow-duration="0.8s" style="color: #ffffff;"><?php echo e($page->title); ?></h1>
+                    <?php if($page->excerpt): ?>
+                        <p class="hero--secondary__text wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.9);"><?php echo e($page->excerpt); ?></p>
+                    <?php endif; ?>
+                    <?php if($page->updated_at): ?>
+                        <p class="mt-3 wow fadeInDown" data-wow-duration="0.8s" style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                            <i class="bi bi-clock me-1"></i>
+                            Last updated: <?php echo e($page->updated_at->format('F d, Y')); ?>
+
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page Content -->
+    <section class="section" style="padding: 80px 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-8">
+                    <div class="page-content">
+                        <div class="page-body wow fadeInUp" data-wow-duration="0.8s">
+                            <?php echo $page->content; ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .page-content {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+
+        .page-excerpt {
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        .page-body {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #475569;
+        }
+
+        .page-body h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-body h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .page-body p {
+            margin-bottom: 1rem;
+        }
+
+        .page-body ul,
+        .page-body ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .page-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .page-body a {
+            color: #ed741b;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .page-body a:hover {
+            color: #cc231b;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 767.98px) {
+            .page-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('front.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\projects\wilchar\resources\views\front\page.blade.php ENDPATH**/ ?>

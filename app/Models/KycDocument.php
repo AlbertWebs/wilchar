@@ -58,11 +58,11 @@ class KycDocument extends Model
     }
 
     /**
-     * Get file URL
+     * Public URL for this file (public storage disk).
      */
-    public function getFileUrlAttribute(): string
+    public function getFileUrlAttribute(): ?string
     {
-        return asset('storage/' . $this->file_path);
+        return LoanApplication::resolvePublicStorageUrl($this->file_path);
     }
 }
 

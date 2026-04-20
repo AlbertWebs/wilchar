@@ -148,55 +148,110 @@
 
         <div class="grid gap-6 lg:grid-cols-2">
             <x-admin.section title="Supporting Documents" description="KYC & business documents">
+                @php
+                    $loanFormUrl = $loanApplication->publicStorageUrl($loanApplication->loan_form_path);
+                    $mpesaUrl = $loanApplication->publicStorageUrl($loanApplication->mpesa_statement_path);
+                    $businessPhotoUrl = $loanApplication->publicStorageUrl($loanApplication->business_photo_path);
+                    $supportingPaths = $loanApplication->supportingDocumentPathsList();
+                @endphp
                 <div class="grid gap-4 md:grid-cols-2 text-sm text-slate-700">
-                    @if($loanApplication->loan_form_path)
-                        <a href="{{ Storage::disk('public')->url($loanApplication->loan_form_path) }}" target="_blank" class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:border-emerald-300">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12l9-4.5-9-4.5-9 4.5 9 4.5z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12l9-4.5-9-4.5-9 4.5 9 4.5zm0 0v9" />
-                                </svg>
-                            </span>
-                            <span>
-                                <span class="block font-semibold text-slate-900">Loan Form</span>
-                                <span class="text-xs text-slate-500">View Uploaded</span>
-                            </span>
-                        </a>
+                    @if($loanFormUrl)
+                        <div class="flex flex-col gap-2 rounded-xl border border-slate-200 px-4 py-3">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12l9-4.5-9-4.5-9 4.5 9 4.5z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12l9-4.5-9-4.5-9 4.5 9 4.5zm0 0v9" />
+                                    </svg>
+                                </span>
+                                <div>
+                                    <span class="block font-semibold text-slate-900">Loan Form</span>
+                                    <span class="text-xs text-slate-500">{{ basename($loanApplication->loan_form_path) }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pl-12 text-xs">
+                                <a href="{{ $loanFormUrl }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600 hover:text-emerald-700">Open</a>
+                                <a href="{{ $loanFormUrl }}" download="{{ basename($loanApplication->loan_form_path) }}" class="text-slate-600 hover:text-slate-800">Download</a>
+                            </div>
+                        </div>
                     @endif
 
-                    @if($loanApplication->mpesa_statement_path)
-                        <a href="{{ Storage::disk('public')->url($loanApplication->mpesa_statement_path) }}" target="_blank" class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:border-emerald-300">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </span>
-                            <span>
-                                <span class="block font-semibold text-slate-900">M-PESA Statement</span>
-                                <span class="text-xs text-slate-500">View Uploaded</span>
-                            </span>
-                        </a>
+                    @if($mpesaUrl)
+                        <div class="flex flex-col gap-2 rounded-xl border border-slate-200 px-4 py-3">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </span>
+                                <div>
+                                    <span class="block font-semibold text-slate-900">M-PESA Statement</span>
+                                    <span class="text-xs text-slate-500">{{ basename($loanApplication->mpesa_statement_path) }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pl-12 text-xs">
+                                <a href="{{ $mpesaUrl }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600 hover:text-emerald-700">Open</a>
+                                <a href="{{ $mpesaUrl }}" download="{{ basename($loanApplication->mpesa_statement_path) }}" class="text-slate-600 hover:text-slate-800">Download</a>
+                            </div>
+                        </div>
                     @endif
 
-                    @if($loanApplication->business_photo_path)
-                        <div class="rounded-xl border border-slate-200 p-3">
-                            <p class="text-xs font-semibold text-slate-500">Business Photo</p>
-                            <img src="{{ Storage::disk('public')->url($loanApplication->business_photo_path) }}" class="mt-2 h-32 w-full rounded-lg object-cover">
+                    @if($businessPhotoUrl)
+                        <div class="rounded-xl border border-slate-200 p-3 md:col-span-2">
+                            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Business Photo</p>
+                            @if(\App\Models\LoanApplication::pathLooksLikeImage($loanApplication->business_photo_path))
+                                <img src="{{ $businessPhotoUrl }}" alt="Business photo" class="mt-2 max-h-64 w-full rounded-lg object-contain bg-slate-50">
+                            @else
+                                <p class="mt-2 text-sm text-slate-600">{{ basename($loanApplication->business_photo_path) }}</p>
+                            @endif
+                            <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                                <a href="{{ $businessPhotoUrl }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600 hover:text-emerald-700">Open</a>
+                                <a href="{{ $businessPhotoUrl }}" download="{{ basename($loanApplication->business_photo_path) }}" class="text-slate-600 hover:text-slate-800">Download</a>
+                            </div>
                         </div>
                     @endif
                 </div>
+
+                @if(count($supportingPaths))
+                    <div class="mt-6">
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Additional supporting files</p>
+                        <ul class="mt-3 space-y-2">
+                            @foreach($supportingPaths as $idx => $docPath)
+                                @php $docUrl = $loanApplication->publicStorageUrl($docPath); @endphp
+                                @if($docUrl)
+                                    <li class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm">
+                                        <span class="font-medium text-slate-900">{{ basename($docPath) ?: 'Document ' . ($idx + 1) }}</span>
+                                        <span class="flex gap-3 text-xs">
+                                            <a href="{{ $docUrl }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600 hover:text-emerald-700">Open</a>
+                                            <a href="{{ $docUrl }}" download="{{ basename($docPath) ?: 'document-' . ($idx + 1) }}" class="text-slate-600 hover:text-slate-800">Download</a>
+                                        </span>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="mt-6">
                     <p class="text-xs font-medium uppercase tracking-wide text-slate-500">KYC Documents</p>
                     <div class="mt-3 grid gap-3 md:grid-cols-2">
                         @forelse($loanApplication->kycDocuments as $document)
-                            <a href="{{ Storage::disk('public')->url($document->file_path) }}" target="_blank" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-sm hover:border-emerald-300">
-                                <div>
-                                    <p class="font-semibold text-slate-900">{{ ucfirst($document->document_type) }}</p>
-                                    <p class="text-xs text-slate-500">{{ $document->document_name }}</p>
+                            @if($document->file_url)
+                                <div class="flex flex-col justify-between gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm hover:border-emerald-300">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">{{ ucfirst($document->document_type) }}</p>
+                                        <p class="text-xs text-slate-500">{{ $document->document_name }}</p>
+                                    </div>
+                                    <div class="flex flex-wrap gap-3 text-xs">
+                                        <a href="{{ $document->file_url }}" target="_blank" rel="noopener" class="font-semibold text-emerald-600">Open</a>
+                                        <a href="{{ $document->file_url }}" download="{{ basename($document->file_path) }}" class="text-slate-600 hover:text-slate-800">Download</a>
+                                    </div>
                                 </div>
-                                <span class="text-xs text-emerald-600">View</span>
-                            </a>
+                            @else
+                                <div class="rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-500">
+                                    {{ ucfirst($document->document_type) }} — file path missing or invalid
+                                </div>
+                            @endif
                         @empty
                             <p class="text-sm text-slate-500">No KYC documents uploaded.</p>
                         @endforelse

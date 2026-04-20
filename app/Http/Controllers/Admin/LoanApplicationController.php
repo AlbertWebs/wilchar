@@ -242,6 +242,7 @@ class LoanApplicationController extends Controller
             'client',
             'creator',
             'loanOfficer',
+            'creditOfficer',
             'collectionOfficer',
             'financeOfficer',
             'kycDocuments',
