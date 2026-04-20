@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -34,7 +36,12 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->where('guard_name', 'web'),
+            ],
             'description' => 'nullable|string|max:500',
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id',
@@ -62,9 +69,17 @@ class RoleController extends Controller
     }
 
     /**
+     * Single-role view URL (e.g. shared links); editing is the primary UI.
+     */
+    public function show(Role $role): RedirectResponse
+    {
+        return redirect()->route('admin.roles.edit', $role);
+    }
+
+    /**
      * Show the form for editing a role
      */
-    public function edit(Role $role)
+    public function edit(Role $role): View
     {
         $permissions = $this->getPermissionsGrouped();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
@@ -77,7 +92,14 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')
+                    ->where('guard_name', $role->guard_name)
+                    ->ignore($role->id),
+            ],
             'description' => 'nullable|string|max:500',
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id',

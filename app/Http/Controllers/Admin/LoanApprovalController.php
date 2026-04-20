@@ -191,6 +191,18 @@ class LoanApprovalController extends Controller
     }
 
     /**
+     * Users with any of the given role names (default guard). Uses whereHas so missing role rows do not throw (Spatie's User::role() resolves names and throws RoleDoesNotExist).
+     */
+    private function usersWithAnyRole(array $roleNames)
+    {
+        $guard = config('auth.defaults.guard', 'web');
+
+        return User::whereHas('roles', function ($query) use ($roleNames, $guard) {
+            $query->where('guard_name', $guard)->whereIn('name', $roleNames);
+        });
+    }
+
+    /**
      * Get recipients for the current approval stage
      */
     private function getStageRecipients(LoanApplication $loanApplication): \Illuminate\Support\Collection
@@ -210,7 +222,7 @@ class LoanApprovalController extends Controller
             return collect([]);
         }
 
-        return User::role($roles)
+        return $this->usersWithAnyRole($roles)
             ->get()
             ->filter(function ($user) use ($loanApplication) {
                 // Include users who:
@@ -684,7 +696,7 @@ class LoanApprovalController extends Controller
         }
 
         // Get users with the required roles who also have permission to view/approve at this stage
-        $recipients = User::role($roles)
+        $recipients = $this->usersWithAnyRole($roles)
             ->get()
             ->filter(function ($user) use ($loanApplication) {
                 // Include users who:
@@ -729,7 +741,7 @@ class LoanApprovalController extends Controller
 
                 $nextRoles = $roleMap[$nextStage] ?? [];
                 if (!empty($nextRoles)) {
-                    $nextApprovers = User::role($nextRoles)
+                    $nextApprovers = $this->usersWithAnyRole($nextRoles)
                         ->where(function ($query) {
                             $query->whereHas('roles', function ($q) {
                                 $q->where('name', 'Admin');

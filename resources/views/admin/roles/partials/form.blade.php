@@ -3,17 +3,31 @@
 @endphp
 
 <div class="space-y-6">
+    @if ($errors->any())
+        <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+            <p class="font-semibold">Please fix the following:</p>
+            <ul class="mt-2 list-inside list-disc space-y-1">
+                @foreach ($errors->all() as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="grid gap-4 md:grid-cols-2">
         <div>
             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Role Name</label>
             <input
                 type="text"
                 name="name"
-                value="{{ old('name', $role->name ?? '') }}"
-                class="mt-1 w-full rounded-xl border-slate-200"
+                value="{{ old('name', $role?->name ?? '') }}"
+                class="mt-1 w-full rounded-xl border-slate-200 @error('name') border-rose-500 ring-1 ring-rose-500 @enderror"
                 placeholder="e.g. Loan Officer"
                 required
             >
+            @error('name')
+                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
             <p class="mt-1 text-xs text-slate-400">Use descriptive names. They will be slugged automatically.</p>
         </div>
         <div>
@@ -21,10 +35,13 @@
             <input
                 type="text"
                 name="description"
-                value="{{ old('description', $role->description ?? '') }}"
-                class="mt-1 w-full rounded-xl border-slate-200"
+                value="{{ old('description', $role?->description ?? '') }}"
+                class="mt-1 w-full rounded-xl border-slate-200 @error('description') border-rose-500 ring-1 ring-rose-500 @enderror"
                 placeholder="Short summary of this role"
             >
+            @error('description')
+                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
         </div>
     </div>
 

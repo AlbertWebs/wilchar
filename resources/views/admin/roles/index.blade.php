@@ -49,15 +49,18 @@
                             </a>
                             @if($role->name !== 'Admin')
                                 <form
+                                    id="delete-role-form-{{ $role->id }}"
                                     method="POST"
                                     action="{{ route('admin.roles.destroy', $role) }}"
-                                    class="inline-flex"
-                                    x-data
-                                    @submit.prevent="Admin.confirmAction({ title: 'Delete Role?', text: 'This action cannot be undone.', icon: 'warning', confirmButtonText: 'Delete' }).then(confirmed => { if (confirmed) $el.submit(); })"
+                                    class="inline-flex items-center"
                                 >
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="rounded-xl bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100">
+                                    <button
+                                        type="button"
+                                        class="rounded-xl bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100"
+                                        onclick="(async () => { const ok = await Admin.confirmAction({ title: 'Delete Role?', text: 'This action cannot be undone.', icon: 'warning', confirmButtonText: 'Delete' }); if (ok) document.getElementById('delete-role-form-{{ $role->id }}').submit(); })()"
+                                    >
                                         Delete
                                     </button>
                                 </form>
