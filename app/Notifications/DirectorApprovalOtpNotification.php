@@ -4,11 +4,13 @@ namespace App\Notifications;
 
 use App\Models\LoanApplication;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DirectorApprovalOtpNotification extends Notification implements ShouldQueue
+/**
+ * Sent synchronously so OTP mail is not stuck behind a queue worker (QUEUE_CONNECTION=database).
+ */
+class DirectorApprovalOtpNotification extends Notification
 {
     use Queueable;
 

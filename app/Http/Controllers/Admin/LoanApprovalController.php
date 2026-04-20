@@ -20,6 +20,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
@@ -808,9 +809,12 @@ class LoanApprovalController extends Controller
     }
 
     /**
-     * Send OTP to director for approval
+     * Send OTP for director-stage approval (same code for all recipients).
+     *
+     * Notifies every Director (so they receive the OTP even when an Admin opened the page first),
+     * and includes the current user if they are not already a Director (e.g. Super Admin).
      */
-    private function sendDirectorOtp(LoanApplication $loanApplication, User $user): void
+    private function sendDirectorOtp(LoanApplication $loanApplication, User $actor): void
     {
         $pending = $loanApplication->onboarding_data['pending_disbursement'] ?? [];
         $otp = (string) random_int(100000, 999999);
@@ -825,8 +829,26 @@ class LoanApprovalController extends Controller
         $loanApplication->onboarding_data = $onboardingData;
         $loanApplication->save();
 
-        // Send OTP via email
-        $user->notify(new DirectorApprovalOtpNotification($loanApplication, $otp, $amountApproved));
+        $recipients = User::role('Director')->get();
+        if (!$recipients->contains('id', $actor->id)) {
+            $recipients->push($actor);
+        }
+
+        $recipients = $recipients->unique('id')->filter(fn (User $u) => filled($u->email))->values();
+
+        if ($recipients->isEmpty()) {
+            Log::warning('Director approval OTP could not be emailed: no recipients with an email address.', [
+                'loan_application_id' => $loanApplication->id,
+                'actor_id' => $actor->id,
+            ]);
+
+            return;
+        }
+
+        Notification::send(
+            $recipients,
+            new DirectorApprovalOtpNotification($loanApplication, $otp, (float) $amountApproved)
+        );
     }
 
     /**
