@@ -40,8 +40,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanCalculatorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicLoanApplicationController;
+use App\Http\Controllers\PwaManifestController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Admin PWA manifest (public; browsers fetch without auth — uses public favicon from site settings)
+Route::get('/manifest-admin.json', [PwaManifestController::class, 'admin'])->name('pwa.manifest.admin');
 
 // Public page routes
 Route::get('/page/{slug}', [\App\Http\Controllers\PageController::class, 'show'])->name('page.show');
@@ -193,6 +197,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::patch('loans/{loan}', [LoanController::class, 'update'])
         ->middleware('permission:loans.edit')
         ->name('loans.update');
+    Route::post('loans/{loan}/send-delete-otp', [LoanController::class, 'sendDeleteOtp'])
+        ->middleware('permission:loans.delete')
+        ->name('loans.send-delete-otp');
     Route::delete('loans/{loan}', [LoanController::class, 'destroy'])
         ->middleware('permission:loans.delete')
         ->name('loans.destroy');

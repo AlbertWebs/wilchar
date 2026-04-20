@@ -307,6 +307,61 @@
                 </div>
             </x-admin.section>
         </div>
+
+        @can('loans.delete')
+            <x-admin.section
+                title="Danger zone"
+                description="Removes this loan record and all data tied to it: repayments, instalments, collection entries, performance logs, and ledger transactions for this loan. The linked loan application and disbursement history are kept; only the loan_id link on the application is cleared. You must verify by email code."
+            >
+                <div class="space-y-4 rounded-2xl border border-rose-200 bg-rose-50/50 p-5">
+                    <p class="text-sm text-rose-900">
+                        This cannot be undone. Click below to receive a 6-digit code at <span class="font-semibold">{{ auth()->user()?->email }}</span>, then enter it to confirm.
+                    </p>
+                    <form method="POST" action="{{ route('loans.send-delete-otp', $loan) }}" class="inline">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="rounded-xl border border-rose-300 bg-white px-4 py-2 text-sm font-semibold text-rose-700 shadow-sm hover:bg-rose-100"
+                        >
+                            Email verification code
+                        </button>
+                    </form>
+
+                    <form
+                        id="delete-loan-form-{{ $loan->id }}"
+                        method="POST"
+                        action="{{ route('loans.destroy', $loan) }}"
+                        class="space-y-3 border-t border-rose-200 pt-4"
+                    >
+                        @csrf
+                        @method('DELETE')
+                        <div>
+                            <label class="text-xs font-semibold uppercase tracking-wide text-rose-800">6-digit code</label>
+                            <input
+                                type="text"
+                                name="otp"
+                                inputmode="numeric"
+                                pattern="[0-9]{6}"
+                                maxlength="6"
+                                autocomplete="one-time-code"
+                                class="mt-1 w-full max-w-xs rounded-xl border-rose-200 bg-white @error('otp') border-rose-500 ring-1 ring-rose-500 @enderror"
+                                placeholder="000000"
+                            >
+                            @error('otp')
+                                <p class="mt-1 text-xs text-rose-700">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <button
+                            type="button"
+                            class="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-700"
+                            onclick="(async () => { const ok = await Admin.confirmAction({ title: 'Delete this loan permanently?', text: 'All repayments and schedules for this loan will be removed. This cannot be undone.', icon: 'error', confirmButtonText: 'Delete loan' }); if (ok) document.getElementById('delete-loan-form-{{ $loan->id }}').submit(); })()"
+                        >
+                            Delete loan permanently
+                        </button>
+                    </form>
+                </div>
+            </x-admin.section>
+        @endcan
     </div>
 
     <!-- Payment Modal -->

@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 @php
     use Illuminate\Support\Str;
+    $adminPwaIcon = !empty($settings['favicon'] ?? null)
+        ? asset('storage/' . $settings['favicon'])
+        : asset('main/assets/images/favicon.png');
+    $adminPwaIconType = is_string($settings['favicon'] ?? null) && str_ends_with(strtolower($settings['favicon']), '.ico')
+        ? 'image/x-icon'
+        : 'image/png';
+    $adminPwaTitle = ($settings['site_name'] ?? config('app.name', 'Wilchar LMS')) . ' Admin';
 @endphp
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-100">
 <head>
@@ -8,26 +15,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <!-- PWA Meta Tags -->
-    <meta name="application-name" content="Wilchar LMS">
+    <!-- PWA (admin installable app — same favicon as public site) -->
+    <link rel="icon" href="{{ $adminPwaIcon }}" type="{{ $adminPwaIconType }}">
+    <meta name="application-name" content="{{ $adminPwaTitle }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Wilchar LMS">
-    <meta name="description" content="Comprehensive loan management system with flexible repayment options, M-Pesa integration, and excellent customer service.">
+    <meta name="apple-mobile-web-app-title" content="{{ $adminPwaTitle }}">
+    <meta name="description" content="Wilchar loan management admin — install as an app on your computer or phone.">
     <meta name="format-detection" content="telephone=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="msapplication-TileColor" content="#10b981">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="theme-color" content="#10b981">
     
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="{{ $adminPwaIcon }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ $adminPwaIcon }}">
     
-    <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="{{ route('pwa.manifest.admin') }}">
 
     <title>{{ $title ?? config('app.name', 'Admin Panel') }}</title>
 
@@ -518,6 +522,20 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
+                    <div
+                        id="admin-pwa-install"
+                        class="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/90 px-2 py-1 sm:px-3"
+                        title="Install this admin panel as an app"
+                    >
+                        <span class="hidden text-xs font-medium text-emerald-900 sm:inline">Install app</span>
+                        <button
+                            type="button"
+                            id="admin-pwa-install-btn"
+                            class="rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                        >
+                            Install
+                        </button>
+                    </div>
                     <button
                         x-on:click="$dispatch('toggle-theme')"
                         class="hidden rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"

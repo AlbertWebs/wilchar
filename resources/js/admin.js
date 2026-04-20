@@ -160,3 +160,44 @@ window.Admin = {
     },
 };
 
+// Admin PWA: service worker + install prompt (Chrome, Edge, etc.)
+document.addEventListener('DOMContentLoaded', () => {
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
+
+    navigator.serviceWorker.register('/sw-admin.js', { scope: '/' }).catch(() => {});
+
+    let deferredInstallPrompt = null;
+    const installWrap = document.getElementById('admin-pwa-install');
+    const installBtn = document.getElementById('admin-pwa-install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        if (installWrap) {
+            installWrap.classList.remove('hidden');
+            installWrap.classList.add('flex');
+        }
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        if (installWrap) {
+            installWrap.classList.add('hidden');
+            installWrap.classList.remove('flex');
+        }
+    });
+
+    installBtn?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) {
+            return;
+        }
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        installWrap?.classList.add('hidden');
+        installWrap?.classList.remove('flex');
+    });
+});
+
