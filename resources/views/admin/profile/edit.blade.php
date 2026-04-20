@@ -15,7 +15,7 @@
         <x-admin.section title="Account Details" description="Update how your name and email appear across the admin portal.">
             <form method="POST" action="{{ route('admin.profile.update') }}" class="space-y-6 max-w-3xl">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>

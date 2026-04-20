@@ -9,7 +9,7 @@
         <x-admin.section title="Update Product" description="Modify rates, fees or availability for this lending product.">
             <form action="{{ route('loan-products.update', $loanProduct) }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 @include('admin.loan-products.partials.form', ['loanProduct' => $loanProduct])
                 <div class="flex items-center justify-between gap-3">
                     <a href="{{ route('loan-products.index') }}" class="text-sm font-semibold text-slate-500 hover:text-slate-700">

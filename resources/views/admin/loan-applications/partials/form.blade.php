@@ -74,7 +74,7 @@
 >
     @csrf
     @if($isEdit)
-        @method('PUT')
+        @method('PATCH')
     @endif
 
     <div class="space-y-6">

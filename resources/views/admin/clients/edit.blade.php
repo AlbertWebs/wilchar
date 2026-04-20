@@ -9,7 +9,7 @@
         <x-admin.section title="Client Profile" description="Update the borrower's personal details and business background.">
             <form action="{{ route('admin.clients.update', $client) }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 @if($errors->any())
                     <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                         <p class="font-semibold">We couldn't save the changes yet.</p>

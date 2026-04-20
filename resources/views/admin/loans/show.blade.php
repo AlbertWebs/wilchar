@@ -202,7 +202,7 @@
                 <div class="space-y-4">
                     <form action="{{ route('loans.update', $loan) }}" method="POST" class="space-y-4">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <div>
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
                             <select name="status" class="mt-1 w-full rounded-xl border-slate-200">

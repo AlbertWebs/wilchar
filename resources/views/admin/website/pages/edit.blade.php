@@ -9,7 +9,7 @@
         <x-admin.section title="Update Page" description="Modify page content and settings.">
             <form action="{{ route('admin.website.pages.update', $page) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 
                 <div class="grid gap-6 lg:grid-cols-3">
                     <div class="lg:col-span-2 space-y-6">

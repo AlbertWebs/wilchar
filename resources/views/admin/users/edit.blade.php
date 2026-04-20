@@ -9,7 +9,7 @@
         <x-admin.section title="Update Account" description="Change user details and adjust their role assignments.">
             <form action="{{ route('users.update', $user) }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>
