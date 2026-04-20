@@ -57,8 +57,10 @@ Route::get('/apply', [PublicLoanApplicationController::class, 'create'])->name('
 Route::post('/apply', [PublicLoanApplicationController::class, 'store'])->name('loan-application.store');
 Route::get('/apply/thank-you', [PublicLoanApplicationController::class, 'thankYou'])->name('loan-application.thank-you');
 
-// Common Dashboard Route (fallback if role not handled)
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Common Dashboard Route (fallback if role not handled) — must require auth; view expects a logged-in user
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
 
 // Routes for All Authenticated Users
 Route::middleware('auth')->group(function () {

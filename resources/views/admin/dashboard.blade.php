@@ -132,7 +132,7 @@
     <div class="space-y-6">
         <!-- Welcome Header -->
         <div class="rounded-2xl bg-white p-6 shadow-lg mb-6 border border-slate-200">
-            <h1 class="text-2xl font-bold mb-2 text-slate-900">Welcome Back, {{ auth()->user()->name }}! 👋</h1>
+            <h1 class="text-2xl font-bold mb-2 text-slate-900">Welcome Back, {{ auth()->user()?->name ?? 'User' }}! 👋</h1>
             <p class="text-slate-600">Here's what's happening with your business today.</p>
         </div>
         
