@@ -226,10 +226,10 @@
                                     <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
                                         <i class="bi bi-file-text me-2 text-primary"></i>Loan Form(s)
                                     </label>
-                                    <div class="file-input-wrapper" style="position: relative;">
-                                        <input type="file" name="loan_form[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
-                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
-                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                    <div class="file-input-wrapper" style="position: relative; min-height: 3.25rem; border: 2px dashed #cbd5e1; border-radius: 8px; background: #fff; transition: border-color 0.2s ease, background-color 0.2s ease;">
+                                        <input type="file" name="loan_form[]" class="file-input-enhanced" multiple accept=".pdf,image/*" title="">
+                                        <div class="file-input-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem; z-index: 1;">
+                                            <span class="file-input-overlay-default"><i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here</span>
                                         </div>
                                     </div>
                                     <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
@@ -240,10 +240,10 @@
                                     <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
                                         <i class="bi bi-phone me-2 text-success"></i>M-Pesa Statement(s)
                                     </label>
-                                    <div class="file-input-wrapper" style="position: relative;">
-                                        <input type="file" name="mpesa_statement[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
-                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
-                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                    <div class="file-input-wrapper" style="position: relative; min-height: 3.25rem; border: 2px dashed #cbd5e1; border-radius: 8px; background: #fff; transition: border-color 0.2s ease, background-color 0.2s ease;">
+                                        <input type="file" name="mpesa_statement[]" class="file-input-enhanced" multiple accept=".pdf,image/*" title="">
+                                        <div class="file-input-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem; z-index: 1;">
+                                            <span class="file-input-overlay-default"><i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here</span>
                                         </div>
                                     </div>
                                     <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
@@ -254,10 +254,10 @@
                                     <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
                                         <i class="bi bi-camera me-2 text-warning"></i>Business Photo(s)
                                     </label>
-                                    <div class="file-input-wrapper" style="position: relative;">
-                                        <input type="file" name="business_photo[]" class="form-control file-input-enhanced" multiple accept="image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
-                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
-                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                    <div class="file-input-wrapper" style="position: relative; min-height: 3.25rem; border: 2px dashed #cbd5e1; border-radius: 8px; background: #fff; transition: border-color 0.2s ease, background-color 0.2s ease;">
+                                        <input type="file" name="business_photo[]" class="file-input-enhanced" multiple accept="image/*" title="">
+                                        <div class="file-input-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem; z-index: 1;">
+                                            <span class="file-input-overlay-default"><i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here</span>
                                         </div>
                                     </div>
                                     <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
@@ -268,10 +268,10 @@
                                     <label class="form-label fw-semibold mb-2" style="color: #1e293b; font-size: 0.95rem;">
                                         <i class="bi bi-folder me-2 text-info"></i>Other Supporting Documents
                                     </label>
-                                    <div class="file-input-wrapper" style="position: relative;">
-                                        <input type="file" name="documents[]" class="form-control file-input-enhanced" multiple accept=".pdf,image/*" style="padding: 0.75rem; border: 2px dashed #cbd5e1; border-radius: 8px; transition: all 0.3s ease;">
-                                        <div class="file-input-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem;">
-                                            <i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here
+                                    <div class="file-input-wrapper" style="position: relative; min-height: 3.25rem; border: 2px dashed #cbd5e1; border-radius: 8px; background: #fff; transition: border-color 0.2s ease, background-color 0.2s ease;">
+                                        <input type="file" name="documents[]" class="file-input-enhanced" multiple accept=".pdf,image/*" title="">
+                                        <div class="file-input-overlay" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; color: #64748b; font-size: 0.875rem; z-index: 1;">
+                                            <span class="file-input-overlay-default"><i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here</span>
                                         </div>
                                     </div>
                                     <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
@@ -346,49 +346,71 @@ document.addEventListener('DOMContentLoaded', function() {
     fileInputs.forEach(input => {
         const wrapper = input.closest('.file-input-wrapper');
         const overlay = wrapper.querySelector('.file-input-overlay');
-        
+        const defaultSpan = overlay.querySelector('.file-input-overlay-default');
+
         input.addEventListener('change', function() {
             if (this.files.length > 0) {
-                input.style.borderColor = '#10b981';
-                input.style.backgroundColor = '#f0fdf4';
-                overlay.style.display = 'none';
+                wrapper.classList.add('has-files');
+                wrapper.style.borderColor = '#10b981';
+                wrapper.style.backgroundColor = '#f0fdf4';
+                overlay.style.color = '#059669';
+                if (defaultSpan) {
+                    defaultSpan.innerHTML = '<i class="bi bi-check-circle me-2"></i>' + this.files.length + ' file(s) selected';
+                }
             } else {
-                input.style.borderColor = '#cbd5e1';
-                input.style.backgroundColor = 'transparent';
-                overlay.style.display = 'flex';
+                wrapper.classList.remove('has-files');
+                wrapper.style.borderColor = '#cbd5e1';
+                wrapper.style.backgroundColor = '#fff';
+                overlay.style.color = '#64748b';
+                if (defaultSpan) {
+                    defaultSpan.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Click to upload or drag files here';
+                }
             }
         });
-        
+
         input.addEventListener('focus', function() {
-            this.style.borderColor = '#0ea5e9';
-            this.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.1)';
+            wrapper.style.borderColor = '#0ea5e9';
+            wrapper.style.boxShadow = '0 0 0 3px rgba(14, 165, 233, 0.12)';
         });
-        
+
         input.addEventListener('blur', function() {
-            this.style.boxShadow = 'none';
+            wrapper.style.boxShadow = 'none';
             if (this.files.length === 0) {
-                this.style.borderColor = '#cbd5e1';
+                wrapper.style.borderColor = '#cbd5e1';
             }
         });
     });
 });
 </script>
 <style>
-.file-input-enhanced {
+/* Full-area invisible file control above custom label — avoids native "No file chosen" overlapping text */
+.file-input-wrapper .file-input-enhanced {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 3.25rem;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
     cursor: pointer;
+    z-index: 2;
+    font-size: 0;
+    line-height: 0;
 }
 
-.file-input-enhanced::-webkit-file-upload-button {
-    visibility: hidden;
-}
-
-.file-input-wrapper:hover .file-input-enhanced {
+.file-input-wrapper:not(.has-files):hover:not(:focus-within) {
     border-color: #0ea5e9 !important;
     background-color: #f8fafc !important;
 }
 
-.file-input-wrapper:hover .file-input-overlay {
+.file-input-wrapper:not(.has-files):hover:not(:focus-within) .file-input-overlay {
     color: #0ea5e9 !important;
+}
+
+.file-input-wrapper.has-files:hover:not(:focus-within) {
+    border-color: #059669 !important;
+    background-color: #ecfdf5 !important;
 }
 </style>
 @endsection
